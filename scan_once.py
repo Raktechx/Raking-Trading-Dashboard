@@ -28,7 +28,7 @@ def load_state(today: str) -> dict:
     return st
 
 
-def eod_text(saved: dict, today: str) -> str:
+def eod_text(saved: dict, today: str, everything: dict | None = None) -> str:
     sigs = store.today_signals(saved, today)
     lines = [f"📊 <b>{config.APP_NAME}</b> — end of day {today}"]
     if not sigs:
@@ -36,6 +36,11 @@ def eod_text(saved: dict, today: str) -> str:
     for s in sigs:
         lines.append(f"• {s['signal_time']} BUY {s['option']} → <b>{s.get('result')}</b> "
                      f"(R {s.get('r')}, premium {s.get('opt_entry')} → {s.get('opt_exit')})")
+    blk = [s for s in (everything or {}).values() if s.get("blocked") and s.get("day") == today]
+    if blk:
+        saved_r = -sum(float(s["r"]) for s in blk if s.get("r") is not None)
+        lines.append(f"🛡️ Quality pre-check blocked {len(blk)} weak signal(s) today"
+                     + (f" — blocking them saved {saved_r:+.2f} R" if any(s.get("r") is not None for s in blk) else ""))
     done = [s for s in saved.values() if s.get("result") in ("TP", "SL", "TIME")]
     if done:
         r = pd.Series([float(s["r"]) for s in done])
@@ -121,9 +126,10 @@ def main() -> None:
     else:
         print("Market closed - scan skipped.")
 
-    saved = store.load(store.DEMO_STORE if is_demo else None)
+    everything = store.load(store.DEMO_STORE if is_demo else None)
+    saved = store.active(everything)
     if weekday and not is_demo and (now.hour, now.minute) > (15, 30) and not st["eod_sent"]:
-        notify.send(eod_text(saved, today))
+        notify.send(eod_text(saved, today, everything))
         if now.weekday() == 4:   # Friday: weekly report
             notify.send(week_text(saved, today))
         days = token_days_left()

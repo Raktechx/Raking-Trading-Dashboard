@@ -55,11 +55,20 @@ def signal_card(s: dict) -> None:
     res = s.get("result") or "OPEN"
     badge = {"TP": "🎯 Target hit", "SL": "🛑 SL hit", "TIME": f"⏱️ Closed {S['exit_time']} ({s.get('r')}R)",
              "OPEN": "🟡 Trade open"}.get(res, res)
+    qline = ""
+    if s.get("grade"):
+        n = s.get("score_notes") or {}
+        col = {"A": "#16c784", "B": "#f5c542", "C": "#ea3943"}.get(s["grade"], "#999")
+        notes = "".join(f"<div class='muted'>➕ {x}</div>" for x in n.get("plus", [])) + \
+            "".join(f"<div class='muted'>➖ {x}</div>" for x in n.get("minus", []))
+        qline = (f"<div style='margin-top:6px'><span class='ts' style='border:1px solid {col};color:{col}'>"
+                 f"Grade {s['grade']} · {s['score']}/100</span>{notes}</div>")
     exit_txt = f" · exit ₹{s['opt_exit']} at {s.get('exit_time')}" if s.get("opt_exit") else ""
     st.markdown(
         f"<div class='card {cls}'><div class='big'>BUY {s['option']}<span class='tag'>exp {s.get('expiry')}</span></div>"
         f"<div style='margin-top:6px'><span class='ts'>⏰ {s['day']} {s['signal_time']}</span> "
         f"<span class='muted'>alert sent {str(s.get('created_at') or '')[11:19]} · {badge}{exit_txt}</span></div>"
+        f"{qline}"
         f"<span class='lv'>Entry <b>₹{s.get('opt_entry')}</b></span>"
         f"<span class='lv'>SL <b style='color:#ea3943'>₹{s.get('opt_sl')}</b></span>"
         f"<span class='lv'>Target <b style='color:#16c784'>₹{s.get('opt_tp')}</b></span>"
@@ -115,6 +124,9 @@ with tab_live:
     closed = [s for s in todays if s.get("result") in analysis.CLOSED]
     m[2].metric("Closed today", len(closed))
     m[3].metric("Today's R", round(sum(float(s["r"]) for s in closed), 2) if closed else 0)
+    nblk = len([s for s in store.today_signals(saved, today, include_blocked=True) if s.get("blocked")])
+    st.caption(f"🛡️ Quality pre-check: only grade A signals are shown and alerted. "
+               f"Blocked today: {nblk} weaker signal(s) — see the Signal log tab.")
 
     cols = st.columns(len(config.INDICES))
     for col, idx in zip(cols, config.INDICES):
@@ -159,6 +171,7 @@ with tab_log:
             d = d[d["side"].isin(side)]
         if isinstance(days, tuple) and len(days) == 2:
             d = d[(d["day"] >= str(days[0])) & (d["day"] <= str(days[1]))]
+        dall, d = d, analysis.sent(d)
         a, b = analysis.stats(d), analysis.stats(d, "alt_r")
         m = st.columns(6)
         m[0].metric("Closed trades", a["trades"])
@@ -177,6 +190,9 @@ with tab_log:
             fig.update_layout(height=260, template="plotly_dark", margin=dict(l=10, r=10, t=10, b=10),
                               xaxis_title="Trade #", yaxis_title="Cumulative R")
             st.plotly_chart(fig, width="stretch", key="eq")
+        st.markdown("**Quality pre-check** — sent (grade A) vs blocked signals. Blocked ones are never alerted, "
+                    "but their result is still tracked to prove the filter works.")
+        st.dataframe(analysis.breakdown(dall, "status"), hide_index=True, width="stretch")
         b1, b2 = st.columns(2)
         b1.markdown("**By instrument**")
         b1.dataframe(analysis.breakdown(d, "instrument"), hide_index=True, width="stretch")
@@ -188,7 +204,7 @@ with tab_log:
         b4.markdown("**By weekday**")
         b4.dataframe(analysis.breakdown(d, "weekday"), hide_index=True, width="stretch")
         st.markdown("**All signals (newest first)**")
-        st.dataframe(d[[c for c, _ in analysis.COLUMNS]].rename(columns=dict(analysis.COLUMNS)),
+        st.dataframe(dall[[c for c, _ in analysis.COLUMNS]].rename(columns=dict(analysis.COLUMNS)),
                      hide_index=True, width="stretch")
     xl = store.LOG_XLSX
     if xl.exists():
@@ -210,6 +226,12 @@ no new entry after {S['last_entry']} · open trades closed at {S['exit_time']} �
 
 **Exit test:** every trade is also scored with Method B (SL on the option's previous candle) so the paper
 record shows which exit earns more.
+
+**Quality grade (0–100):** each signal is also graded on trend strength, breakout candle, volume, OI build-up,
+PCR, room to the next big OI wall, option IV, India VIX and broader-market alignment.
+**Quality pre-check:** only grade A (score ≥ {S['min_quality']}) is sent to Telegram and shown as a live signal.
+Lower grades, or a signal whose quality cannot be checked, are blocked. They're logged with the reason and their
+result is still tracked, so the "Sent vs blocked" table shows whether the filter really improves results.
 
 ⚠️ Paper-trading tool, not investment advice.
 """)
