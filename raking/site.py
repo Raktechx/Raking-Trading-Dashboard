@@ -38,7 +38,8 @@ def _card(s: dict) -> str:
     reasons = "".join(f"<li>{html.escape(r)}</li>" for r in s.get("reasons", []))
     return (f"<div class='card' style='border-left-color:{color}'>"
             f"<div class='big'>BUY {html.escape(s['option'])} <span class='tag'>exp {s.get('expiry')}</span></div>"
-            f"<div class='muted'>{s['day']} {s['signal_time']} · numbers fixed · {res}</div>{prem}"
+            f"<div class='muted'>{s['day']} {s['signal_time']} · numbers fixed · {res}"
+            f"{' · Grade ' + str(s['grade']) + ' (' + str(s.get('score')) + '/100)' if s.get('grade') else ''}</div>{prem}"
             f"<ul>{reasons}</ul></div>")
 
 

@@ -122,6 +122,9 @@ STRATEGY = {
     "skip_expiry_day": True,       # on expiry day use the next expiry's options
     "assumed_delta": 0.5,          # for option SL/TP when the live delta is not available
     "fresh_minutes": 20,           # live: a signal older than this is never sent (no stale alerts)
+    # 7. Quality pre-check: only grade A (score >= 70) is sent; lower grades are logged, never alerted
+    "min_quality": 70,
+    "max_blocked_per_index": 3,    # blocked signals logged per instrument per day (to measure the pre-check)
 }
 
 UPSTOX_BASE = "https://api.upstox.com"

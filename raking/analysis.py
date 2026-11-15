@@ -10,7 +10,7 @@ CLOSED = ("TP", "SL", "TIME")
 COLUMNS = [
     ("day", "Date"), ("signal_time", "Signal time"), ("created_at", "Alert sent at"),
     ("instrument", "Instrument"), ("group", "Type"), ("option", "Option"), ("expiry", "Expiry"),
-    ("side", "Side"), ("opt_entry", "Premium entry"), ("opt_sl", "Premium SL"), ("opt_tp", "Premium target"),
+    ("side", "Side"), ("status", "Pre-check"), ("block_reason", "Blocked because"), ("grade", "Grade"), ("score", "Quality score"), ("opt_entry", "Premium entry"), ("opt_sl", "Premium SL"), ("opt_tp", "Premium target"),
     ("opt_exit", "Premium exit"), ("opt_points", "Premium P/L (pts)"), ("result", "Result"),
     ("exit_time", "Exit time"), ("r", "R"), ("alt_result", "Method B result"), ("alt_r", "Method B R"),
     ("atm_oi_pct", "ATM OI %"), ("writing_oi_pct", "Writing OI %"), ("volume_x", "Volume x avg"),
@@ -31,9 +31,17 @@ def frame(saved: dict) -> pd.DataFrame:
             df[c] = None
     for c in ("r", "alt_r", "opt_entry", "opt_exit", "opt_points"):
         df[c] = pd.to_numeric(df[c], errors="coerce")
+    df["score"] = pd.to_numeric(df["score"], errors="coerce")
+    df["grade"] = df["grade"].fillna("-")
+    df["status"] = df["blocked"].map(lambda b: "Blocked" if b is True else "Sent") if "blocked" in df else "Sent"
     df["hour"] = df["signal_time"].str.slice(0, 2) + ":00"
     df["weekday"] = pd.to_datetime(df["day"]).dt.day_name()
     return df.sort_values(["day", "signal_time"], ascending=False).reset_index(drop=True)
+
+
+def sent(df: pd.DataFrame) -> pd.DataFrame:
+    """Only the signals that were really alerted - the paper record never includes blocked ones."""
+    return df[df["status"] == "Sent"] if "status" in df else df
 
 
 def stats(df: pd.DataFrame, col: str = "r") -> dict:
@@ -65,15 +73,17 @@ def equity(df: pd.DataFrame) -> pd.DataFrame:
 
 def excel(saved: dict, path) -> None:
     df = frame(saved)
-    a, b = stats(df), stats(df, "alt_r")
+    ds = sent(df)
+    a, b = stats(ds), stats(ds, "alt_r")
     summary = pd.DataFrame({
         "Measure": ["Signals", "Closed trades", "Win rate %", "Total R", "Average R", "Max drawdown R",
                     "Profit factor", "Method B (option-candle SL) total R", "Method B trades"],
-        "Value": [len(df), a["trades"], a["win_rate"], a["total_r"], a["avg_r"], a["max_dd"], a["pf"],
+        "Value": [len(ds), a["trades"], a["win_rate"], a["total_r"], a["avg_r"], a["max_dd"], a["pf"],
                   b["total_r"], b["trades"]]})
     with pd.ExcelWriter(path, engine="openpyxl") as xw:
         df[[c for c, _ in COLUMNS]].rename(columns=dict(COLUMNS)).to_excel(xw, sheet_name="Signals", index=False)
         summary.to_excel(xw, sheet_name="Summary", index=False)
-        for by, name in (("instrument", "By instrument"), ("side", "By side"), ("hour", "By hour"),
+        breakdown(df, "status").to_excel(xw, sheet_name="Sent vs blocked", index=False)
+        for by, name in (("grade", "By grade"), ("instrument", "By instrument"), ("side", "By side"), ("hour", "By hour"),
                          ("weekday", "By weekday"), ("day", "By day")):
-            breakdown(df, by).to_excel(xw, sheet_name=name, index=False)
+            breakdown(ds, by).to_excel(xw, sheet_name=name, index=False)

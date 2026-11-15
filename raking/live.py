@@ -5,7 +5,7 @@ from datetime import datetime
 
 import pandas as pd
 
-from . import config, data, demo, notify, store
+from . import config, data, demo, notify, quality, store
 from .config import STRATEGY as S
 from .strategy import public, r05, simulate, simulate_option
 from .strategy import day_trades
@@ -50,7 +50,8 @@ def _fresh(sig: dict) -> bool:
 
 
 def _store_new(trades: list, saved: dict, tday: str, group: str, max_total: int, api, demo_mode: bool,
-               send_alerts: bool) -> None:
+               send_alerts: bool, days: dict | None = None, ctx: dict | None = None) -> None:
+    ctx = ctx if ctx is not None else {}
     for t in trades:
         mine = [s for s in store.today_signals(saved, tday) if _group(s) == group]
         if t["id"] in saved or len(mine) >= max_total:
@@ -59,26 +60,48 @@ def _store_new(trades: list, saved: dict, tday: str, group: str, max_total: int,
             continue   # never send an old signal (e.g. a stock that is only now being checked)
         if any(s["result"] == "OPEN" and s["index"] == t["index"] for s in mine):
             continue
+        n_blocked = [s for s in store.today_signals(saved, tday, t["index"], include_blocked=True) if s.get("blocked")]
         if len([s for s in mine if s["index"] == t["index"]]) >= S["max_trades_per_index"]:
             continue
         rec = public(t)
         rec["group"] = group
-        if not demo_mode and rec.get("opt_entry"):
+        chain = None
+        if not demo_mode:
+            try:
+                chain = api.option_chain(t["index"], pd.Timestamp(rec["expiry"]).date())
+            except Exception:
+                chain = None
+        if chain and rec.get("opt_entry"):
             try:   # use the live delta for the option SL / target
-                dl = chain_delta(api.option_chain(t["index"], pd.Timestamp(rec["expiry"]).date()),
-                                 rec["strike"], rec["side"])
+                dl = chain_delta(chain, rec["strike"], rec["side"])
                 if dl:
                     mv = min(max(dl, 0.2), 0.9) * rec["risk_pts"]
                     rec["opt_sl"] = max(r05(rec["opt_entry"] - mv), 0.05)
                     rec["opt_tp"] = r05(rec["opt_entry"] + S["reward_risk"] * mv)
                     rec["delta"] = round(dl, 2)
-            except UpstoxError:
+            except Exception:
                 pass
+        try:   # quality score (pre-check below)
+            if "vix" not in ctx:
+                ctx["vix"] = None if demo_mode else quality.vix(api)
+            d = (days or {}).get(t["index"])
+            if d is not None:
+                rec.update(quality.score({**t, "group": group}, d, chain, ctx["vix"], ctx.get("market")))
+                rec.pop("_pos", None)
+        except Exception:
+            pass
         rec["created_at"] = now_ist().strftime("%Y-%m-%d %H:%M:%S")
+        if not quality.passes(rec, S["min_quality"]):
+            if len(n_blocked) >= S["max_blocked_per_index"]:
+                continue
+            rec["blocked"] = True   # quality pre-check failed: logged, result tracked, never alerted
+            rec["block_reason"] = ("quality could not be checked" if rec.get("score") is None else
+                                   f"grade {rec.get('grade')} ({rec.get('score')}/100): "
+                                   + ("; ".join((rec.get("score_notes") or {}).get("minus") or []) or "overall quality too low"))
         for k in ("result", "exit", "exit_time", "r", "points", "opt_exit", "opt_points", "alt_result", "alt_r"):
             rec[k] = None   # filled by the result check, never from look-ahead
         rec["result"] = "OPEN"
-        if store.add_if_new(saved, rec) and send_alerts:
+        if store.add_if_new(saved, rec) and send_alerts and not rec.get("blocked"):
             notify.signal_alert(rec)
 
 
@@ -111,10 +134,12 @@ def scan(api: Upstox | None = None, send_alerts: bool = True, demo_mode: bool = 
         _load(api, idx, today, demo_mode, status, days)
     charts = {k: d.fut[d.fut["day"] == today].copy() for k, d in days.items()}
     checks = {}
+    ctx = {"market": {k: quality.bias(d) for k, d in days.items()}}
     if days:
         trades, evs = day_trades(today, days, S["max_trades_per_day"])
         checks = {k: _checklist(v) for k, v in evs.items()}
-        _store_new(trades, saved, tday, "INDEX", S["max_trades_per_day"], api, demo_mode, send_alerts)
+        _store_new(trades, saved, tday, "INDEX", S["max_trades_per_day"], api, demo_mode, send_alerts,
+                   days, ctx)
 
     # ---------------- stock options (two-step, all F&O stocks)
     stock_days, cands = {}, []
@@ -139,11 +164,11 @@ def scan(api: Upstox | None = None, send_alerts: bool = True, demo_mode: bool = 
         if stock_days:
             st_trades, _ = day_trades(today, stock_days, config.STOCKS["max_trades_per_day"], full_check=False)
             _store_new(st_trades, saved, tday, "STOCK", config.STOCKS["max_trades_per_day"], api, demo_mode,
-                       send_alerts)
+                       send_alerts, stock_days, ctx)
 
     # ---------------- results of today's open signals, using the FIXED stored numbers
     every = {**days, **stock_days}
-    for s in store.today_signals(saved, tday):
+    for s in store.today_signals(saved, tday, include_blocked=True):
         if s.get("alt_result") in (None, "OPEN") and s["index"] in every:
             try:
                 s.update(simulate_option(s, every[s["index"]]))
@@ -154,7 +179,7 @@ def scan(api: Upstox | None = None, send_alerts: bool = True, demo_mode: bool = 
             if res["result"] != "OPEN":
                 res.pop("_exit_ts", None)
                 s.update(res)
-                if send_alerts:
+                if send_alerts and not s.get("blocked"):
                     notify.result_alert(s)
     store.save(saved, spath)
     store.write_excel(saved, xpath)

@@ -34,8 +34,18 @@ def save(data: dict, path: Path | None = None) -> None:
     tmp.replace(path)
 
 
-def today_signals(data: dict, day: str, idx: str | None = None) -> list[dict]:
-    out = [s for s in data.values() if s.get("day") == day and (idx is None or s.get("index") == idx)]
+def active(data: dict) -> dict:
+    """Signals that were really sent (without those blocked by the quality pre-check)."""
+    return {k: s for k, s in data.items() if not s.get("blocked")}
+
+
+def blocked(data: dict) -> dict:
+    return {k: s for k, s in data.items() if s.get("blocked")}
+
+
+def today_signals(data: dict, day: str, idx: str | None = None, include_blocked: bool = False) -> list[dict]:
+    out = [s for s in data.values() if s.get("day") == day and (idx is None or s.get("index") == idx)
+           and (include_blocked or not s.get("blocked"))]
     return sorted(out, key=lambda s: s["signal_time"])
 
 

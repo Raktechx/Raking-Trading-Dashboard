@@ -37,6 +37,10 @@ def signal_alert(s: dict) -> bool:
              f"📌 <b>{s['option']}</b> (expiry {s.get('expiry')})"]
     if s.get("opt_entry"):
         lines.append(f"Premium: entry ₹{s['opt_entry']} | SL ₹{s.get('opt_sl')} | target ₹{s.get('opt_tp')}")
+    if s.get("grade"):
+        n = s.get("score_notes") or {}
+        lines.append(f"⭐ Quality: <b>Grade {s['grade']} · {s['score']}/100</b>")
+        lines += ["  ➕ " + x for x in n.get("plus", [])] + ["  ➖ " + x for x in n.get("minus", [])]
     lines += ["✅ " + "\n✅ ".join(s["reasons"]),
               "⚠️ Paper-trading signal. Manage your own risk."]
     return send("\n".join(lines))
