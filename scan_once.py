@@ -62,6 +62,12 @@ def week_text(saved: dict, today: str) -> str:
     if done:
         r = pd.Series([float(s["r"]) for s in done])
         lines.append(f"Win rate {(r > 0).mean() * 100:.0f}% · total {r.sum():.2f} R · best {r.max():.2f} R · worst {r.min():.2f} R")
+    alt = [s for s in saved.values() if s.get("alt_result") in ("TP", "SL", "TIME")]
+    main = [s for s in saved.values() if s.get("result") in ("TP", "SL", "TIME")]
+    if alt and main:
+        a, m = sum(float(s["alt_r"]) for s in alt), sum(float(s["r"]) for s in main)
+        lines.append(f"Exit test (all time): current method {m:.2f} R ({len(main)} trades) vs "
+                     f"option-candle SL {a:.2f} R ({len(alt)} trades)")
     return "\n".join(lines)
 
 
