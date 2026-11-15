@@ -31,8 +31,8 @@ def send(text: str) -> bool:
 
 def signal_alert(s: dict) -> bool:
     emoji = "🟢" if s["side"] == "CE" else "🔴"
-    label = config.INDICES[s["index"]]["label"]
-    lines = [f"{emoji} <b>{config.APP_NAME}</b> — {label} BUY {s['side']}",
+    label = config.label(s["index"])
+    lines = [f"{emoji} <b>{config.APP_NAME}</b> — {label} BUY {s['side']}" + (" (stock option)" if s.get("group") == "STOCK" else ""),
              f"⏰ {s['day']} {s['signal_time']}",
              f"📌 <b>{s['option']}</b> (expiry {s.get('expiry')})"]
     if s.get("opt_entry"):
@@ -45,5 +45,5 @@ def signal_alert(s: dict) -> bool:
 
 def result_alert(s: dict) -> bool:
     icon = {"TP": "🎯", "SL": "🛑", "TIME": "⏱️"}.get(s.get("result"), "ℹ️")
-    return send(f"{icon} {config.INDICES[s['index']]['label']} {s['side']} {s.get('option', '')} result: "
+    return send(f"{icon} {config.label(s['index'])} {s['side']} {s.get('option', '')} result: "
                 f"<b>{s['result']}</b> @ {s.get('exit')} ({s.get('exit_time')}) | R = {s.get('r')}")
