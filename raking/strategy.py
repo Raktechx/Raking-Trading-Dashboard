@@ -70,6 +70,7 @@ class IndexDay:
     fut_symbol: str = ""
     lot_size: int | None = None
     skip_oi: bool = False             # price-only backtest (no option OI data available)
+    strikes: list | None = None       # available strikes (stocks have uneven strike gaps)
 
 
 def _asof(df: pd.DataFrame | None, ts, col: str):
@@ -81,11 +82,27 @@ def _asof(df: pd.DataFrame | None, ts, col: str):
     return float(df[col].iat[i])
 
 
-def atm_strike(d: IndexDay, ts) -> int | None:
+def atm_strike(d: IndexDay, ts):
     px = _asof(d.spot, ts, "close")
     if px is None:
         return None
+    if d.strikes:
+        return min(d.strikes, key=lambda k: abs(k - px))
     return int(round(px / d.step) * d.step)
+
+
+def neighbours(d: IndexDay, atm, side: str, n: int) -> list:
+    """ATM plus the next n-1 strikes below (puts, for CE side) or above (calls, for PE side)."""
+    if d.strikes:
+        ks = sorted(d.strikes)
+        i = ks.index(atm)
+        return ks[max(0, i - n + 1): i + 1][::-1] if side == "CE" else ks[i: i + n]
+    sign = -1 if side == "CE" else 1
+    return [atm + sign * i * d.step for i in range(n)]
+
+
+def fmt_strike(k) -> str:
+    return f"{k:g}"
 
 
 def _change(df, ts, col):
@@ -113,9 +130,10 @@ def oi_check(d: IndexDay, ts, side: str) -> dict:
     out["atm_ok"] = px_pct is not None and oi_pct is not None and px_pct > 0 and oi_pct >= S["atm_oi_min_pct"]
 
     w_type = "PE" if side == "CE" else "CE"
-    sign = -1 if side == "CE" else 1
-    strikes = [atm + sign * i * d.step for i in range(S["writing_strikes"])]
+    strikes = neighbours(d, atm, side, S["writing_strikes"])
     out["writing_strikes"] = strikes
+    if len(strikes) < S["writing_strikes"]:
+        return out
     oi_now = oi_before = px_now = px_before = 0.0
     for k in strikes:
         f = d.opts.get((k, w_type))
@@ -202,8 +220,8 @@ def make_signal(d: IndexDay, pos: int, side: str, ev: dict, orb) -> dict | None:
         oi_lines = ["OI checks skipped (price-only backtest - no option OI data)"]
     else:
         oi_lines = [
-            f"ATM {strike} {side} long build-up: premium {oi['atm_px_pct']:+.1f}%, OI {oi['atm_oi_pct']:+.1f}%",
-            f"{w} writing ({', '.join(str(k) for k in oi['writing_strikes'])}): OI {oi['writing_oi_pct']:+.1f}%"]
+            f"ATM {fmt_strike(strike)} {side} long build-up: premium {oi['atm_px_pct']:+.1f}%, OI {oi['atm_oi_pct']:+.1f}%",
+            f"{w} writing ({', '.join(fmt_strike(k) for k in oi['writing_strikes'])}): OI {oi['writing_oi_pct']:+.1f}%"]
     reasons = [
         f"Trend: price {'above' if side == 'CE' else 'below'} VWAP {row['vwap']:.1f}, "
         f"EMA20 {'>' if side == 'CE' else '<'} EMA50",
@@ -217,7 +235,7 @@ def make_signal(d: IndexDay, pos: int, side: str, ev: dict, orb) -> dict | None:
         "index": d.idx, "day": str(row["day"]), "side": side,
         "signal_time": row["bar_close"].strftime("%H:%M"),
         "future": d.fut_symbol, "entry": entry, "sl": sl, "tp": tp, "risk_pts": risk,
-        "strike": strike, "expiry": d.expiry, "option": f"{d.idx} {strike} {side}",
+        "strike": strike, "expiry": d.expiry, "option": f"{d.idx} {fmt_strike(strike)} {side}",
         "opt_entry": r05(opt_px) if opt_px else None, "opt_sl": None, "opt_tp": None,
         "orb_high": orb[0], "orb_low": orb[1], "vwap": round(float(row["vwap"]), 2),
         "volume_x": round(float(row["volume"] / row["vol_avg"]), 2),
@@ -267,10 +285,12 @@ def simulate(sig: dict, d: IndexDay) -> dict:
             "opt_exit": None, "opt_points": None, "_exit_ts": None}
 
 
-def day_trades(day, days: dict[str, IndexDay]) -> tuple[list[dict], dict]:
+def day_trades(day, days: dict[str, IndexDay], max_total: int | None = None,
+               full_check: bool = True) -> tuple[list[dict], dict]:
     """Run the whole day for all indices in time order, applying the limits.
     Returns (trades, last evaluation per index for the dashboard checklist)."""
     es, le = _t(S["entry_start"]), _t(S["last_entry"])
+    max_total = S["max_trades_per_day"] if max_total is None else max_total
     frames, state = {}, {}
     for idx, d in days.items():
         dd = d.fut[d.fut["day"] == day]
@@ -289,10 +309,10 @@ def day_trades(day, days: dict[str, IndexDay]) -> tuple[list[dict], dict]:
             bc = dd.loc[pos, "bar_close"].time()
             if bc <= es:
                 continue
-            ev = evaluate(days[idx], pos, orb, full=(ts == last_ts[idx]))
+            ev = evaluate(days[idx], pos, orb, full=full_check and ts == last_ts[idx])
             checks[idx] = ev
             st = state[idx]
-            if bc > le or total >= S["max_trades_per_day"] or st["n"] >= S["max_trades_per_index"]:
+            if bc > le or total >= max_total or st["n"] >= S["max_trades_per_index"]:
                 continue
             if st["busy"] == "open" or (st["busy"] is not None and ts <= st["busy"]):
                 continue
