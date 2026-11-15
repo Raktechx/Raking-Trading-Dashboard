@@ -36,7 +36,7 @@ def upstox_token() -> str:
 
 
 # ---------------------------------------------------------------------------
-# Instruments (document: Nifty 50 and Bank Nifty index options)
+# Index options: Nifty 50, Bank Nifty, Sensex
 #   spot_key   -> Upstox index key (spot price, ATM strike, option chain)
 #   fut_symbol -> underlying_symbol in the Upstox instrument master. The index
 #                 itself has no volume, so VWAP and the volume check use the
@@ -59,7 +59,37 @@ INDICES = {
         "segment": "NSE_FO",
         "step": 100,
     },
+    "SENSEX": {
+        "label": "Sensex",
+        "spot_key": "BSE_INDEX|SENSEX",
+        "fut_symbol": "SENSEX",
+        "master": "BSE",
+        "segment": "BSE_FO",
+        "step": 100,
+    },
 }
+
+# ---------------------------------------------------------------------------
+# Stock options: every NSE F&O stock is checked automatically (no list to keep).
+# Step 1 - one batch quote for all stock futures finds stocks that are past their
+#          9:15-9:30 range on the right side of VWAP.
+# Step 2 - only those candidates get the full strategy (EMA, volume, option OI).
+# ---------------------------------------------------------------------------
+STOCKS = {
+    "enabled": True,
+    "max_candidates_per_scan": 8,   # strongest movers checked in full each scan
+    "max_trades_per_day": 2,        # stock trades a day (separate from the index limit)
+}
+
+
+def label(name: str) -> str:
+    """Display name for an index or a stock symbol."""
+    return INDICES[name]["label"] if name in INDICES else name
+
+
+def stock_spec(symbol: str, underlying_key: str) -> dict:
+    return {"label": symbol, "spot_key": underlying_key, "fut_symbol": symbol,
+            "master": "NSE", "segment": "NSE_FO", "step": None}
 
 # ---------------------------------------------------------------------------
 # Combined strategy - exactly as in the user's document
@@ -85,12 +115,13 @@ STRATEGY = {
     "max_risk_atr": 2.0,           # skip if previous candle SL is too far (> 2 ATR)
     "atr_period": 14,
     # 6. Limits
-    "max_trades_per_day": 2,       # total for the day (both indices together)
+    "max_trades_per_day": 2,       # index trades a day (Nifty + Bank Nifty + Sensex together)
     "max_trades_per_index": 2,
     "last_entry": "15:00",         # no new entry after 3:00 PM
     "exit_time": "15:15",          # open trade squared off at this time
     "skip_expiry_day": True,       # on expiry day use the next expiry's options
     "assumed_delta": 0.5,          # for option SL/TP when the live delta is not available
+    "fresh_minutes": 20,           # live: a signal older than this is never sent (no stale alerts)
 }
 
 UPSTOX_BASE = "https://api.upstox.com"
