@@ -12,8 +12,15 @@ import plotly.graph_objects as go
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 
+import importlib
+
 from raking import analysis, config, store
-from raking.config import STRATEGY as S
+
+# The cloud host keeps imported modules in memory between code updates; reload them so
+# a new app.py never runs against an old copy of the raking package.
+for _m in (config, store, analysis):
+    importlib.reload(_m)
+from raking.config import STRATEGY as S  # noqa: E402
 
 st.set_page_config(page_title=config.APP_NAME, page_icon="📈", layout="wide", initial_sidebar_state="collapsed")
 st_autorefresh(interval=60_000, key="auto")
