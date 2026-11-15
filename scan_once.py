@@ -7,6 +7,7 @@
 
 Run by hand:  python scan_once.py        (python scan_once.py demo -> demo data, no alerts)
 """
+import base64
 import json
 import sys
 
@@ -42,6 +43,28 @@ def eod_text(saved: dict, today: str) -> str:
     return "\n".join(lines)
 
 
+def token_days_left() -> int | None:
+    """Days until the Upstox token expires (read from the token itself, nothing is sent anywhere)."""
+    try:
+        part = config.upstox_token().split(".")[1]
+        exp = json.loads(base64.urlsafe_b64decode(part + "=" * (-len(part) % 4))).get("exp")
+        return int((exp - pd.Timestamp.now(tz="UTC").timestamp()) // 86400) if exp else None
+    except (IndexError, ValueError, TypeError):
+        return None
+
+
+def week_text(saved: dict, today: str) -> str:
+    start = str((pd.Timestamp(today) - pd.Timedelta(days=6)).date())
+    week = [s for s in saved.values() if start <= s["day"] <= today]
+    done = [s for s in week if s.get("result") in ("TP", "SL", "TIME")]
+    lines = [f"🗓️ <b>{config.APP_NAME}</b> — weekly report ({start} to {today})",
+             f"Signals: {len(week)} · closed: {len(done)}"]
+    if done:
+        r = pd.Series([float(s["r"]) for s in done])
+        lines.append(f"Win rate {(r > 0).mean() * 100:.0f}% · total {r.sum():.2f} R · best {r.max():.2f} R · worst {r.min():.2f} R")
+    return "\n".join(lines)
+
+
 def main() -> None:
     is_demo = len(sys.argv) > 1 and sys.argv[1] == "demo"
     now = pd.Timestamp.now(tz=config.TZ)
@@ -71,6 +94,13 @@ def main() -> None:
     saved = store.load(store.DEMO_STORE if is_demo else None)
     if weekday and not is_demo and (now.hour, now.minute) > (15, 30) and not st["eod_sent"]:
         notify.send(eod_text(saved, today))
+        if now.weekday() == 4:   # Friday: weekly report
+            notify.send(week_text(saved, today))
+        days = token_days_left()
+        if days is not None and days <= 15:
+            notify.send(f"🔑 <b>{config.APP_NAME}</b>: your Upstox token expires in {days} day(s). "
+                        "Generate a new Analytics Token on the Upstox Developer Apps page and update the "
+                        "UPSTOX_ANALYTICS_TOKEN secret on GitHub.")
         st["eod_sent"] = True
 
     status = "🟢 Market open" if live.market_open() else "⚪ Market closed"
