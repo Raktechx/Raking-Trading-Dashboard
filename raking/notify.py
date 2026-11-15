@@ -37,13 +37,12 @@ def signal_alert(s: dict) -> bool:
              f"📌 <b>{s['option']}</b> (expiry {s.get('expiry')})"]
     if s.get("opt_entry"):
         lines.append(f"Premium: entry ₹{s['opt_entry']} | SL ₹{s.get('opt_sl')} | target ₹{s.get('opt_tp')}")
-    lines += [f"Future: entry {s['entry']} | SL {s['sl']} | target {s['tp']} (1:2)",
-              "✅ " + "\n✅ ".join(s["reasons"]),
+    lines += ["✅ " + "\n✅ ".join(s["reasons"]),
               "⚠️ Paper-trading signal. Manage your own risk."]
     return send("\n".join(lines))
 
 
 def result_alert(s: dict) -> bool:
     icon = {"TP": "🎯", "SL": "🛑", "TIME": "⏱️"}.get(s.get("result"), "ℹ️")
-    return send(f"{icon} {config.label(s['index'])} {s['side']} {s.get('option', '')} result: "
-                f"<b>{s['result']}</b> @ {s.get('exit')} ({s.get('exit_time')}) | R = {s.get('r')}")
+    return send(f"{icon} {s.get('option', '')} result: <b>{s['result']}</b> ({s.get('exit_time')}) | "
+                f"premium {s.get('opt_entry')} → {s.get('opt_exit')} | R = {s.get('r')}")
