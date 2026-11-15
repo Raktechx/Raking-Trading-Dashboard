@@ -12,7 +12,9 @@ from __future__ import annotations
 import gzip
 import io
 import json
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date, timedelta
 
 import pandas as pd
@@ -47,14 +49,24 @@ def candles_df(payload: dict) -> pd.DataFrame:
     return df.sort_values("ts").drop_duplicates("ts").reset_index(drop=True)
 
 
+KEEP = ["instrument_key", "segment", "instrument_type", "underlying_symbol", "underlying_key",
+        "underlying_type", "expiry", "strike_price", "lot_size", "trading_symbol"]
+
+
+def skey(x) -> float:
+    """Strike as a dict key (stock strikes can be like 1012.5)."""
+    return round(float(x), 2)
+
+
 class Upstox:
-    min_gap = 0.25   # seconds between calls (stay well inside rate limits)
+    min_gap = 0.06   # seconds between calls (Upstox allows far more; this stays polite)
 
     def __init__(self, token: str | None = None):
         self.token = token or config.upstox_token()
         self.s = requests.Session()
         self._master: dict[str, pd.DataFrame] = {}
         self._last = 0.0
+        self._lock = threading.Lock()
         self._plus: bool | None = None
 
     # ------------------------------------------------------------------ http
@@ -65,10 +77,11 @@ class Upstox:
         headers = {"Accept": "application/json", "Authorization": f"Bearer {self.token}"}
         last = None
         for attempt in range(retries):
-            wait = self.min_gap - (time.time() - self._last)
-            if wait > 0:
-                time.sleep(wait)
-            self._last = time.time()
+            with self._lock:
+                wait = self.min_gap - (time.time() - self._last)
+                if wait > 0:
+                    time.sleep(wait)
+                self._last = time.time()
             try:
                 r = self.s.get(url, headers=headers, params=params, timeout=25)
             except requests.RequestException as e:
@@ -104,9 +117,7 @@ class Upstox:
             r = self.s.get(INSTRUMENT_URL.format(ex=exchange), timeout=90)
             r.raise_for_status()
             rows = json.load(io.TextIOWrapper(gzip.GzipFile(fileobj=io.BytesIO(r.content)), encoding="utf-8"))
-            syms = {c["fut_symbol"] for c in config.INDICES.values()}
-            rows = [x for x in rows if x.get("instrument_type") in ("FUT", "CE", "PE")
-                    and x.get("underlying_symbol") in syms]
+            rows = [{k: x.get(k) for k in KEEP} for x in rows if x.get("instrument_type") in ("FUT", "CE", "PE")]
             cache.write_text(json.dumps(rows), encoding="utf-8")
             for old in config.CACHE_DIR.glob(f"instruments_{exchange}_*.json"):
                 if old != cache:
@@ -117,8 +128,39 @@ class Upstox:
         self._master[exchange] = df
         return df
 
+    def spec(self, idx: str) -> dict:
+        if idx in config.INDICES:
+            return config.INDICES[idx]
+        f = self.master("NSE")
+        row = f[(f["instrument_type"] == "FUT") & (f["underlying_symbol"] == idx)]
+        if row.empty:
+            raise UpstoxError(f"{idx}: not an F&O stock")
+        return config.stock_spec(idx, row["underlying_key"].iloc[0])
+
+    def fno_stock_futures(self, on: date) -> pd.DataFrame:
+        """Near-month future of every NSE F&O stock (one row per stock)."""
+        m = self.master("NSE")
+        f = m[(m["instrument_type"] == "FUT") & (m["segment"] == "NSE_FO")
+              & (m["underlying_type"] == "EQUITY") & (m["expiry_date"] >= on)]
+        return f.sort_values("expiry_date").groupby("underlying_symbol", as_index=False).first()
+
+    def quotes(self, keys: list[str]) -> dict:
+        """Full market quotes, up to 500 instruments per call. Returns {instrument_key: quote}."""
+        out = {}
+        for i in range(0, len(keys), 500):
+            p = self._get("/v2/market-quote/quotes", {"instrument_key": ",".join(keys[i:i + 500])})
+            for v in (p.get("data") or {}).values():
+                if v.get("instrument_token"):
+                    out[v["instrument_token"]] = v
+        return out
+
+    def many(self, fn, items, workers: int = 6) -> list:
+        """Run fn over items in parallel (rate limit still applies)."""
+        with ThreadPoolExecutor(workers) as ex:
+            return list(ex.map(fn, items))
+
     def _listed(self, idx: str, kinds) -> pd.DataFrame:
-        c = config.INDICES[idx]
+        c = self.spec(idx)
         m = self.master(c["master"])
         return m[(m["instrument_type"].isin(kinds)) & (m["underlying_symbol"] == c["fut_symbol"])
                  & (m["segment"] == c["segment"])]
@@ -139,7 +181,7 @@ class Upstox:
     def listed_option_keys(self, idx: str, expiry: date) -> dict:
         o = self._listed(idx, ["CE", "PE"])
         o = o[o["expiry_date"] == expiry]
-        return {(int(round(float(r.strike_price))), r.instrument_type): r.instrument_key for r in o.itertuples()}
+        return {(skey(r.strike_price), r.instrument_type): r.instrument_key for r in o.itertuples()}
 
     # ---------------------------------------------------------------- candles
     def intraday(self, key: str, minutes: int = 5) -> pd.DataFrame:
@@ -181,7 +223,7 @@ class Upstox:
         for r in p.get("data") or []:
             t = r.get("instrument_type")
             if t in ("CE", "PE"):
-                out[(int(round(float(r.get("strike_price", 0)))), t)] = r.get("instrument_key")
+                out[(skey(r.get("strike_price", 0)), t)] = r.get("instrument_key")
         return out
 
     def expired_future_key(self, idx: str, expiry: date) -> str | None:
@@ -205,14 +247,14 @@ class Upstox:
 
     # ----------------------------------------------------------- option chain
     def option_chain(self, idx: str, expiry: date) -> list[dict]:
-        c = config.INDICES[idx]
+        c = self.spec(idx)
         p = self._get("/v2/option/chain", {"instrument_key": c["spot_key"], "expiry_date": f"{expiry:%Y-%m-%d}"})
         return p.get("data") or []
 
 
 def chain_delta(chain: list[dict], strike: int, side: str) -> float | None:
     for r in chain or []:
-        if int(round(float(r.get("strike_price", 0)))) == strike:
+        if skey(r.get("strike_price", 0)) == skey(strike):
             leg = r.get("call_options" if side == "CE" else "put_options") or {}
             d = (leg.get("option_greeks") or {}).get("delta")
             return abs(float(d)) if d else None
