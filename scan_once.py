@@ -71,6 +71,30 @@ def week_text(saved: dict, today: str) -> str:
     return "\n".join(lines)
 
 
+def save_live_state(out, status: str) -> None:
+    """Today's candles, indicators and condition checklist for the online dashboard."""
+    path = config.DATA_DIR / "live_state.json"
+    if out is None:
+        try:
+            st = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            st = {}
+        st["market"] = status
+        st["checked_at"] = pd.Timestamp.now(tz=config.TZ).strftime("%Y-%m-%d %H:%M:%S")
+        path.write_text(json.dumps(st), encoding="utf-8")
+        return
+    charts = {}
+    for k, d in out["charts"].items():
+        c = d[["bar_close", "open", "high", "low", "close", "vwap", "ema_f", "ema_s"]].copy()
+        c["bar_close"] = c["bar_close"].dt.strftime("%Y-%m-%d %H:%M")
+        charts[k] = c.round(2).to_dict("list")
+    st = {"updated": out["time"].strftime("%Y-%m-%d %H:%M:%S"), "market": status,
+          "status": out["status"], "candidates": out.get("candidates", []),
+          "checks": out["checks"], "charts": charts,
+          "checked_at": pd.Timestamp.now(tz=config.TZ).strftime("%Y-%m-%d %H:%M:%S")}
+    path.write_text(json.dumps(st, default=str), encoding="utf-8")
+
+
 def main() -> None:
     is_demo = len(sys.argv) > 1 and sys.argv[1] == "demo"
     now = pd.Timestamp.now(tz=config.TZ)
@@ -112,6 +136,7 @@ def main() -> None:
     status = "🟢 Market open" if live.market_open() else "⚪ Market closed"
     if not is_demo:
         site.build(out, saved, status)
+        save_live_state(out, status)
         STATE.write_text(json.dumps(st, indent=2), encoding="utf-8")
 
 
