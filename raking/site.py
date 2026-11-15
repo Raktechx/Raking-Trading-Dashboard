@@ -77,6 +77,16 @@ def build(out: dict | None, saved: dict, market_status: str) -> Path:
             md_today.append(f"| {s['signal_time']} | **BUY {s['option']}** | {s.get('opt_entry') or '-'} | "
                             f"{s.get('opt_sl') or '-'} | {s.get('opt_tp') or '-'} | {s['entry']} / {s['sl']} / {s['tp']} "
                             f"| {s.get('result')} |")
+    stock_sigs = [x for x in store.today_signals(saved, today) if x["index"] not in config.INDICES]
+    inner = "".join(_card(x) for x in reversed(stock_sigs)) or \
+        "<div class='card'><div class='muted'>No stock option signal yet today.</div></div>"
+    cand = ", ".join((out or {}).get("candidates") or []) or "—"
+    cols += (f"<div class='col'><h2>Stock options</h2><div class='muted'>Being checked now: {html.escape(cand)}</div>"
+             f"{inner}</div>")
+    for s in stock_sigs:
+        md_today.append(f"| {s['signal_time']} | **BUY {s['option']}** | {s.get('opt_entry') or '-'} | "
+                        f"{s.get('opt_sl') or '-'} | {s.get('opt_tp') or '-'} | {s['entry']} / {s['sl']} / {s['tp']} "
+                        f"| {s.get('result')} |")
     recent = sorted(saved.values(), key=lambda s: (s["day"], s["signal_time"]), reverse=True)[:40]
     rows = "".join(
         f"<tr><td>{s['day']}</td><td>{s['signal_time']}</td><td>{html.escape(s['option'])}</td>"
@@ -98,14 +108,14 @@ h1{{margin:0;font-size:1.5rem}} h2{{font-size:1.15rem;margin:14px 0 8px}} .upd{{
 ul{{margin:6px 0 0 18px;padding:0;font-size:.85rem}} table{{width:100%;border-collapse:collapse;font-size:.82rem}}
 td,th{{border-bottom:1px solid #222a3a;padding:5px;text-align:left}} .box{{overflow-x:auto}}
 </style></head><body><div class="wrap">
-<header><div><h1>📈 {config.APP_NAME}</h1><div class="muted">Combined Strategy · Nifty 50 · Bank Nifty · 5-min</div></div>
+<header><div><h1>📈 {config.APP_NAME}</h1><div class="muted">Combined Strategy · Nifty 50 · Bank Nifty · Sensex · F&amp;O stocks · 5-min</div></div>
 <div class="upd">Last update<br><b>{upd} IST</b><br>{market_status}</div></header>
 <div class="grid">{cols}</div>
 <h2>Paper trading record</h2><div class="card">{stats}</div>
 <div class="box"><table><tr><th>Day</th><th>Time</th><th>Option</th><th>Premium</th><th>Fut entry</th><th>SL</th>
 <th>Target</th><th>Result</th><th>R</th></tr>{rows}</table></div>
-<p class="muted">Updated about every 5 minutes during market hours by GitHub Actions. Max {S['max_trades_per_day']} trades
-a day, no new entry after {S['last_entry']}. Paper-trading tool — not investment advice.</p>
+<p class="muted">Updated about every 5 minutes during market hours by GitHub Actions. Max {S['max_trades_per_day']} index trades
+and {config.STOCKS['max_trades_per_day']} stock trades a day, no new entry after {S['last_entry']}. Paper-trading tool — not investment advice.</p>
 </div></body></html>"""
     path = DOCS / "index.html"
     path.write_text(page, encoding="utf-8")
