@@ -10,7 +10,7 @@ from . import config
 
 def _creds() -> tuple[str, str]:
     """Clean up pasted values: drop quotes, spaces or a 'bot' prefix around the token."""
-    raw = config.env("TELEGRAM_BOT_TOKEN")
+    raw = re.sub(r"\s+", "", config.env("TELEGRAM_BOT_TOKEN"))
     m = re.search(r"\d{6,12}:[A-Za-z0-9_-]{30,}", raw)
     chat = re.sub(r"[^0-9-]", "", config.env("TELEGRAM_CHAT_ID"))
     return (m.group(0) if m else raw), chat
