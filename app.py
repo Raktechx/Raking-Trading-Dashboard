@@ -46,8 +46,6 @@ today = str(now.date())
 # ------------------------------------------------------------------ header
 h1, h2 = st.columns([3, 1])
 h1.markdown(f"## 📈 {config.APP_NAME}")
-h1.caption("Combined strategy · VWAP + EMA20/50 · ATM option OI · opening-range breakout + volume · "
-           "Nifty 50 · Bank Nifty · Sensex · all F&O stock options")
 h2.markdown(f"<div class='refresh'>Last scan<br><b>{state.get('updated') or state.get('checked_at') or '—'} IST</b>"
             f"<br>{state.get('market', '')}</div>", unsafe_allow_html=True)
 
