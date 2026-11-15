@@ -19,6 +19,10 @@ def main() -> int:
             df = api.historical(c["spot_key"], date.today() - timedelta(days=7), date.today(), 5)
             fut = api.near_future("NIFTY", date.today())
             lines.append(f"✅ Upstox: {len(df)} Nifty 5-min candles from the last 7 days, near future {fut.get('trading_symbol')}")
+            sx = api.near_future("SENSEX", date.today())
+            stocks = api.fno_stock_futures(date.today())
+            q = api.quotes(list(stocks["instrument_key"]))
+            lines.append(f"✅ Sensex future {sx.get('trading_symbol')} | {len(stocks)} F&O stocks | {len(q)} live quotes")
         except Exception as e:  # report every kind of failure
             lines.append(f"❌ Upstox: {e}")
             ok = False
