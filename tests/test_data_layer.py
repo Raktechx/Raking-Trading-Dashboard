@@ -29,6 +29,9 @@ class FakeUpstox:
         return [d.date() for d in pd.date_range(self.today - timedelta(days=70), self.today + timedelta(days=40),
                                                 freq="W-TUE")]
 
+    def spec(self, idx):
+        return config.INDICES["NIFTY"]
+
     def futures(self, idx):
         months = {}
         for e in self._tuesdays():
@@ -45,7 +48,7 @@ class FakeUpstox:
         return [e for e in self._tuesdays() if e >= self.today]
 
     def listed_option_keys(self, idx, e):
-        return {(k, t): f"OPT|{e}|{k}|{t}" for k in range(20000, 32000, 50) for t in ("CE", "PE")}
+        return {(float(k), t): f"OPT|{e}|{k}|{t}" for k in range(20000, 32000, 50) for t in ("CE", "PE")}
 
     expired_option_keys = listed_option_keys
 
@@ -119,7 +122,9 @@ def test_live_day_builds_inputs(monkeypatch):
     api = FakeUpstox(True, today)
     monkeypatch.setattr(pd.Timestamp, "now", classmethod(lambda cls, tz=None: pd.Timestamp(f"{today} 15:40", tz=tz)))
     d = data.live_day(api, "NIFTY", today)
-    assert d is not None and len(d.opts) > 10 and not d.fut.empty
+    assert d is not None and len(d.strikes) > 10 and not d.fut.empty
+    atm = min(d.strikes, key=lambda k: abs(k - float(d.spot["close"].iloc[-1])))
+    assert not d.opts.get((atm, "CE")).empty      # fetched on demand
     assert d.fut["day"].nunique() > 3   # warm-up days for EMA50
 
 
@@ -134,3 +139,22 @@ def test_live_page_builds(tmp_path, monkeypatch):
     text = page.read_text(encoding="utf-8")
     assert "Raking the Trader" in text and "Paper trading record" in text
     assert (tmp_path / "LIVE.md").exists()
+
+
+def test_stock_two_step_scan(tmp_path, monkeypatch):
+    """Stocks: ORB file + one batch quote pick candidates; only they get the full strategy."""
+    from raking import data as dmod
+    today = date(2026, 11, 13)
+    api = FakeUpstox(True, today)
+    monkeypatch.setattr(config, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(pd.Timestamp, "now", classmethod(lambda cls, tz=None: pd.Timestamp(f"{today} 11:00", tz=tz)))
+    futs = pd.DataFrame([{"underlying_symbol": "AAA", "instrument_key": "FUT|A"},
+                         {"underlying_symbol": "BBB", "instrument_key": "FUT|B"}])
+    api.fno_stock_futures = lambda on: futs
+    api.many = lambda fn, items, workers=6: [fn(i) for i in items]
+    orb = dmod.stock_orbs(api, today)
+    assert set(orb) == {"AAA", "BBB"} and (tmp_path / "stock_orb.json").exists()
+    hi_a = orb["AAA"][0]
+    api.quotes = lambda keys: {"FUT|A": {"last_price": hi_a + 5, "average_price": hi_a - 5},
+                               "FUT|B": {"last_price": orb["BBB"][0] - 1, "average_price": 1}}
+    assert dmod.stock_candidates(api, orb, 8) == ["AAA"]
