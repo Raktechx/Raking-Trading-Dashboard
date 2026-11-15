@@ -285,6 +285,33 @@ def simulate(sig: dict, d: IndexDay) -> dict:
             "opt_exit": None, "opt_points": None, "_exit_ts": None}
 
 
+def simulate_option(sig: dict, d: IndexDay) -> dict:
+    """Shadow test of a second exit method, on the option itself: SL = previous option candle low,
+    target = 2 x that risk. Recorded next to the main result so paper trading shows which earns more."""
+    leg = d.opts.get((sig["strike"], sig["side"]))
+    none = {"alt_result": None, "alt_r": None}
+    if leg is None or leg.empty or not sig.get("opt_entry"):
+        return none
+    sig_ts = pd.Timestamp(f"{sig['day']} {sig['signal_time']}").tz_localize(leg["ts"].dt.tz) - bar()
+    prev = leg[leg["ts"] < sig_ts]
+    if prev.empty:
+        return none
+    entry, sl = float(sig["opt_entry"]), float(prev["low"].iloc[-1])
+    risk = entry - sl
+    if risk <= 0:
+        return none
+    tp = entry + S["reward_risk"] * risk
+    xt = _t(S["exit_time"])
+    for _, row in leg[leg["ts"] > sig_ts].iterrows():
+        if row["low"] <= sl:
+            return {"alt_result": "SL", "alt_r": -1.0}
+        if row["high"] >= tp:
+            return {"alt_result": "TP", "alt_r": S["reward_risk"]}
+        if (row["ts"] + bar()).time() >= xt:
+            return {"alt_result": "TIME", "alt_r": round((float(row["close"]) - entry) / risk, 2)}
+    return {"alt_result": "OPEN", "alt_r": None}
+
+
 def day_trades(day, days: dict[str, IndexDay], max_total: int | None = None,
                full_check: bool = True) -> tuple[list[dict], dict]:
     """Run the whole day for all indices in time order, applying the limits.
