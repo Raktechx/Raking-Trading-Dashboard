@@ -1,12 +1,17 @@
 """Telegram check: shows exactly why a Telegram message fails (never prints the token)."""
 import os
+import re
 
 import requests
 
-tok = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
-chat = os.getenv("TELEGRAM_CHAT_ID", "").strip()
-print("Bot token set:", bool(tok), "| length:", len(tok), "| has ':' :", ":" in tok)
-print("Chat id set:", bool(chat), "| digits only:", chat.lstrip("-").isdigit(), "| length:", len(chat))
+raw = os.getenv("TELEGRAM_BOT_TOKEN", "")
+chat = re.sub(r"[^0-9-]", "", os.getenv("TELEGRAM_CHAT_ID", ""))
+m = re.search(r"\d{6,12}:[A-Za-z0-9_-]{30,}", raw)
+tok = m.group(0) if m else raw.strip()
+print("Raw secret length:", len(raw), "| starts with 'bot':", raw.strip().lower().startswith("bot"),
+      "| has quotes:", any(q in raw for q in "\"'"), "| has spaces inside:", " " in raw.strip())
+print("Token pattern found inside:", bool(m), "| cleaned length:", len(tok))
+print("Chat id digits:", len(chat))
 r = requests.get(f"https://api.telegram.org/bot{tok}/getMe", timeout=15)
 j = r.json()
 print("getMe:", r.status_code, j.get("description") or ("bot @" + j.get("result", {}).get("username", "?")))
