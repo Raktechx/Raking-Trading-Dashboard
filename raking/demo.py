@@ -11,7 +11,7 @@ import pandas as pd
 from . import config
 from .strategy import IndexDay, prepare_fut
 
-BASE = {"NIFTY": 25800.0, "BANKNIFTY": 58000.0}
+BASE = {"NIFTY": 25800.0, "BANKNIFTY": 58000.0, "SENSEX": 84500.0}
 
 
 def _seed(idx: str, d: date) -> int:
@@ -104,10 +104,11 @@ def live_day(idx: str, today: date) -> IndexDay | None:
     if upto.date() != today or upto.time() < pd.Timestamp("09:20").time():
         upto = None   # market closed -> show the full demo day
     # demo today: Nifty bullish, Bank Nifty bearish, so both signal types can be seen
-    spots, futs, opts = _series(idx, today - timedelta(days=7), today, upto, 1.0 if idx == "NIFTY" else -1.0)
+    spots, futs, opts = _series(idx, today - timedelta(days=7), today, upto,
+                                {"NIFTY": 1.0, "BANKNIFTY": -1.0}.get(idx, 0.0))
     if today not in spots:
         return None
     fut = prepare_fut(pd.concat(futs, ignore_index=True))
     step = config.INDICES[idx]["step"]
     return IndexDay(idx, step, str(today + timedelta(days=2)), fut, spots[today], opts[today],
-                    f"{idx} FUT (demo)", 75 if idx == "NIFTY" else 35)
+                    f"{idx} FUT (demo)", {"NIFTY": 75, "BANKNIFTY": 35}.get(idx, 20))
