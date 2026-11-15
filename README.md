@@ -1,6 +1,6 @@
 # 📈 Raking the Trader — Combined Strategy
 
-**Instruments:** Nifty 50 and Bank Nifty index options, 5-minute candles.
+**Instruments:** Nifty 50, Bank Nifty and Sensex index options, plus options of **every NSE F&O stock**, 5-minute candles.
 Price, VWAP, EMA and volume come from the near-month **future**, because the index itself has no volume. The ATM strike comes from the spot index.
 
 ## Rules
@@ -15,6 +15,11 @@ Price, VWAP, EMA and volume come from the near-month **future**, because the ind
 
 ### BUY PE
 The mirror image: price below VWAP, EMA20 below EMA50, long build-up in the ATM put plus call writing at ATM and the 2 strikes above, the range low breaks with volume, and the SL is the previous candle's high.
+
+### Stock options (automatic, all F&O stocks)
+Every scan first runs one batch quote for all F&O stock futures and picks the stocks that are past their 9:15–9:30 range on the right side of VWAP (freshest breakouts first, up to 8). Only those get the full check: EMA20/50, volume and option OI. Stock trades have their own limit of 2 a day; the 2-a-day index limit is separate. Stock strikes come from the real option list, so uneven strike gaps are handled.
+
+Note: Sensex futures trade thinly, so its volume check is less reliable than Nifty's and Bank Nifty's.
 
 ### Two extra safety rules
 You can change these in `raking/config.py`:
@@ -58,10 +63,11 @@ The daily access token still works as a fallback.
 
 ## ☁️ Always live: GitHub Actions + Telegram (laptop can stay off)
 Every 5 minutes on weekdays, GitHub Actions:
-- scans Nifty and Bank Nifty from 9:15 to 3:30;
+- scans Nifty, Bank Nifty, Sensex and all F&O stock options from 9:15 to 3:30;
 - sends **Telegram** alerts for new signals and for results (target / SL / time exit);
 - sends a **"scanner running"** message on the first scan of the day, or an **error alert** if the token or data fails (once a day);
-- sends an **end-of-day summary** after 3:30 PM, with your running paper-trading record;
+- sends an **end-of-day summary** after 3:30 PM, with your running paper-trading record, and a **weekly report** every Friday;
+- reminds you **15 days before** the Upstox token expires (renew once a year);
 - rebuilds a **live page**: `LIVE.md` and `docs/index.html`.
 
 ### 1. Telegram bot (free)
