@@ -57,17 +57,11 @@ def update_result(data: dict, k: str, res: dict) -> bool:
 
 
 def write_excel(data: dict, path: Path | None = None) -> Path:
+    """Excel log for analysis: Signals, Summary and breakdowns (instrument, side, hour, weekday, day)."""
+    from .analysis import excel
     path = path or LOG_XLSX
-    rows = []
-    for s in data.values():
-        r = dict(s)
-        r["reasons"] = " | ".join(r.get("reasons", []))
-        rows.append(r)
-    df = pd.DataFrame(rows)
-    if not df.empty:
-        df = df.sort_values(["day", "signal_time"], ascending=[False, False])
     try:
-        df.to_excel(path, index=False)
+        excel(data, path)
     except PermissionError:   # file open in Excel
         pass
     return path
