@@ -6,7 +6,7 @@ import requests
 
 raw = os.getenv("TELEGRAM_BOT_TOKEN", "")
 chat = re.sub(r"[^0-9-]", "", os.getenv("TELEGRAM_CHAT_ID", ""))
-m = re.search(r"\d{6,12}:[A-Za-z0-9_-]{30,}", raw)
+m = re.search(r"\d{6,12}:[A-Za-z0-9_-]{30,}", re.sub(r"\s+", "", raw))
 tok = m.group(0) if m else raw.strip()
 print("Raw secret length:", len(raw), "| starts with 'bot':", raw.strip().lower().startswith("bot"),
       "| has quotes:", any(q in raw for q in "\"'"), "| has spaces inside:", " " in raw.strip())
