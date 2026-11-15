@@ -7,7 +7,7 @@ import pandas as pd
 
 from . import config, data, demo, notify, store
 from .config import STRATEGY as S
-from .strategy import public, r05, simulate
+from .strategy import public, r05, simulate, simulate_option
 from .strategy import day_trades
 from .upstox import Upstox, UpstoxError, chain_delta
 
@@ -75,7 +75,7 @@ def _store_new(trades: list, saved: dict, tday: str, group: str, max_total: int,
             except UpstoxError:
                 pass
         rec["created_at"] = now_ist().strftime("%Y-%m-%d %H:%M:%S")
-        for k in ("result", "exit", "exit_time", "r", "points", "opt_exit", "opt_points"):
+        for k in ("result", "exit", "exit_time", "r", "points", "opt_exit", "opt_points", "alt_result", "alt_r"):
             rec[k] = None   # filled by the result check, never from look-ahead
         rec["result"] = "OPEN"
         if store.add_if_new(saved, rec) and send_alerts:
@@ -144,6 +144,11 @@ def scan(api: Upstox | None = None, send_alerts: bool = True, demo_mode: bool = 
     # ---------------- results of today's open signals, using the FIXED stored numbers
     every = {**days, **stock_days}
     for s in store.today_signals(saved, tday):
+        if s.get("alt_result") in (None, "OPEN") and s["index"] in every:
+            try:
+                s.update(simulate_option(s, every[s["index"]]))
+            except Exception:   # the shadow test must never stop the real scan
+                pass
         if s.get("result") == "OPEN" and s["index"] in every:
             res = simulate(s, every[s["index"]])
             if res["result"] != "OPEN":
