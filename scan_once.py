@@ -1,6 +1,6 @@
 """One scheduled scan (GitHub Actions runs this every 5 minutes on weekdays).
 
- * 09:15-15:30 IST : scan Nifty / Bank Nifty, send Telegram alerts for new signals and results
+ * 09:15-15:30 IST : scan Nifty / Bank Nifty / Sensex / F&O stocks, send Telegram alerts for new signals and results
  * first scan of the day : "scanner running" message (or an error message if the token / data fails)
  * after 15:30 IST : one end-of-day summary
  * every run : rebuilds the live page (docs/index.html and LIVE.md)
@@ -78,12 +78,12 @@ def main() -> None:
         print("Scan time:", out["time"].strftime("%Y-%m-%d %H:%M:%S"))
         for idx, msg in out["status"].items():
             print(f"  {idx}: {msg}")
-            if msg != "OK" and msg not in st["errors_sent"] and not is_demo:
-                notify.send(f"⚠️ <b>{config.APP_NAME}</b> — {config.INDICES[idx]['label']}: {msg}")
+            if not msg.startswith("OK") and msg not in st["errors_sent"] and not is_demo:
+                notify.send(f"⚠️ <b>{config.APP_NAME}</b> — {config.label(idx)}: {msg}")
                 st["errors_sent"].append(msg)
-        if not st["start_sent"] and not is_demo and all(v == "OK" for v in out["status"].values()):
+        if not st["start_sent"] and not is_demo and all(v.startswith("OK") for v in out["status"].values()):
             notify.send(f"✅ <b>{config.APP_NAME}</b> scanner running for {today}. "
-                        f"Watching Nifty 50 and Bank Nifty every 5 minutes.")
+                        f"Watching Nifty 50, Bank Nifty, Sensex and all F&O stock options every 5 minutes.")
             st["start_sent"] = True
         for s in out["today"]:
             print(f"  SIGNAL {s['option']} @ {s['signal_time']}  future entry {s['entry']} SL {s['sl']} "
