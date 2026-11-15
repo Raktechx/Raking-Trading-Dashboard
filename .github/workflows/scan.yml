@@ -2,9 +2,11 @@ name: Raking the Trader - live scan
 
 on:
   schedule:
-    # every 5 minutes, Mon-Fri, 03:00-10:55 UTC = 08:30-16:25 IST
-    # (scans 09:15-15:30 IST, sends the end-of-day summary after 15:30)
-    - cron: "*/5 3-10 * * 1-5"
+    # market hours only (saves GitHub minutes): every 5 min, Mon-Fri,
+    # 09:20-15:45 IST = 03:50-10:15 UTC (end-of-day summary after 15:30)
+    - cron: "50,55 3 * * 1-5"
+    - cron: "*/5 4-9 * * 1-5"
+    - cron: "0-15/5 10 * * 1-5"
   workflow_dispatch: {}
 
 permissions:
