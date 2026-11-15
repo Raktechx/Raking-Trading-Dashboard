@@ -39,7 +39,6 @@ def _card(s: dict) -> str:
     return (f"<div class='card' style='border-left-color:{color}'>"
             f"<div class='big'>BUY {html.escape(s['option'])} <span class='tag'>exp {s.get('expiry')}</span></div>"
             f"<div class='muted'>{s['day']} {s['signal_time']} · numbers fixed · {res}</div>{prem}"
-            f"<div class='muted'>Future: entry {s['entry']} · SL {s['sl']} · target {s['tp']} · risk {s['risk_pts']} pts</div>"
             f"<ul>{reasons}</ul></div>")
 
 
@@ -75,8 +74,7 @@ def build(out: dict | None, saved: dict, market_status: str) -> Path:
         cols += f"<div class='col'><h2>{c['label']}</h2>{note}{inner}</div>"
         for s in sigs:
             md_today.append(f"| {s['signal_time']} | **BUY {s['option']}** | {s.get('opt_entry') or '-'} | "
-                            f"{s.get('opt_sl') or '-'} | {s.get('opt_tp') or '-'} | {s['entry']} / {s['sl']} / {s['tp']} "
-                            f"| {s.get('result')} |")
+                            f"{s.get('opt_sl') or '-'} | {s.get('opt_tp') or '-'} | {s.get('result')} |")
     stock_sigs = [x for x in store.today_signals(saved, today) if x["index"] not in config.INDICES]
     inner = "".join(_card(x) for x in reversed(stock_sigs)) or \
         "<div class='card'><div class='muted'>No stock option signal yet today.</div></div>"
@@ -85,12 +83,12 @@ def build(out: dict | None, saved: dict, market_status: str) -> Path:
              f"{inner}</div>")
     for s in stock_sigs:
         md_today.append(f"| {s['signal_time']} | **BUY {s['option']}** | {s.get('opt_entry') or '-'} | "
-                        f"{s.get('opt_sl') or '-'} | {s.get('opt_tp') or '-'} | {s['entry']} / {s['sl']} / {s['tp']} "
-                        f"| {s.get('result')} |")
+                        f"{s.get('opt_sl') or '-'} | {s.get('opt_tp') or '-'} | {s.get('result')} |")
     recent = sorted(saved.values(), key=lambda s: (s["day"], s["signal_time"]), reverse=True)[:40]
     rows = "".join(
         f"<tr><td>{s['day']}</td><td>{s['signal_time']}</td><td>{html.escape(s['option'])}</td>"
-        f"<td>{s.get('opt_entry') or '-'}</td><td>{s['entry']}</td><td>{s['sl']}</td><td>{s['tp']}</td>"
+        f"<td>{s.get('opt_entry') or '-'}</td><td>{s.get('opt_sl') or '-'}</td><td>{s.get('opt_tp') or '-'}</td>"
+        f"<td>{s.get('opt_exit') or '-'}</td>"
         f"<td>{s.get('result') or ''}</td><td>{s.get('r') if s.get('r') is not None else ''}</td></tr>" for s in recent)
     stats = (f"Signals {st.get('signals', 0)} · closed {st.get('closed', 0)} · win rate {st.get('win_rate', '—')}% · "
              f"total {st.get('total_r', '—')} R · max drawdown {st.get('max_dd', '—')} R · since {st.get('since', '—')}")
@@ -112,8 +110,8 @@ td,th{{border-bottom:1px solid #222a3a;padding:5px;text-align:left}} .box{{overf
 <div class="upd">Last update<br><b>{upd} IST</b><br>{market_status}</div></header>
 <div class="grid">{cols}</div>
 <h2>Paper trading record</h2><div class="card">{stats}</div>
-<div class="box"><table><tr><th>Day</th><th>Time</th><th>Option</th><th>Premium</th><th>Fut entry</th><th>SL</th>
-<th>Target</th><th>Result</th><th>R</th></tr>{rows}</table></div>
+<div class="box"><table><tr><th>Day</th><th>Time</th><th>Option</th><th>Entry</th><th>SL</th>
+<th>Target</th><th>Exit</th><th>Result</th><th>R</th></tr>{rows}</table></div>
 <p class="muted">Updated about every 5 minutes during market hours by GitHub Actions. Max {S['max_trades_per_day']} index trades
 and {config.STOCKS['max_trades_per_day']} stock trades a day, no new entry after {S['last_entry']}. Paper-trading tool — not investment advice.</p>
 </div></body></html>"""
@@ -122,8 +120,8 @@ and {config.STOCKS['max_trades_per_day']} stock trades a day, no new entry after
     md = [f"# 📈 {config.APP_NAME} — Live", "", f"**Last update:** {upd} IST · {market_status}", "",
           "## Today's signals", ""]
     if md_today:
-        md += ["| Time | Signal | Premium entry | Premium SL | Premium target | Future entry / SL / target | Result |",
-               "|---|---|---|---|---|---|---|", *md_today]
+        md += ["| Time | Signal | Premium entry | Premium SL | Premium target | Result |",
+               "|---|---|---|---|---|---|", *md_today]
     else:
         md.append("No signal yet today.")
     md += ["", "## Paper trading record", "", stats, "",
