@@ -1,6 +1,7 @@
 """Builds the per-day inputs (spot, future, option candles) for live scans and backtests."""
 from __future__ import annotations
 
+import json
 import re
 from datetime import date, timedelta
 from typing import Callable
@@ -60,8 +61,27 @@ def _opts_slice(opts_full: dict, day: date) -> dict:
 
 
 # ======================================================================= LIVE
+class LazyOpts(dict):
+    """Option candles fetched only when the strategy actually needs a strike
+    (most scans never reach the OI check, so this keeps each run short)."""
+
+    def __init__(self, api: Upstox, keys: dict, cutoff, mins: int):
+        super().__init__()
+        self.api, self.keys, self.cutoff, self.mins = api, keys, cutoff, mins
+
+    def get(self, k, default=None):
+        if k not in self and k in self.keys:
+            try:
+                o = self.api.intraday(self.keys[k], self.mins)
+                o = o[o["ts"] <= self.cutoff].reset_index(drop=True)
+            except UpstoxError:
+                o = pd.DataFrame(columns=COLS)
+            self[k] = o
+        return super().get(k, default)
+
+
 def live_day(api: Upstox, idx: str, today: date) -> IndexDay | None:
-    c = config.INDICES[idx]
+    c = api.spec(idx)
     mins = S["candle_minutes"]
     cutoff = pd.Timestamp.now(tz=config.TZ) - pd.Timedelta(minutes=mins)   # closed candles only
     spot = api.intraday(c["spot_key"], mins)
@@ -75,18 +95,57 @@ def live_day(api: Upstox, idx: str, today: date) -> IndexDay | None:
     f = f.sort_values("ts").drop_duplicates("ts")
     f = f[f["ts"] <= cutoff].reset_index(drop=True)
     exp = option_expiry_for(today, api.listed_option_expiries(idx))
-    keys = api.listed_option_keys(idx, exp)
-    opts = {}
-    for k in strikes_for(spot, c["step"]):
-        for t in ("CE", "PE"):
-            key = keys.get((k, t))
-            if key:
-                o = api.intraday(key, mins)
-                o = o[o["ts"] <= cutoff]
-                if not o.empty:
-                    opts[(k, t)] = o.reset_index(drop=True)
-    return IndexDay(idx, c["step"], str(exp), prepare_fut(f), spot.reset_index(drop=True), opts,
-                    fut.get("trading_symbol", ""), fut.get("lot_size"))
+    keys = api.listed_option_keys(idx, exp) if exp else {}
+    strikes = sorted({k for k, _ in keys})
+    return IndexDay(idx, c["step"] or 1, str(exp), prepare_fut(f), spot.reset_index(drop=True),
+                    LazyOpts(api, keys, cutoff, mins), fut.get("trading_symbol", ""), fut.get("lot_size"),
+                    strikes=strikes or None)
+
+
+# ---------------------------------------------------------------- stocks
+def stock_orbs(api: Upstox, today: date) -> dict:
+    """9:15-9:30 range of every F&O stock future, worked out once a day and saved."""
+    path = config.DATA_DIR / "stock_orb.json"
+    try:
+        saved = json.loads(path.read_text(encoding="utf-8"))
+        if saved.get("day") == str(today) and saved.get("orb"):
+            return saved["orb"]
+    except (OSError, ValueError):
+        pass
+    futs = api.fno_stock_futures(today)
+    end = pd.Timestamp(f"{today} 09:30", tz=config.TZ)
+
+    def one(row):
+        try:
+            c = api.intraday(row["instrument_key"], S["candle_minutes"])
+        except UpstoxError:
+            return None
+        c = c[c["ts"] < end]
+        if len(c) < S["orb_minutes"] // S["candle_minutes"]:
+            return None
+        return row["underlying_symbol"], [float(c["high"].max()), float(c["low"].min()), row["instrument_key"]]
+
+    orb = dict(x for x in api.many(one, [r for _, r in futs.iterrows()]) if x)
+    if orb:
+        path.write_text(json.dumps({"day": str(today), "orb": orb}), encoding="utf-8")
+    return orb
+
+
+def stock_candidates(api: Upstox, orb: dict, limit: int) -> list[str]:
+    """One batch quote: stocks past their opening range on the matching side of VWAP."""
+    q = api.quotes([v[2] for v in orb.values()])
+    scored = []
+    for sym, (hi, lo, key) in orb.items():
+        x = q.get(key)
+        if not x:
+            continue
+        ltp, vwap = float(x.get("last_price") or 0), float(x.get("average_price") or 0)
+        if ltp > hi and (not vwap or ltp > vwap):
+            scored.append(((ltp - hi) / hi, sym))
+        elif ltp < lo and (not vwap or ltp < vwap):
+            scored.append(((lo - ltp) / lo, sym))
+    # freshest breakouts first: the strategy only enters within 3 candles of the break
+    return [s for _, s in sorted(scored)[:limit]]
 
 
 # =================================================================== BACKTEST
