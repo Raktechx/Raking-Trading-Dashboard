@@ -132,7 +132,7 @@ BT_XLSX = config.DATA_DIR / ("demo_backtest_report.xlsx" if demo_mode else "back
 # ------------------------------------------------------------------ header
 h1, h2 = st.columns([3, 1])
 h1.markdown(f"## 📈 {config.APP_NAME}")
-h1.caption("Combined Strategy · VWAP + EMA20/50 · ATM option OI · Opening-range breakout + volume · Nifty 50 · Bank Nifty")
+h1.caption("Combined Strategy · VWAP + EMA20/50 · ATM option OI · Opening-range breakout + volume · Nifty 50 · Bank Nifty · Sensex · F&O stocks")
 refresh_box = h2.empty()
 
 tab_live, tab_bt, tab_paper, tab_rules = st.tabs(
@@ -159,8 +159,8 @@ with tab_live:
         st.warning("Add your Upstox Analytics Token (or daily access token) in Settings on the left and press Save.")
     if out:
         for k, v in out["status"].items():
-            if v != "OK":
-                st.info(f"{config.INDICES[k]['label']}: {v}")
+            if not v.startswith("OK"):
+                st.info(f"{config.label(k)}: {v}")
     saved = out["signals"] if out else store.load(SPATH)
     today = str(live.now_ist().date())
     cols = st.columns(len(config.INDICES))
@@ -172,6 +172,14 @@ with tab_live:
                 signal_card(s)
             if not any(s.get("result") == "OPEN" for s in sigs):
                 checklist_card("Live checklist", (out or {}).get("checks", {}).get(idx), len(sigs))
+    stock_sigs = [x for x in store.today_signals(saved, today) if x["index"] not in config.INDICES]
+    st.markdown("### Stock options")
+    if stock_sigs:
+        for x in reversed(stock_sigs):
+            signal_card(x)
+    else:
+        st.caption("No stock option signal yet today. All F&O stocks are checked automatically on GitHub "
+                   "(this laptop dashboard checks only the indices).")
     if out:
         for idx in config.INDICES:
             df = out["charts"].get(idx)
@@ -231,7 +239,7 @@ with tab_bt:
         if mode.startswith("DEMO"):
             st.error("These numbers come from simulated demo data — they say nothing about the real market.")
         for _, s in summ.iterrows():
-            name = "Both indices" if s["index"] == "ALL" else config.INDICES[s["index"]]["label"]
+            name = "All indices" if s["index"] == "ALL" else config.label(s["index"])
             st.markdown(f"#### {name} · {int(s['days'] or 0)} days")
             if not s.get("trades"):
                 st.write("No trades.")
