@@ -1,13 +1,15 @@
 # 📈 Raking the Trader — Live
 
-**Last update:** 16 Nov 2026, 14:15:25 IST · 🟢 Market open
+**Last update:** 16 Nov 2026, 14:20:27 IST · 🟢 Market open
 
 ## Today's signals
 
-No signal yet today.
+| Time | Signal | Premium entry | Premium SL | Premium target | Result |
+|---|---|---|---|---|---|
+| 14:05 | **BUY TMPV 260 PE** | 4.45 | 4.05 | 5.2 | OPEN |
 
 ## Paper trading record
 
-Signals 0 · closed 0 · win rate —% · total — R · max drawdown — R · since —
+Signals 1 · closed 0 · win rate —% · total — R · max drawdown — R · since 2026-11-16
 
 _Updated about every 5 minutes during market hours. Full page: `docs/index.html`._
