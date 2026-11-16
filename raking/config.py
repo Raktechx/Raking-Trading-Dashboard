@@ -136,6 +136,11 @@ STRATEGY = {
     "pullback_live": False,        # turned on only after the backtest shows it adds profit
     "pullback_touch_atr": 0.3,     # candle low/high must come within 0.3 ATR of VWAP or EMA20
     "max_blocked_per_index": 3,    # blocked signals logged per instrument per day (to measure the pre-check)
+    # 9. Accuracy upgrades - each one is backtested on its own; switched on only if it adds profit
+    "htf_trend": False,            # also need the 15-min trend (EMA60 > EMA150 on 5-min = 15-min EMA20/50)
+    "breakeven_at_r": 0.0,         # move SL to entry once price is +1R in profit (0 = off)
+    "skip_entry_window": None,     # e.g. ["12:00", "13:30"]: no new entries in the midday chop
+    "max_losses_per_day": 0,       # stop new entries after this many losing trades in a day (0 = off)
 }
 
 UPSTOX_BASE = "https://api.upstox.com"
