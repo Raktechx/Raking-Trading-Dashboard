@@ -176,15 +176,28 @@ def evaluate(d: IndexDay, pos: int, orb, full: bool = True) -> dict:
         inside = [i for i, x in enumerate(day_closes) if not outside(x)]
         return bool(inside) and (len(day_closes) - 1 - inside[-1]) <= w
 
+    prev = d.fut.loc[pos - 1] if pos - 1 in d.fut.index else row
+    tol = S["pullback_touch_atr"] * atr
+    vw, ef = float(row["vwap"]), float(row["ema_f"])
+    earlier = day_closes[:-1]
+
     res = {}
     for side in ("CE", "PE"):
         if side == "CE":
             trend = c > row["vwap"] and row["ema_f"] > row["ema_s"]
             brk = recent_break(lambda x: x > oh)
+            # pullback: range broken before (not fresh), low tagged VWAP/EMA20, bullish close above prev close
+            pb = (S["pullback_enabled"] and not brk and bool(len(earlier)) and (earlier > oh).any()
+                  and min(float(row["low"]), float(prev["low"])) <= max(vw, ef) + tol
+                  and c > float(row["open"]) and c > float(prev["close"]) and c > ef)
         else:
             trend = c < row["vwap"] and row["ema_f"] < row["ema_s"]
             brk = recent_break(lambda x: x < ol)
-        if not full and not (trend and brk and vol_ok):
+            pb = (S["pullback_enabled"] and not brk and bool(len(earlier)) and (earlier < ol).any()
+                  and max(float(row["high"]), float(prev["high"])) >= min(vw, ef) - tol
+                  and c < float(row["open"]) and c < float(prev["close"]) and c < ef)
+        pb = bool(pb)
+        if not full and not (trend and (brk or pb) and vol_ok):
             oi = {"atm": None, "atm_ok": False, "writing_ok": False, "atm_oi_pct": None,
                   "atm_px_pct": None, "writing_oi_pct": None, "writing_strikes": []}
         elif d.skip_oi:
@@ -192,23 +205,33 @@ def evaluate(d: IndexDay, pos: int, orb, full: bool = True) -> dict:
                   "atm_px_pct": None, "writing_oi_pct": None, "writing_strikes": [], "skipped": True}
         else:
             oi = oi_check(d, row["ts"], side)
-        res[side] = {"trend": bool(trend), "breakout": bool(brk), "volume": vol_ok,
+        res[side] = {"trend": bool(trend), "breakout": bool(brk), "pullback": pb, "volume": vol_ok,
                      "atm_buildup": bool(oi["atm_ok"]), "writing": bool(oi["writing_ok"]), "oi": oi}
-        res[side]["all"] = all(res[side][k] for k in ("trend", "breakout", "volume", "atm_buildup", "writing"))
+        base = all(res[side][k] for k in ("trend", "volume", "atm_buildup", "writing"))
+        res[side]["all"] = base and brk
+        res[side]["pb_all"] = base and pb
     res["row"] = row
     res["atr"] = atr
     return res
 
 
 # ------------------------------------------------------------------ trades
-def make_signal(d: IndexDay, pos: int, side: str, ev: dict, orb) -> dict | None:
+def make_signal(d: IndexDay, pos: int, side: str, ev: dict, orb, setup: str = "Breakout") -> dict | None:
     f = d.fut
     row, prev = f.loc[pos], f.loc[pos - 1]
     entry = r05(row["close"])
-    sl = r05(prev["low"] if side == "CE" else prev["high"])
+    if setup == "Pullback":   # SL below / above the pullback low / high (this or previous candle)
+        sl = r05(min(prev["low"], row["low"]) if side == "CE" else max(prev["high"], row["high"]))
+    else:
+        sl = r05(prev["low"] if side == "CE" else prev["high"])
     risk = (entry - sl) if side == "CE" else (sl - entry)
     if risk <= 0 or risk > S["max_risk_atr"] * ev["atr"]:
         return None
+    # never a tiny SL: at least min_risk_atr x ATR and min_risk_pct of the price
+    floor = max(S["min_risk_atr"] * ev["atr"], S["min_risk_pct"] / 100 * entry)
+    if risk < floor:
+        risk = floor
+        sl = r05(entry - risk) if side == "CE" else r05(entry + risk)
     risk = r05(risk)
     tp = r05(entry + S["reward_risk"] * risk) if side == "CE" else r05(entry - S["reward_risk"] * risk)
     oi = ev[side]["oi"]
@@ -226,13 +249,17 @@ def make_signal(d: IndexDay, pos: int, side: str, ev: dict, orb) -> dict | None:
         f"Trend: price {'above' if side == 'CE' else 'below'} VWAP {row['vwap']:.1f}, "
         f"EMA20 {'>' if side == 'CE' else '<'} EMA50",
         *oi_lines,
-        f"Opening range {'high' if side == 'CE' else 'low'} {lvl:.1f} broken, "
-        f"volume {row['volume'] / row['vol_avg']:.1f}x (vs 20-candle avg)",
-        f"SL = previous candle {'low' if side == 'CE' else 'high'}, target 1:{S['reward_risk']:.0f}",
+        (f"Opening range {'high' if side == 'CE' else 'low'} {lvl:.1f} broken, "
+         if setup == "Breakout" else
+         f"Pullback: range {'high' if side == 'CE' else 'low'} {lvl:.1f} broken earlier, price dipped to "
+         f"VWAP/EMA20 and bounced, ")
+        + f"volume {row['volume'] / row['vol_avg']:.1f}x (vs 20-candle avg)",
+        (f"SL = previous candle {'low' if side == 'CE' else 'high'}" if setup == "Breakout" else
+         f"SL = pullback {'low' if side == 'CE' else 'high'}") + f", target 1:{S['reward_risk']:.0f}",
     ]
     sig = {
         "id": f"{row['day']}|{d.idx}|{row['bar_close']:%H:%M}",
-        "index": d.idx, "day": str(row["day"]), "side": side,
+        "index": d.idx, "day": str(row["day"]), "side": side, "setup": setup,
         "signal_time": row["bar_close"].strftime("%H:%M"),
         "future": d.fut_symbol, "entry": entry, "sl": sl, "tp": tp, "risk_pts": risk,
         "strike": strike, "expiry": d.expiry, "option": f"{d.idx} {fmt_strike(strike)} {side}",
@@ -244,10 +271,16 @@ def make_signal(d: IndexDay, pos: int, side: str, ev: dict, orb) -> dict | None:
         "lot_size": d.lot_size, "reasons": reasons, "_pos": int(pos),
     }
     if opt_px:
-        mv = S["assumed_delta"] * risk
-        sig["opt_sl"] = max(r05(opt_px - mv), 0.05)
-        sig["opt_tp"] = r05(opt_px + S["reward_risk"] * mv)
+        if opt_px < S["min_premium"]:
+            return None
+        sig["opt_sl"], sig["opt_tp"] = opt_levels(opt_px, S["assumed_delta"], risk)
     return sig
+
+
+def opt_levels(opt_px: float, delta: float, risk: float) -> tuple[float, float]:
+    """Option SL / target from the underlying risk x delta, never closer than min_opt_sl_pct."""
+    mv = max(delta * risk, S["min_opt_sl_pct"] / 100 * opt_px)
+    return max(r05(opt_px - mv), 0.05), r05(opt_px + S["reward_risk"] * mv)
 
 
 def simulate(sig: dict, d: IndexDay) -> dict:
@@ -313,7 +346,7 @@ def simulate_option(sig: dict, d: IndexDay) -> dict:
 
 
 def day_trades(day, days: dict[str, IndexDay], max_total: int | None = None,
-               full_check: bool = True) -> tuple[list[dict], dict]:
+               full_check: bool = True, pullback: bool = True) -> tuple[list[dict], dict]:
     """Run the whole day for all indices in time order, applying the limits.
     Returns (trades, last evaluation per index for the dashboard checklist)."""
     es, le = _t(S["entry_start"]), _t(S["last_entry"])
@@ -344,9 +377,13 @@ def day_trades(day, days: dict[str, IndexDay], max_total: int | None = None,
             if st["busy"] == "open" or (st["busy"] is not None and ts <= st["busy"]):
                 continue
             for side in ("CE", "PE"):
-                if not ev[side]["all"]:
+                if ev[side]["all"]:
+                    setup = "Breakout"
+                elif pullback and ev[side].get("pb_all"):
+                    setup = "Pullback"
+                else:
                     continue
-                sig = make_signal(days[idx], pos, side, ev, orb)
+                sig = make_signal(days[idx], pos, side, ev, orb, setup)
                 if not sig:
                     continue
                 res = simulate(sig, days[idx])
