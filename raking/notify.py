@@ -46,9 +46,7 @@ def signal_alert(s: dict) -> bool:
     if s.get("opt_entry"):
         lines.append(f"Premium: entry ₹{s['opt_entry']} | SL ₹{s.get('opt_sl')} | target ₹{s.get('opt_tp')}")
     else:
-        lines.append("Premium: not available yet - use the stock levels below")
-    if s.get("group") == "STOCK" and s.get("entry"):
-        lines.append(f"📈 Stock future price: entry ₹{s['entry']} | SL ₹{s.get('sl')} | target ₹{s.get('tp')}")
+        lines.append("Premium: not available yet - check the option price in your broker app before entering")
     if s.get("grade"):
         n = s.get("score_notes") or {}
         lines.append(f"⭐ Quality: <b>Grade {s['grade']} · {s['score']}/100</b>")
