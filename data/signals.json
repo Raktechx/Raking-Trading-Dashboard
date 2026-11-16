@@ -135,5 +135,75 @@
     "created_at": "2026-11-16 14:20:27",
     "alt_result": "SL",
     "alt_r": -1.0
+  },
+  "2026-11-16|ADANIENSOL|14:40": {
+    "id": "2026-11-16|ADANIENSOL|14:40",
+    "index": "ADANIENSOL",
+    "day": "2026-11-16",
+    "side": "CE",
+    "signal_time": "14:40",
+    "future": "ADANIENSOL FUT 23 NOV 26",
+    "entry": 1442.1,
+    "sl": 1442.0,
+    "tp": 1442.3,
+    "risk_pts": 0.1,
+    "strike": 1440.0,
+    "expiry": "2026-11-23",
+    "option": "ADANIENSOL 1440 CE",
+    "opt_entry": 27.4,
+    "opt_sl": 27.35,
+    "opt_tp": 27.5,
+    "orb_high": 1440.9,
+    "orb_low": 1415.5,
+    "vwap": 1429.8,
+    "volume_x": 1.71,
+    "atm_oi_pct": 1.87,
+    "writing_oi_pct": 1.01,
+    "lot_size": 675,
+    "reasons": [
+      "Trend: price above VWAP 1429.8, EMA20 > EMA50",
+      "ATM 1440 CE long build-up: premium +8.5%, OI +1.9%",
+      "Put writing (1440, 1420, 1400): OI +1.0%",
+      "Opening range high 1440.9 broken, volume 1.7x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "SL",
+    "exit": 1442.0,
+    "exit_time": "14:45",
+    "r": -1.0,
+    "points": -0.1,
+    "opt_exit": 27.0,
+    "opt_points": -0.4,
+    "group": "STOCK",
+    "delta": 0.52,
+    "score": 55,
+    "grade": "B",
+    "score_parts": {
+      "Trend strength": 7.5,
+      "Breakout candle": 3.3,
+      "Volume": 4.7,
+      "OI build-up": 4.3,
+      "PCR": 5.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 0.0
+    },
+    "score_notes": {
+      "plus": [
+        "no big OI wall before target (next at 1520)",
+        "premium fairly priced (IV 32.2)"
+      ],
+      "minus": [
+        "price stretched 3.8 ATR from VWAP",
+        "weak breakout candle (small body / long wick)",
+        "OI build-up only marginal"
+      ]
+    },
+    "created_at": "2026-11-16 14:50:29",
+    "blocked": true,
+    "block_reason": "grade B (55/100): price stretched 3.8 ATR from VWAP; weak breakout candle (small body / long wick); OI build-up only marginal",
+    "alt_result": "SL",
+    "alt_r": -1.0
   }
 }
