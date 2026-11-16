@@ -1,16 +1,18 @@
 name: Raking the Trader - live scan
 
+# One run stays alive for the whole market day and scans every 5 minutes, so the bot
+# does not depend on GitHub's 5-minute timer. The timers below only START the day's run;
+# extra starts simply wait in the queue and exit at once.
 on:
   schedule:
-    # market hours only (saves GitHub minutes): every 5 min, Mon-Fri, (schedule refreshed 16 Nov)
-    # 09:20-15:45 IST = 03:50-10:15 UTC (end-of-day summary after 15:30)
-    - cron: "50,55 3 * * 1-5"
-    - cron: "*/5 4-9 * * 1-5"
-    - cron: "0-15/5 10 * * 1-5"
+    - cron: "40 3 * * 1-5"        # 09:10 IST - main start
+    - cron: "10 4 * * 1-5"        # 09:40 IST - backup start
+    - cron: "0 5-9 * * 1-5"       # hourly backup starts
   workflow_dispatch: {}
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: raking-scan
@@ -19,7 +21,7 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 355
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -35,19 +37,37 @@ jobs:
         with:
           path: data/cache/instruments_*.json
           key: instruments-${{ steps.day.outputs.day }}
-      - name: Scan Nifty / Bank Nifty / Sensex / F&O stocks, send Telegram alerts, rebuild live page
+      - name: Scan every 5 minutes until 15:45 IST, send Telegram alerts, save log and live page
         env:
           UPSTOX_ANALYTICS_TOKEN: ${{ secrets.UPSTOX_ANALYTICS_TOKEN }}
           UPSTOX_ACCESS_TOKEN: ${{ secrets.UPSTOX_ACCESS_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python scan_once.py
-      - name: Save signals, log and live page back to the repo
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "raking-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add -A data docs LIVE.md
-          if ! git diff --cached --quiet; then
-            git commit -m "live update"
-            git pull --rebase && git push
-          fi
+          start=$(date +%s)
+          while true; do
+            dow=$(TZ=Asia/Kolkata date +%u)
+            hm=$(TZ=Asia/Kolkata date +%H%M)
+            if [ "$dow" -gt 5 ] || [ "$((10#$hm))" -gt 1545 ]; then
+              echo "Market day over - stopping."
+              break
+            fi
+            if [ "$((10#$hm))" -lt 915 ]; then
+              sleep 30
+              continue
+            fi
+            python scan_once.py || echo "Scan failed - trying again next cycle."
+            git add -A data docs LIVE.md
+            if ! git diff --cached --quiet; then
+              git commit -q -m "live update"
+              git pull -q --rebase && git push -q || echo "Push failed - will retry next cycle."
+            fi
+            if [ $(( $(date +%s) - start )) -gt 19800 ]; then
+              gh workflow run scan.yml --ref main && echo "Handed over to a fresh run."
+              break
+            fi
+            sleep $(( 300 - $(date +%s) % 300 ))
+          done
