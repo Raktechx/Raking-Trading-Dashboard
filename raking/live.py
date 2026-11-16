@@ -7,9 +7,9 @@ import pandas as pd
 
 from . import config, data, demo, notify, quality, store
 from .config import STRATEGY as S
-from .strategy import public, r05, simulate, simulate_option
+from .strategy import opt_levels, public, r05, simulate, simulate_option
 from .strategy import day_trades
-from .upstox import Upstox, UpstoxError, chain_delta
+from .upstox import Upstox, UpstoxError, chain_delta, skey
 
 
 def now_ist() -> datetime:
@@ -34,7 +34,8 @@ def _checklist(ev: dict | None) -> dict | None:
         e = ev[side]
         out[side] = {"Trend (VWAP + EMA20/50)": e["trend"], "ATM long build-up": e["atm_buildup"],
                      ("Put" if side == "CE" else "Call") + " writing": e["writing"],
-                     "Range " + ("high" if side == "CE" else "low") + " break": e["breakout"],
+                     "Range " + ("high" if side == "CE" else "low") + " break" + (" / pullback" if S["pullback_live"] else ""):
+                         e["breakout"] or (S["pullback_live"] and e.get("pullback", False)),
                      "Volume > 20-candle avg": e["volume"]}
         out[side + "_atm"] = e["oi"].get("atm")
     return out
@@ -75,10 +76,15 @@ def _store_new(trades: list, saved: dict, tday: str, group: str, max_total: int,
             try:   # use the live delta for the option SL / target
                 dl = chain_delta(chain, rec["strike"], rec["side"])
                 if dl:
-                    mv = min(max(dl, 0.2), 0.9) * rec["risk_pts"]
-                    rec["opt_sl"] = max(r05(rec["opt_entry"] - mv), 0.05)
-                    rec["opt_tp"] = r05(rec["opt_entry"] + S["reward_risk"] * mv)
+                    rec["opt_sl"], rec["opt_tp"] = opt_levels(rec["opt_entry"], min(max(dl, 0.2), 0.9),
+                                                              rec["risk_pts"])
                     rec["delta"] = round(dl, 2)
+            except Exception:
+                pass
+        if not demo_mode:
+            try:   # option instrument key, so exits can be checked every minute on the live premium
+                rec["opt_key"] = api.listed_option_keys(
+                    t["index"], pd.Timestamp(rec["expiry"]).date()).get((skey(rec["strike"]), rec["side"]))
             except Exception:
                 pass
         try:   # quality score (pre-check below)
@@ -136,13 +142,13 @@ def scan(api: Upstox | None = None, send_alerts: bool = True, demo_mode: bool = 
     checks = {}
     ctx = {"market": {k: quality.bias(d) for k, d in days.items()}}
     if days:
-        trades, evs = day_trades(today, days, S["max_trades_per_day"])
+        trades, evs = day_trades(today, days, S["max_trades_per_day"], pullback=S["pullback_live"])
         checks = {k: _checklist(v) for k, v in evs.items()}
         _store_new(trades, saved, tday, "INDEX", S["max_trades_per_day"], api, demo_mode, send_alerts,
                    days, ctx)
 
     # ---------------- stock options (two-step, all F&O stocks)
-    stock_days, cands = {}, []
+    stock_days, cands, top = {}, [], []
     open_stocks = [s["index"] for s in store.today_signals(saved, tday)
                    if _group(s) == "STOCK" and s.get("result") == "OPEN"]
     if config.STOCKS["enabled"] and not demo_mode:
@@ -150,7 +156,8 @@ def scan(api: Upstox | None = None, send_alerts: bool = True, demo_mode: bool = 
             now = now_ist()
             if (now.hour, now.minute) >= (9, 35):
                 orb = data.stock_orbs(api, today)
-                cands = data.stock_candidates(api, orb, config.STOCKS["max_candidates_per_scan"])
+                top = data.stock_candidates(api, orb, config.STOCKS["max_candidates_per_scan"])
+                cands = [r["symbol"] for r in top]
             for sym in dict.fromkeys(cands + open_stocks):
                 _load(api, sym, today, demo_mode, status, stock_days)
             status["STOCKS"] = f"OK ({len(cands)} candidates: {', '.join(cands) or '-'})"
@@ -162,7 +169,8 @@ def scan(api: Upstox | None = None, send_alerts: bool = True, demo_mode: bool = 
             if sym not in config.INDICES and sym != "STOCKS":
                 status.pop(sym)
         if stock_days:
-            st_trades, _ = day_trades(today, stock_days, config.STOCKS["max_trades_per_day"], full_check=False)
+            st_trades, _ = day_trades(today, stock_days, config.STOCKS["max_trades_per_day"], full_check=False,
+                                      pullback=S["pullback_live"])
             _store_new(st_trades, saved, tday, "STOCK", config.STOCKS["max_trades_per_day"], api, demo_mode,
                        send_alerts, stock_days, ctx)
 
@@ -178,10 +186,63 @@ def scan(api: Upstox | None = None, send_alerts: bool = True, demo_mode: bool = 
             res = simulate(s, every[s["index"]])
             if res["result"] != "OPEN":
                 res.pop("_exit_ts", None)
+                res["exit_by"] = "5-min candle"
                 s.update(res)
                 if send_alerts and not s.get("blocked"):
                     notify.result_alert(s)
     store.save(saved, spath)
     store.write_excel(saved, xpath)
     return {"signals": saved, "today": store.today_signals(saved, tday), "status": status,
-            "charts": charts, "checks": checks, "time": now_ist(), "candidates": cands}
+            "charts": charts, "checks": checks, "time": now_ist(), "candidates": cands, "top_stocks": top}
+
+
+def check_exit(s: dict, ltp: float | None, hhmm: str) -> dict | None:
+    """Live-premium exit: premium at/above the option target -> TP, at/below the option SL -> SL."""
+    if ltp is None or s.get("result") != "OPEN" or not s.get("opt_entry"):
+        return None
+    if s.get("opt_tp") and ltp >= s["opt_tp"]:
+        res, r = "TP", float(S["reward_risk"])
+    elif s.get("opt_sl") and ltp <= s["opt_sl"]:
+        res, r = "SL", -1.0
+    else:
+        return None
+    return {"result": res, "exit": None, "exit_time": hhmm, "r": r,
+            "points": round(r * s["risk_pts"], 2) if s.get("risk_pts") else None,
+            "opt_exit": r05(ltp), "opt_points": round(ltp - s["opt_entry"], 2), "exit_by": "live premium"}
+
+
+def fast_exits(api: Upstox | None = None, send_alerts: bool = True) -> list[dict]:
+    """Every-minute check between the 5-minute scans: has an open trade hit its option target / SL?"""
+    now = now_ist()
+    if not market_open(now) or (now.hour, now.minute) >= tuple(map(int, S["exit_time"].split(":"))):
+        return []   # the 15:15 time exit stays with the 5-minute scan
+    saved = store.load()
+    tday = str(now.date())
+    open_ = [s for s in store.today_signals(saved, tday, include_blocked=True)
+             if s.get("result") == "OPEN" and s.get("opt_entry") and (s.get("opt_sl") or s.get("opt_tp"))]
+    if not open_:
+        return []
+    api = api or Upstox()
+    for s in open_:
+        if not s.get("opt_key"):
+            try:
+                s["opt_key"] = api.listed_option_keys(
+                    s["index"], pd.Timestamp(s["expiry"]).date()).get((skey(s["strike"]), s["side"]))
+            except Exception:
+                pass
+    keys = [s["opt_key"] for s in open_ if s.get("opt_key")]
+    q = api.quotes(keys) if keys else {}
+    hhmm = now.strftime("%H:%M")
+    closed = []
+    for s in open_:
+        ltp = (q.get(s.get("opt_key")) or {}).get("last_price")
+        res = check_exit(s, float(ltp) if ltp else None, hhmm)
+        if res:
+            s.update(res)
+            closed.append(s)
+            if send_alerts and not s.get("blocked"):
+                notify.result_alert(s)
+    store.save(saved)
+    if closed:
+        store.write_excel(saved)
+    return closed
