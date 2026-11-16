@@ -82,6 +82,49 @@ def compare(base: pd.DataFrame, with_pb: pd.DataFrame, n_days: int) -> pd.DataFr
     return pd.DataFrame(rows).reindex(columns=cols)
 
 
+VARIANTS = {
+    "Base (current rules)": {},
+    "+ 15-min trend filter": {"htf_trend": True},
+    "+ breakeven at +1R": {"breakeven_at_r": 1.0},
+    "+ skip 12:00-13:30": {"skip_entry_window": ["12:00", "13:30"]},
+    "+ stop after 2 losses": {"max_losses_per_day": 2},
+}
+
+
+def variants(days_by_index: dict, n_days: int) -> pd.DataFrame:
+    """Each accuracy upgrade tested alone against the same data, then all winners together."""
+    from .config import STRATEGY
+    keep = {k: STRATEGY[k] for v in VARIANTS.values() for k in v}
+    rows, base, winners = [], None, {}
+    try:
+        for name, ov in VARIANTS.items():
+            STRATEGY.update(keep)
+            STRATEGY.update(ov)
+            s = stats(run(days_by_index), n_days)
+            s["variant"] = name
+            rows.append(s)
+            if base is None:
+                base = s
+            elif s.get("trades") and _better(s, base):
+                winners.update(ov)
+        STRATEGY.update(keep)
+        STRATEGY.update(winners)
+        s = stats(run(days_by_index), n_days)
+        s["variant"] = "ALL WINNERS: " + (", ".join(f"{k}={v}" for k, v in winners.items()) or "none")
+        rows.append(s)
+    finally:
+        STRATEGY.update(keep)
+    cols = ["variant"] + [c for c in rows[0] if c != "variant"]
+    return pd.DataFrame(rows).reindex(columns=cols)
+
+
+def _better(s: dict, base: dict) -> bool:
+    """Better = more total R AND a profit factor at least as good AND no deeper drawdown."""
+    pf, bpf = s.get("profit_factor") or 0, base.get("profit_factor") or 0
+    return (s.get("total_r", 0) > base.get("total_r", 0) and pf >= bpf
+            and s.get("max_drawdown_r", 0) >= base.get("max_drawdown_r", 0) - 0.5)
+
+
 def monthly(t: pd.DataFrame) -> pd.DataFrame:
     if t.empty:
         return t
@@ -91,7 +134,7 @@ def monthly(t: pd.DataFrame) -> pd.DataFrame:
 
 
 def save_excel(t: pd.DataFrame, summ: pd.DataFrame, path: Path, mode: str,
-               comp: pd.DataFrame | None = None) -> Path:
+               comp: pd.DataFrame | None = None, var: pd.DataFrame | None = None) -> Path:
     with pd.ExcelWriter(path, engine="openpyxl") as xw:
         pd.DataFrame({"item": ["Mode", "Generated", "Cost per trade", "Note"],
                       "value": [mode, f"{pd.Timestamp.now(tz=config.TZ):%Y-%m-%d %H:%M}", f"{COST_R} R",
@@ -99,6 +142,8 @@ def save_excel(t: pd.DataFrame, summ: pd.DataFrame, path: Path, mode: str,
         summ.to_excel(xw, sheet_name="Summary", index=False)
         if comp is not None and not comp.empty:
             comp.to_excel(xw, sheet_name="Pullback test", index=False)
+        if var is not None and not var.empty:
+            var.to_excel(xw, sheet_name="Upgrade tests", index=False)
         monthly(t).to_excel(xw, sheet_name="Monthly", index=False)
         (t if not t.empty else pd.DataFrame({"info": ["No trades"]})).to_excel(xw, sheet_name="Trades", index=False)
     return path
