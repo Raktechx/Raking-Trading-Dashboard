@@ -11,13 +11,13 @@ from .strategy import day_trades, public
 COST_R = 0.10   # brokerage + slippage per trade, in R (conservative)
 
 
-def run(days_by_index: dict[str, dict]) -> pd.DataFrame:
+def run(days_by_index: dict[str, dict], pullback: bool = False) -> pd.DataFrame:
     """days_by_index = {idx: {date: IndexDay}} -> one row per trade."""
     all_days = sorted({d for m in days_by_index.values() for d in m})
     rows = []
     for day in all_days:
         todays = {idx: m[day] for idx, m in days_by_index.items() if day in m}
-        trades, _ = day_trades(day, todays)
+        trades, _ = day_trades(day, todays, pullback=pullback)
         for t in trades:
             if t["result"] == "OPEN":
                 continue
@@ -69,6 +69,19 @@ def summary(t: pd.DataFrame, days_by_index: dict[str, dict]) -> pd.DataFrame:
     return pd.DataFrame(rows).reindex(columns=cols)
 
 
+def compare(base: pd.DataFrame, with_pb: pd.DataFrame, n_days: int) -> pd.DataFrame:
+    """Current system (breakout only) vs the same system with the pullback setup added."""
+    parts = [("Current: breakout only", base), ("Upgraded: breakout + pullback", with_pb),
+             ("  of which pullback trades", with_pb[with_pb["setup"] == "Pullback"] if not with_pb.empty else with_pb)]
+    rows = []
+    for name, part in parts:
+        s = stats(part, n_days)
+        s["system"] = name
+        rows.append(s)
+    cols = ["system"] + [c for c in rows[0] if c != "system"]
+    return pd.DataFrame(rows).reindex(columns=cols)
+
+
 def monthly(t: pd.DataFrame) -> pd.DataFrame:
     if t.empty:
         return t
@@ -77,12 +90,15 @@ def monthly(t: pd.DataFrame) -> pd.DataFrame:
                          "total_r": g.sum().round(2)}).reset_index()
 
 
-def save_excel(t: pd.DataFrame, summ: pd.DataFrame, path: Path, mode: str) -> Path:
+def save_excel(t: pd.DataFrame, summ: pd.DataFrame, path: Path, mode: str,
+               comp: pd.DataFrame | None = None) -> Path:
     with pd.ExcelWriter(path, engine="openpyxl") as xw:
         pd.DataFrame({"item": ["Mode", "Generated", "Cost per trade", "Note"],
                       "value": [mode, f"{pd.Timestamp.now(tz=config.TZ):%Y-%m-%d %H:%M}", f"{COST_R} R",
                                 "If SL and target were both touched in the same candle, SL is assumed"]}).to_excel(xw, sheet_name="Info", index=False)
         summ.to_excel(xw, sheet_name="Summary", index=False)
+        if comp is not None and not comp.empty:
+            comp.to_excel(xw, sheet_name="Pullback test", index=False)
         monthly(t).to_excel(xw, sheet_name="Monthly", index=False)
         (t if not t.empty else pd.DataFrame({"info": ["No trades"]})).to_excel(xw, sheet_name="Trades", index=False)
     return path
