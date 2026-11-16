@@ -70,9 +70,11 @@ def signal_card(s: dict) -> None:
             "".join(f"<div class='muted'>➖ {x}</div>" for x in n.get("minus", []))
         qline = (f"<div style='margin-top:6px'><span class='ts' style='border:1px solid {col};color:{col}'>"
                  f"Grade {s['grade']} · {s['score']}/100</span>{notes}</div>")
+    pb_tag = "<span class='tag'>↩️ Pullback</span>" if s.get("setup") == "Pullback" else ""
     exit_txt = f" · exit ₹{s['opt_exit']} at {s.get('exit_time')}" if s.get("opt_exit") else ""
     st.markdown(
-        f"<div class='card {cls}'><div class='big'>BUY {s['option']}<span class='tag'>exp {s.get('expiry')}</span></div>"
+        f"<div class='card {cls}'><div class='big'>BUY {s['option']}<span class='tag'>exp {s.get('expiry')}</span>"
+        f"{pb_tag}</div>"
         f"<div style='margin-top:6px'><span class='ts'>⏰ {s['day']} {s['signal_time']}</span> "
         f"<span class='muted'>alert sent {str(s.get('created_at') or '')[11:19]} · {badge}{exit_txt}</span></div>"
         f"{qline}"
@@ -146,7 +148,17 @@ with tab_live:
                 checklist("Live checklist", (state.get("checks") or {}).get(idx))
 
     st.markdown("### Stock options")
-    st.caption("Being checked now: " + (", ".join(state.get("candidates") or []) or "—"))
+    top = state.get("top_stocks") or []
+    if top:
+        st.caption(f"Top {len(top)} F&O stocks right now (ranked by strength, refreshed every 5 minutes) "
+                   "- each one gets the full signal check:")
+        st.dataframe(pd.DataFrame([{
+            "#": i + 1, "Stock": r["symbol"], "Side": "CE (up)" if r["side"] == "CE" else "PE (down)",
+            "Price": r["ltp"], "Day %": r["day_pct"], "Past range %": r["break_pct"],
+            "From VWAP %": r["vwap_gap_pct"], "Strength": r["strength"]} for i, r in enumerate(top)]),
+            hide_index=True, use_container_width=True)
+    else:
+        st.caption("Being checked now: " + (", ".join(state.get("candidates") or []) or "—"))
     stock_sigs = [s for s in todays if s["index"] not in config.INDICES]
     for s in reversed(stock_sigs):
         signal_card(s)
@@ -226,6 +238,9 @@ with tab_rules:
 put writing at ATM and 2 strikes below · after 9:30 the 9:15–9:30 high breaks with volume above the 20-candle average ·
 SL previous candle low · target 1:2.
 **BUY PE:** the mirror image.
+
+**SL size:** never tighter than {S['min_risk_atr']} ATR or {S['min_risk_pct']}% of the price, and the option SL is at
+least {S['min_opt_sl_pct']:.0f}% below the entry premium (target = 2× that). Options under ₹{S['min_premium']:.0f} are skipped.
 
 **Limits:** {S['max_trades_per_day']} index trades and {config.STOCKS['max_trades_per_day']} stock trades a day ·
 no new entry after {S['last_entry']} · open trades closed at {S['exit_time']} · alerts never older than
