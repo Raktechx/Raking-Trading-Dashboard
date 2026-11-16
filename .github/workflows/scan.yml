@@ -69,5 +69,12 @@ jobs:
               gh workflow run scan.yml --ref main && echo "Handed over to a fresh run."
               break
             fi
-            sleep $(( 300 - $(date +%s) % 300 ))
+            next=$(( ($(date +%s) / 300 + 1) * 300 ))
+            while [ $(( next - $(date +%s) )) -gt 45 ]; do
+              sleep $(( 60 - $(date +%s) % 60 ))
+              python scan_once.py exits || echo "Exit check failed."
+              git add -A data
+              if ! git diff --cached --quiet; then git commit -q -m "exit update"; git pull -q --rebase && git push -q || echo "Push failed."; fi
+            done
+            wait_s=$(( next - $(date +%s) )); if [ "$wait_s" -gt 0 ]; then sleep "$wait_s"; fi
           done
