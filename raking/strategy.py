@@ -51,6 +51,8 @@ def prepare_fut(df: pd.DataFrame) -> pd.DataFrame:
     d["vwap"] = ((tp * vol).groupby(d["day"]).cumsum() / cum_v.replace(0, np.nan)).fillna(tp)
     d["ema_f"] = d["close"].ewm(span=S["ema_fast"], adjust=False).mean()
     d["ema_s"] = d["close"].ewm(span=S["ema_slow"], adjust=False).mean()
+    d["ema_hf"] = d["close"].ewm(span=3 * S["ema_fast"], adjust=False).mean()   # = 15-min EMA20
+    d["ema_hs"] = d["close"].ewm(span=3 * S["ema_slow"], adjust=False).mean()   # = 15-min EMA50
     d["vol_avg"] = vol.shift(1).rolling(S["volume_avg_candles"], min_periods=S["volume_avg_candles"]).mean()
     pc = d["close"].shift(1)
     tr = np.maximum(d["high"] - d["low"], np.maximum((d["high"] - pc).abs(), (d["low"] - pc).abs()))
@@ -185,6 +187,8 @@ def evaluate(d: IndexDay, pos: int, orb, full: bool = True) -> dict:
     for side in ("CE", "PE"):
         if side == "CE":
             trend = c > row["vwap"] and row["ema_f"] > row["ema_s"]
+            if S["htf_trend"] and "ema_hf" in row:
+                trend = trend and row["ema_hf"] > row["ema_hs"]
             brk = recent_break(lambda x: x > oh)
             # pullback: range broken before (not fresh), low tagged VWAP/EMA20, bullish close above prev close
             pb = (S["pullback_enabled"] and not brk and bool(len(earlier)) and (earlier > oh).any()
@@ -192,6 +196,8 @@ def evaluate(d: IndexDay, pos: int, orb, full: bool = True) -> dict:
                   and c > float(row["open"]) and c > float(prev["close"]) and c > ef)
         else:
             trend = c < row["vwap"] and row["ema_f"] < row["ema_s"]
+            if S["htf_trend"] and "ema_hf" in row:
+                trend = trend and row["ema_hf"] < row["ema_hs"]
             brk = recent_break(lambda x: x < ol)
             pb = (S["pullback_enabled"] and not brk and bool(len(earlier)) and (earlier < ol).any()
                   and max(float(row["high"]), float(prev["high"])) >= min(vw, ef) - tol
@@ -290,18 +296,25 @@ def simulate(sig: dict, d: IndexDay) -> dict:
     after = f[(f["day"] == pd.Timestamp(sig["day"]).date()) & (f["ts"] > sig_ts)]
     xt = _t(S["exit_time"])
     leg = d.opts.get((sig["strike"], sig["side"]))
+    sl, be = sig["sl"], False
+    be_r = S["breakeven_at_r"]
     for _, row in after.iterrows():
         hit = None
+        sl_r = 0.0 if be else -1.0
         if sig["side"] == "CE":
-            if row["low"] <= sig["sl"]:
-                hit = ("SL", sig["sl"], -1.0)
+            if row["low"] <= sl:
+                hit = ("SL", sl, sl_r)
             elif row["high"] >= sig["tp"]:
                 hit = ("TP", sig["tp"], S["reward_risk"])
+            elif be_r and not be and row["high"] >= sig["entry"] + be_r * sig["risk_pts"]:
+                be, sl = True, sig["entry"]       # active from the next candle (no look-ahead)
         else:
-            if row["high"] >= sig["sl"]:
-                hit = ("SL", sig["sl"], -1.0)
+            if row["high"] >= sl:
+                hit = ("SL", sl, sl_r)
             elif row["low"] <= sig["tp"]:
                 hit = ("TP", sig["tp"], S["reward_risk"])
+            elif be_r and not be and row["low"] <= sig["entry"] - be_r * sig["risk_pts"]:
+                be, sl = True, sig["entry"]
         if hit is None and row["bar_close"].time() >= xt:
             px = float(row["close"])
             r = (px - sig["entry"]) / sig["risk_pts"] if sig["side"] == "CE" else (sig["entry"] - px) / sig["risk_pts"]
@@ -310,7 +323,7 @@ def simulate(sig: dict, d: IndexDay) -> dict:
             opt_exit = _asof(leg, row["ts"], "close")
             pts = (hit[1] - sig["entry"]) if sig["side"] == "CE" else (sig["entry"] - hit[1])
             return {"result": hit[0], "exit": hit[1], "exit_time": row["bar_close"].strftime("%H:%M"),
-                    "r": hit[2], "points": round(pts, 2),
+                    "r": hit[2], "points": round(pts, 2), "breakeven": bool(be and hit[0] == "SL"),
                     "opt_exit": r05(opt_exit) if opt_exit else None,
                     "opt_points": round(opt_exit - sig["opt_entry"], 2) if opt_exit and sig.get("opt_entry") else None,
                     "_exit_ts": row["ts"]}
@@ -373,6 +386,13 @@ def day_trades(day, days: dict[str, IndexDay], max_total: int | None = None,
             checks[idx] = ev
             st = state[idx]
             if bc > le or total >= max_total or st["n"] >= S["max_trades_per_index"]:
+                continue
+            win = S["skip_entry_window"]
+            if win and _t(win[0]) <= bc <= _t(win[1]):
+                continue
+            if S["max_losses_per_day"] and sum(1 for t in trades if (t.get("r") or 0) < 0
+                                               and t.get("_exit_ts") is not None
+                                               and t["_exit_ts"] < ts) >= S["max_losses_per_day"]:
                 continue
             if st["busy"] == "open" or (st["busy"] is not None and ts <= st["busy"]):
                 continue
