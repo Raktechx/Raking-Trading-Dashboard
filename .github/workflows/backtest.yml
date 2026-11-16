@@ -1,0 +1,36 @@
+name: Raking the Trader - backtest
+
+# Manual only: Actions tab -> "Raking the Trader - backtest" -> Run workflow.
+# Compares the current system with the pullback upgrade on past Upstox data.
+on:
+  workflow_dispatch:
+    inputs:
+      years:
+        description: "Years of history to test"
+        default: "1"
+
+permissions:
+  contents: write
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-scan.txt
+      - name: Run backtest
+        env:
+          UPSTOX_ANALYTICS_TOKEN: ${{ secrets.UPSTOX_ANALYTICS_TOKEN }}
+          UPSTOX_ACCESS_TOKEN: ${{ secrets.UPSTOX_ACCESS_TOKEN }}
+        run: python run_backtest.py "${{ github.event.inputs.years }}"
+      - name: Save report to the repo
+        run: |
+          git config user.name "raking-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -f data/backtest_report.xlsx data/backtest_summary.txt
+          git commit -q -m "backtest report" || exit 0
+          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
