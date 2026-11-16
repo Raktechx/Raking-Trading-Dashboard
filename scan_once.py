@@ -94,13 +94,22 @@ def save_live_state(out, status: str) -> None:
         c["bar_close"] = c["bar_close"].dt.strftime("%Y-%m-%d %H:%M")
         charts[k] = c.round(2).to_dict("list")
     st = {"updated": out["time"].strftime("%Y-%m-%d %H:%M:%S"), "market": status,
-          "status": out["status"], "candidates": out.get("candidates", []),
+          "status": out["status"], "candidates": out.get("candidates", []), "top_stocks": out.get("top_stocks", []),
           "checks": out["checks"], "charts": charts,
           "checked_at": pd.Timestamp.now(tz=config.TZ).strftime("%Y-%m-%d %H:%M:%S")}
     path.write_text(json.dumps(st, default=str), encoding="utf-8")
 
 
+def exits_only() -> None:
+    closed = live.fast_exits()
+    for s in closed:
+        print(f"  EXIT {s['option']}: {s['result']} at {s['exit_time']} premium {s.get('opt_exit')}")
+    print(f"Exit check {pd.Timestamp.now(tz=config.TZ):%H:%M:%S}: {len(closed)} closed")
+
+
 def main() -> None:
+    if len(sys.argv) > 1 and sys.argv[1] == "exits":
+        return exits_only()
     is_demo = len(sys.argv) > 1 and sys.argv[1] == "demo"
     now = pd.Timestamp.now(tz=config.TZ)
     today = str(now.date())
