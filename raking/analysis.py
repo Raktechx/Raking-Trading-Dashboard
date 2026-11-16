@@ -12,7 +12,7 @@ COLUMNS = [
     ("instrument", "Instrument"), ("group", "Type"), ("option", "Option"), ("expiry", "Expiry"),
     ("side", "Side"), ("status", "Pre-check"), ("block_reason", "Blocked because"), ("grade", "Grade"), ("score", "Quality score"), ("opt_entry", "Premium entry"), ("opt_sl", "Premium SL"), ("opt_tp", "Premium target"),
     ("opt_exit", "Premium exit"), ("opt_points", "Premium P/L (pts)"), ("result", "Result"),
-    ("exit_time", "Exit time"), ("r", "R"), ("alt_result", "Method B result"), ("alt_r", "Method B R"),
+    ("exit_time", "Exit time"), ("exit_by", "Exit checked on"), ("r", "R"), ("alt_result", "Method B result"), ("alt_r", "Method B R"),
     ("atm_oi_pct", "ATM OI %"), ("writing_oi_pct", "Writing OI %"), ("volume_x", "Volume x avg"),
     ("reasons", "Why (all conditions)"),
 ]
