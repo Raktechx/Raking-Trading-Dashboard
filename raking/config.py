@@ -77,7 +77,8 @@ INDICES = {
 # ---------------------------------------------------------------------------
 STOCKS = {
     "enabled": True,
-    "max_candidates_per_scan": 8,   # strongest movers checked in full each scan
+    "max_candidates_per_scan": 10,  # top-10 strongest F&O stocks checked in full each scan
+    "max_break_pct": 3.0,           # more than 3% past the opening range = too late to chase
     "max_trades_per_day": 2,        # stock trades a day (separate from the index limit)
 }
 
@@ -113,6 +114,11 @@ STRATEGY = {
     # 4/5. Stop loss = previous candle low/high, target = R:R x risk
     "reward_risk": 2.0,
     "max_risk_atr": 2.0,           # skip if previous candle SL is too far (> 2 ATR)
+    # Minimum SL size, so normal noise does not stop the trade out (fixes tiny SL / target)
+    "min_risk_atr": 0.6,           # SL at least 0.6 ATR away from entry
+    "min_risk_pct": 0.15,          # ... and at least 0.15% of the price away
+    "min_opt_sl_pct": 12.0,        # option SL at least 12% below the entry premium (target = 2x that)
+    "min_premium": 3.0,            # skip options cheaper than Rs 3 (too illiquid, costs eat the move)
     "atr_period": 14,
     # 6. Limits
     "max_trades_per_day": 2,       # index trades a day (Nifty + Bank Nifty + Sensex together)
@@ -121,9 +127,14 @@ STRATEGY = {
     "exit_time": "15:15",          # open trade squared off at this time
     "skip_expiry_day": True,       # on expiry day use the next expiry's options
     "assumed_delta": 0.5,          # for option SL/TP when the live delta is not available
-    "fresh_minutes": 20,           # live: a signal older than this is never sent (no stale alerts)
+    "fresh_minutes": 10,           # live: only the latest closed candle (+ scan delay) can alert - no late entries
     # 7. Quality pre-check: only grade A (score >= 70) is sent; lower grades are logged, never alerted
     "min_quality": 70,
+    # 8. Second setup - PULLBACK: range already broken earlier, price dips back to VWAP / EMA20
+    #    and the candle bounces in the trend direction with volume (OI checks the same).
+    "pullback_enabled": True,      # evaluated + backtested always; this switch controls live signals
+    "pullback_live": False,        # turned on only after the backtest shows it adds profit
+    "pullback_touch_atr": 0.3,     # candle low/high must come within 0.3 ATR of VWAP or EMA20
     "max_blocked_per_index": 3,    # blocked signals logged per instrument per day (to measure the pre-check)
 }
 
