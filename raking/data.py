@@ -131,21 +131,40 @@ def stock_orbs(api: Upstox, today: date) -> dict:
     return orb
 
 
-def stock_candidates(api: Upstox, orb: dict, limit: int) -> list[str]:
-    """One batch quote: stocks past their opening range on the matching side of VWAP."""
-    q = api.quotes([v[2] for v in orb.values()])
-    scored = []
+def rank_stocks(q: dict, orb: dict, limit: int, max_break: float = 3.0) -> list[dict]:
+    """Rank every F&O stock that is past its opening range on the matching side of VWAP.
+    Strength 0-100 = fresh breakout (40) + day move (35) + distance from VWAP (25)."""
+    rows = []
     for sym, (hi, lo, key) in orb.items():
         x = q.get(key)
         if not x:
             continue
         ltp, vwap = float(x.get("last_price") or 0), float(x.get("average_price") or 0)
+        chg = float(x.get("net_change") or 0)
+        if ltp <= 0:
+            continue
         if ltp > hi and (not vwap or ltp > vwap):
-            scored.append(((ltp - hi) / hi, sym))
+            side, brk = "CE", (ltp - hi) / hi * 100
         elif ltp < lo and (not vwap or ltp < vwap):
-            scored.append(((lo - ltp) / lo, sym))
-    # freshest breakouts first: the strategy only enters within 3 candles of the break
-    return [s for _, s in sorted(scored)[:limit]]
+            side, brk = "PE", (lo - ltp) / lo * 100
+        else:
+            continue
+        if brk > max_break:
+            continue
+        day = chg / (ltp - chg) * 100 if ltp != chg else 0.0
+        gap = abs(ltp - vwap) / vwap * 100 if vwap else 0.0
+        strength = 100 * (0.40 * max(0.0, 1 - brk / max_break) + 0.35 * min(abs(day) / 3, 1)
+                          + 0.25 * min(gap / 1.0, 1))
+        rows.append({"symbol": sym, "side": side, "ltp": round(ltp, 2), "break_pct": round(brk, 2),
+                     "day_pct": round(day, 2), "vwap_gap_pct": round(gap, 2), "strength": round(strength)})
+    rows.sort(key=lambda r: -r["strength"])
+    return rows[:limit]
+
+
+def stock_candidates(api: Upstox, orb: dict, limit: int) -> list[dict]:
+    """One batch quote for all F&O stocks -> top `limit` by strength (see rank_stocks)."""
+    q = api.quotes([v[2] for v in orb.values()])
+    return rank_stocks(q, orb, limit, config.STOCKS.get("max_break_pct", 3.0))
 
 
 # =================================================================== BACKTEST
