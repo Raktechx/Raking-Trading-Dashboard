@@ -33,11 +33,20 @@ def main() -> None:
         path = config.DATA_DIR / "backtest_report.xlsx"
     print("Running backtest...")
     t = backtest.run(days)
+    t2 = backtest.run(days, pullback=True)
+    n_days = len({d for m in days.values() for d in m})
     summ = backtest.summary(t, days)
-    backtest.save_excel(t, summ, path, mode)
+    comp = backtest.compare(t, t2, n_days)
+    backtest.save_excel(t2, summ, path, mode, comp)
     print("\nMode:", mode)
     print(summ.to_string(index=False))
+    print("\nPULLBACK TEST (go live only if 'Upgraded' total_r and profit_factor beat 'Current'):")
+    print(comp[["system", "trades", "win_rate_pct", "total_r", "avg_r", "profit_factor", "max_drawdown_r"]].to_string(index=False))
     print("\nReport saved:", path)
+    txt = (f"Backtest {start} to {end} - mode: {mode}\n\n{summ.to_string(index=False)}\n\nPULLBACK TEST\n"
+           + comp.to_string(index=False) + "\n")
+    (config.DATA_DIR / ("demo_backtest_summary.txt" if arg == "demo" else "backtest_summary.txt")).write_text(
+        txt, encoding="utf-8")
 
 
 if __name__ == "__main__":
