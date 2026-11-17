@@ -546,8 +546,8 @@
       ]
     },
     "created_at": "2026-11-17 09:55:11",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "TP",
+    "alt_r": 2.0,
     "exit_by": "live premium"
   }
 }
