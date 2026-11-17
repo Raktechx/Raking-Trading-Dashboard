@@ -511,13 +511,13 @@
       "Opening range high 61815.0 broken, volume 1.1x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "TP",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "10:06",
+    "r": 2.0,
+    "points": 218.4,
+    "opt_exit": 620.4,
+    "opt_points": 122.4,
     "group": "INDEX",
     "delta": 0.51,
     "opt_key": "NSE_FO|62422",
@@ -547,6 +547,7 @@
     },
     "created_at": "2026-11-17 09:55:11",
     "alt_result": "OPEN",
-    "alt_r": null
+    "alt_r": null,
+    "exit_by": "live premium"
   }
 }
