@@ -478,5 +478,75 @@
     "created_at": "2026-11-17 09:50:09",
     "alt_result": "OPEN",
     "alt_r": null
+  },
+  "2026-11-17|BANKNIFTY|09:50": {
+    "id": "2026-11-17|BANKNIFTY|09:50",
+    "index": "BANKNIFTY",
+    "day": "2026-11-17",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "09:50",
+    "future": "BANKNIFTY FUT 23 NOV 26",
+    "entry": 61880.2,
+    "sl": 61771.0,
+    "tp": 62098.6,
+    "risk_pts": 109.2,
+    "strike": 61900.0,
+    "expiry": "2026-11-23",
+    "option": "BANKNIFTY 61900 CE",
+    "opt_entry": 498.0,
+    "opt_sl": 438.25,
+    "opt_tp": 617.5,
+    "orb_high": 61815.0,
+    "orb_low": 61400.0,
+    "vwap": 61730.64,
+    "volume_x": 1.1,
+    "atm_oi_pct": 37.09,
+    "writing_oi_pct": 36.62,
+    "lot_size": 30,
+    "reasons": [
+      "Trend: price above VWAP 61730.6, EMA20 > EMA50",
+      "ATM 61900 CE long build-up: premium +16.7%, OI +37.1%",
+      "Put writing (61900, 61800, 61700): OI +36.6%",
+      "Opening range high 61815.0 broken, volume 1.1x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "INDEX",
+    "delta": 0.51,
+    "opt_key": "NSE_FO|62422",
+    "score": 76,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 15.0,
+      "Breakout candle": 14.1,
+      "Volume": 0.7,
+      "OI build-up": 15.0,
+      "PCR": 9.6,
+      "Room to OI wall": 1.5,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "strong breakout candle closing near its high",
+        "heavy fresh OI build-up and writing"
+      ],
+      "minus": [
+        "volume only just above average",
+        "big call OI wall at 62000 before the target"
+      ]
+    },
+    "created_at": "2026-11-17 09:55:11",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
