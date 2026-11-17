@@ -1,13 +1,22 @@
-Backtest 2025-11-15 to 2026-11-15 - mode: full (with option OI)
+Backtest 2025-11-16 to 2026-11-16 - mode: full (with option OI)
 
     index  days  trades  win_rate_pct  breakeven_win_rate_pct  tp  sl  time_exit  avg_r  total_r  avg_points  biggest_loss_points  biggest_loss_r  max_drawdown_r  profit_factor  avg_option_points  biggest_option_loss
-      ALL   247     316          42.1                    33.3  94 169         53  0.051    16.14        15.2               -276.6            -1.1          -24.76           1.08                0.6               -219.6
-    NIFTY   237      93          49.5                    33.3  33  45         15  0.234    21.75        16.0               -101.5            -1.1          -12.94           1.44                5.3                -78.8
-BANKNIFTY   247     122          33.6                    33.3  35  75         12 -0.127   -15.46         4.9               -228.6            -1.1          -18.03           0.82               -1.4               -134.1
-   SENSEX   237     101          45.5                    33.3  26  49         26  0.098     9.85        26.8               -276.6            -1.1           -7.70           1.18               -1.2               -219.6
+      ALL   248     318          41.8                    33.3  94 171         53  0.044    13.94        14.6               -276.6            -1.1          -24.76           1.07                0.4               -219.6
+    NIFTY   238      94          48.9                    33.3  33  46         15  0.220    20.65        15.4               -101.5            -1.1          -12.94           1.40                5.0                -78.8
+BANKNIFTY   248     122          33.6                    33.3  35  75         12 -0.127   -15.46         4.9               -228.6            -1.1          -18.03           0.82               -1.4               -134.1
+   SENSEX   238     102          45.1                    33.3  26  50         26  0.086     8.75        25.4               -276.6            -1.1           -7.70           1.16               -1.8               -219.6
 
 PULLBACK TEST
                        system  days  trades  win_rate_pct  breakeven_win_rate_pct  tp  sl  time_exit  avg_r  total_r  avg_points  biggest_loss_points  biggest_loss_r  max_drawdown_r  profit_factor  avg_option_points  biggest_option_loss
-       Current: breakout only   247     316          42.1                    33.3  94 169         53  0.051    16.14        15.2               -276.6            -1.1          -24.76           1.08                0.6               -219.6
-Upgraded: breakout + pullback   247     361          40.2                    33.3 102 195         64  0.007     2.65        13.0               -276.6            -1.1          -31.50           1.01               -0.0               -219.6
-     of which pullback trades   247      63          36.5                    33.3  15  33         15 -0.088    -5.57        10.4               -205.2            -1.1          -11.04           0.86                0.7               -122.0
+       Current: breakout only   248     318          41.8                    33.3  94 171         53  0.044    13.94        14.6               -276.6            -1.1          -24.76           1.07                0.4               -219.6
+Upgraded: breakout + pullback   248     363          39.9                    33.3 102 197         64  0.001     0.45        12.4               -276.6            -1.1          -31.50           1.00               -0.3               -219.6
+     of which pullback trades   248      63          36.5                    33.3  15  33         15 -0.088    -5.57        10.4               -205.2            -1.1          -11.04           0.86                0.7               -122.0
+
+UPGRADE TESTS
+                    variant  days  trades  win_rate_pct  breakeven_win_rate_pct  tp  sl  time_exit  avg_r  total_r  avg_points  biggest_loss_points  biggest_loss_r  max_drawdown_r  profit_factor  avg_option_points  biggest_option_loss
+       Base (current rules)   248     318          41.8                    33.3  94 171         53  0.044    13.94        14.6               -276.6            -1.1          -24.76           1.07                0.4               -219.6
+      + 15-min trend filter   248     235          43.8                    33.3  73 121         41  0.093    21.79        22.1               -228.6            -1.1          -14.24           1.16                6.9               -157.5
+         + breakeven at +1R   248     320          29.4                    33.3  74 219         27 -0.017    -5.53         8.1               -276.6            -1.1          -29.82           0.97               -1.6               -219.6
+         + skip 12:00-13:30   248     284          41.2                    33.3  84 157         43  0.032     9.23        13.8               -276.6            -1.1          -24.84           1.05                0.0               -219.6
+      + stop after 2 losses   248     318          41.8                    33.3  94 171         53  0.044    13.94        14.6               -276.6            -1.1          -24.76           1.07                0.4               -219.6
+ALL WINNERS: htf_trend=True   248     235          43.8                    33.3  73 121         41  0.093    21.79        22.1               -228.6            -1.1          -14.24           1.16                6.9               -157.5
