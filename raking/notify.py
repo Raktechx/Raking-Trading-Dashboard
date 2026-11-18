@@ -37,39 +37,46 @@ def send(text: str) -> bool:
         return False
 
 
+def _hdr(s: dict) -> str:
+    kind = "Stock option" if s.get("group") == "STOCK" or s.get("index") not in config.INDICES else "Index option"
+    return f"{kind} · exp {s.get('expiry')}"
+
+
+def _pnl(s: dict) -> str:
+    pts, lot = s.get("opt_points"), s.get("lot_size")
+    if not isinstance(pts, (int, float)):
+        return ""
+    sign = "+" if pts >= 0 else "-"
+    return f"{pts:+.2f}/unit" + (f" ({sign}₹{abs(pts * lot):,.0f} per lot)" if lot else "")
+
+
 def signal_alert(s: dict) -> bool:
-    emoji = "🟢" if s["side"] == "CE" else "🔴"
-    label = config.label(s["index"])
-    lines = [f"{emoji} <b>{config.APP_NAME}</b> — {label} BUY {s['side']}" + (" (stock option)" if s.get("group") == "STOCK" else ""),
-             f"⏰ {s['day']} {s['signal_time']}" + (" · ↩️ Pullback setup" if s.get("setup") == "Pullback" else ""),
-             f"📌 <b>{s['option']}</b> (expiry {s.get('expiry')})"]
-    if s.get("opt_entry"):
-        lines.append(f"Premium: entry ₹{s['opt_entry']} | SL ₹{s.get('opt_sl')} | target ₹{s.get('opt_tp')}")
-    else:
-        lines.append("Premium: not available yet - check the option price in your broker app before entering")
+    up = s["side"] == "CE"
+    lines = [f"{'🟢' if up else '🔴'} <b>NEW SIGNAL · BUY {s['option']}</b>",
+             _hdr(s)]
     if s.get("grade"):
-        n = s.get("score_notes") or {}
-        lines.append(f"⭐ Quality: <b>Grade {s['grade']} · {s['score']}/100</b>")
-        lines += ["  ➕ " + html.escape(x) for x in n.get("plus", [])] + ["  ➖ " + html.escape(x) for x in n.get("minus", [])]
-    lines += ["✅ " + "\n✅ ".join(html.escape(r) for r in s["reasons"]),
-              "⚠️ Paper-trading signal. Manage your own risk."]
+        lines.append(f"⭐ Grade <b>{s['grade']}</b> ({s.get('score')}/100)")
+    if s.get("opt_entry"):
+        lines += ["",
+                  f"▶️ Entry  : <b>₹{s['opt_entry']}</b>",
+                  f"🛑 SL     : <b>₹{s.get('opt_sl')}</b>",
+                  f"🎯 Target : <b>₹{s.get('opt_tp')}</b>"]
+    else:
+        lines.append("Premium not available - check the option price in your broker app first.")
+    lines += ["", f"⏰ {s['signal_time']} · exit by {config.STRATEGY['exit_time']}"]
     return send("\n".join(lines))
 
 
 def result_alert(s: dict) -> bool:
     res = s.get("result")
-    icon = {"TP": "🎯", "SL": "🛑", "TIME": "⏱️"}.get(res, "ℹ️")
-    what = {"TP": "TARGET HIT ✅ profit", "SL": "STOP-LOSS HIT ❌ loss",
-            "TIME": f"CLOSED at {config.STRATEGY['exit_time']} (time exit)"}.get(res, res)
-    pnl = s.get("opt_points")
-    lot = s.get("lot_size")
-    lines = [f"{icon} <b>{config.APP_NAME}</b> — trade closed",
-             f"📌 <b>{s.get('option', '')}</b> (signal {s.get('signal_time')})",
-             f"Result: <b>{what}</b> at {s.get('exit_time')}"
-             + (" · live-price exit" if s.get("exit_by") == "live premium" else ""),
-             f"Premium: entry ₹{s.get('opt_entry')} | SL ₹{s.get('opt_sl')} | target ₹{s.get('opt_tp')}",
-             f"Exit premium: ₹{s.get('opt_exit')}"
-             + (f" ({pnl:+.2f} per unit" + (f", ₹{pnl * lot:+,.0f} per lot of {lot})" if lot else ")")
-                if isinstance(pnl, (int, float)) else ""),
-             f"R = {s.get('r')}  (1R = the risk you planned; target = +{config.STRATEGY['reward_risk']:.0f}R)"]
+    head = {"TP": "🎯 <b>TARGET HIT ✅</b>", "SL": "🛑 <b>STOP-LOSS HIT ❌</b>",
+            "TIME": f"⏱️ <b>CLOSED AT {config.STRATEGY['exit_time']}</b>"}.get(res, f"ℹ️ <b>{res}</b>")
+    if res == "SL" and s.get("breakeven"):
+        head = "🟰 <b>STOP AT COST - no loss</b>"
+    r = s.get("r")
+    lines = [head,
+             f"<b>{s.get('option', '')}</b>",
+             f"Entry ₹{s.get('opt_entry')} → Exit <b>₹{s.get('opt_exit')}</b>",
+             f"P&amp;L: <b>{_pnl(s) or '-'}</b>" + (f" · {float(r):+.1f}R" if r is not None else ""),
+             f"⏰ {s.get('signal_time')} → {s.get('exit_time')}"]
     return send("\n".join(lines))
