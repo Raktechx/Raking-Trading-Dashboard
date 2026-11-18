@@ -29,22 +29,37 @@ def load_state(today: str) -> dict:
 
 
 def eod_text(saved: dict, today: str, everything: dict | None = None) -> str:
+    """Market-close report: today's trades, result of each, today's R and the running record."""
+    icon = {"TP": "🎯", "SL": "🛑", "TIME": "⏱️", "OPEN": "🟡"}
     sigs = store.today_signals(saved, today)
-    lines = [f"📊 <b>{config.APP_NAME}</b> — end of day {today}"]
+    day = pd.Timestamp(today).strftime("%a %d %b %Y")
+    lines = [f"📊 <b>MARKET CLOSE REPORT</b>", day, ""]
     if not sigs:
-        lines.append("No signal today (conditions never all lined up).")
-    for s in sigs:
-        lines.append(f"• {s['signal_time']} BUY {s['option']} → <b>{s.get('result')}</b> "
-                     f"(R {s.get('r')}, premium {s.get('opt_entry')} → {s.get('opt_exit')})")
+        lines.append("No signal sent today - the rules never all lined up with grade A.")
+    else:
+        tp = sum(s.get("result") == "TP" for s in sigs)
+        sl = sum(s.get("result") == "SL" for s in sigs)
+        lines.append(f"Signals: <b>{len(sigs)}</b> · 🎯 {tp} · 🛑 {sl}")
+        for s in sigs:
+            r = s.get("r")
+            lines.append(f"{icon.get(s.get('result'), '•')} {s['signal_time']} <b>{s['option']}</b> "
+                         f"(grade {s.get('grade') or '-'}) ₹{s.get('opt_entry')} → ₹{s.get('opt_exit')}"
+                         + (f" · {float(r):+.1f}R" if r is not None else ""))
+        rs = [float(s["r"]) for s in sigs if s.get("r") is not None]
+        if rs:
+            lines.append(f"Today: <b>{sum(rs):+.1f}R</b>")
     blk = [s for s in (everything or {}).values() if s.get("blocked") and s.get("day") == today]
     if blk:
-        saved_r = -sum(float(s["r"]) for s in blk if s.get("r") is not None)
-        lines.append(f"🛡️ Quality pre-check blocked {len(blk)} weak signal(s) today"
-                     + (f" — blocking them saved {saved_r:+.2f} R" if any(s.get("r") is not None for s in blk) else ""))
+        lines.append("")
+        lines.append(f"🛡️ Blocked (not sent): {len(blk)}")
+        for s in blk:
+            r = s.get("r")
+            lines.append(f"  {s['signal_time']} {s['option']} grade {s.get('grade') or '-'} → "
+                         f"{s.get('result')}" + (f" {float(r):+.1f}R" if r is not None else ""))
     done = [s for s in saved.values() if s.get("result") in ("TP", "SL", "TIME")]
     if done:
         r = pd.Series([float(s["r"]) for s in done])
-        lines.append(f"Paper record: {len(done)} trades · win rate {(r > 0).mean() * 100:.0f}% · total {r.sum():.2f} R")
+        lines += ["", f"📈 All-time: {len(done)} trades · win {(r > 0).mean() * 100:.0f}% · <b>{r.sum():+.1f}R</b>"]
     return "\n".join(lines)
 
 
