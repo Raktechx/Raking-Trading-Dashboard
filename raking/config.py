@@ -77,7 +77,7 @@ INDICES = {
 # ---------------------------------------------------------------------------
 STOCKS = {
     "enabled": True,
-    "max_candidates_per_scan": 10,  # top-10 strongest F&O stocks checked in full each scan
+    "max_candidates_per_scan": 25,  # top-25 strongest F&O stocks checked in full each scan
     "max_break_pct": 3.0,           # more than 3% past the opening range = too late to chase
     "max_trades_per_day": 2,        # stock trades a day (separate from the index limit)
 }
