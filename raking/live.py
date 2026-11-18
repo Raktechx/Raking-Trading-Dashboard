@@ -169,8 +169,12 @@ def scan(api: Upstox | None = None, send_alerts: bool = True, demo_mode: bool = 
             if sym not in config.INDICES and sym != "STOCKS":
                 status.pop(sym)
         if stock_days:
-            st_trades, _ = day_trades(today, stock_days, config.STOCKS["max_trades_per_day"], full_check=False,
-                                      pullback=S["pullback_live"])
+            st_trades, st_evs = day_trades(today, stock_days, config.STOCKS["max_trades_per_day"], full_check=False,
+                                           pullback=S["pullback_live"])
+            for r in top:   # how many of the price rules each listed stock meets right now
+                e = (st_evs.get(r["symbol"]) or {}).get(r["side"])
+                if e:
+                    r["rules"] = int(bool(e["trend"])) + int(bool(e["breakout"])) + int(bool(e["volume"]))
             _store_new(st_trades, saved, tday, "STOCK", config.STOCKS["max_trades_per_day"], api, demo_mode,
                        send_alerts, stock_days, ctx)
 
