@@ -583,13 +583,13 @@
       "Opening range low 166.6 broken, volume 1.1x (vs 20-candle avg)",
       "SL = previous candle high, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "TP",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "11:09",
+    "r": 2.0,
+    "points": 1.1,
+    "opt_exit": 4.05,
+    "opt_points": 0.91,
     "group": "STOCK",
     "delta": 0.62,
     "opt_key": "NSE_FO|144692",
@@ -621,6 +621,7 @@
     "blocked": true,
     "block_reason": "grade B (62/100): volume only just above average; big put OI wall at 165 before the target",
     "alt_result": "OPEN",
-    "alt_r": null
+    "alt_r": null,
+    "exit_by": "live premium"
   }
 }
