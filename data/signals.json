@@ -620,8 +620,8 @@
     "created_at": "2026-11-18 11:08:31",
     "blocked": true,
     "block_reason": "grade B (62/100): volume only just above average; big put OI wall at 165 before the target",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "TP",
+    "alt_r": 2.0,
     "exit_by": "live premium"
   }
 }
