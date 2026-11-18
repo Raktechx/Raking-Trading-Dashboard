@@ -6,8 +6,10 @@ data/signal_log.xlsx every 5 minutes; this page only shows them, refreshing itse
 from __future__ import annotations
 
 import json
+import time
 
 import pandas as pd
+import requests
 import plotly.graph_objects as go
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
@@ -38,14 +40,38 @@ st.markdown("""
 </style>""", unsafe_allow_html=True)
 
 
+# Read the newest scan straight from GitHub (the scanner commits every few minutes), so the page
+# never waits for the hosting service to redeploy. Falls back to the copy bundled with the app.
+RAW = "https://raw.githubusercontent.com/Raktechx/Raking-Trading-Dashboard/main/data/"
+
+
+@st.cache_data(ttl=50, show_spinner=False)
+def fetch_json(name: str, bucket: int):
+    try:
+        r = requests.get(RAW + name, params={"t": bucket}, timeout=8)
+        if r.ok:
+            return r.json()
+    except (requests.RequestException, ValueError):
+        pass
+    return None
+
+
 def load_state() -> dict:
+    live = fetch_json("live_state.json", int(time.time() // 30))
+    if isinstance(live, dict):
+        return live
     try:
         return json.loads((config.DATA_DIR / "live_state.json").read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return {}
 
 
-saved = store.load()
+def load_signals() -> dict:
+    live = fetch_json("signals.json", int(time.time() // 30))
+    return live if isinstance(live, dict) else store.load()
+
+
+saved = load_signals()
 state = load_state()
 now = pd.Timestamp.now(tz=config.TZ)
 today = str(now.date())
@@ -55,6 +81,9 @@ h1, h2 = st.columns([3, 1])
 h1.markdown(f"## 📈 {config.APP_NAME}")
 h2.markdown(f"<div class='refresh'>Last scan<br><b>{state.get('updated') or state.get('checked_at') or '—'} IST</b>"
             f"<br>{state.get('market', '')}</div>", unsafe_allow_html=True)
+if h2.button("🔄 Refresh now", width="stretch"):
+    fetch_json.clear()
+    st.rerun()
 
 
 def signal_card(s: dict) -> None:
@@ -151,12 +180,12 @@ with tab_live:
     top = state.get("top_stocks") or []
     if top:
         st.caption(f"Top {len(top)} F&O stocks right now (ranked by strength, refreshed every 5 minutes) "
-                   "- each one gets the full signal check:")
+                   "- each one gets the full signal check. A signal needs every rule plus grade A:")
         st.dataframe(pd.DataFrame([{
             "#": i + 1, "Stock": r["symbol"], "Side": "CE (up)" if r["side"] == "CE" else "PE (down)",
             "Price": r["ltp"], "Day %": r["day_pct"], "Past range %": r["break_pct"],
             "From VWAP %": r["vwap_gap_pct"], "Strength": r["strength"]} for i, r in enumerate(top)]),
-            hide_index=True, use_container_width=True)
+            hide_index=True, width="stretch")
     else:
         st.caption("Being checked now: " + (", ".join(state.get("candidates") or []) or "—"))
     stock_sigs = [s for s in todays if s["index"] not in config.INDICES]
