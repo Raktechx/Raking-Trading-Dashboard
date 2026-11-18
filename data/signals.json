@@ -550,5 +550,77 @@
     "alt_result": "TP",
     "alt_r": 2.0,
     "exit_by": "live premium"
+  },
+  "2026-11-18|SAIL|11:00": {
+    "id": "2026-11-18|SAIL|11:00",
+    "index": "SAIL",
+    "day": "2026-11-18",
+    "side": "PE",
+    "setup": "Breakout",
+    "signal_time": "11:00",
+    "future": "SAIL FUT 23 NOV 26",
+    "entry": 166.0,
+    "sl": 166.55,
+    "tp": 164.9,
+    "risk_pts": 0.55,
+    "strike": 167.5,
+    "expiry": "2026-11-23",
+    "option": "SAIL 167.5 PE",
+    "opt_entry": 3.15,
+    "opt_sl": 2.75,
+    "opt_tp": 3.9,
+    "orb_high": 170.01,
+    "orb_low": 166.61,
+    "vwap": 166.76,
+    "volume_x": 1.07,
+    "atm_oi_pct": 2.63,
+    "writing_oi_pct": 1.03,
+    "lot_size": 4700,
+    "reasons": [
+      "Trend: price below VWAP 166.8, EMA20 < EMA50",
+      "ATM 167.5 PE long build-up: premium +9.0%, OI +2.6%",
+      "Call writing (167.5, 170, 172.5): OI +1.0%",
+      "Opening range low 166.6 broken, volume 1.1x (vs 20-candle avg)",
+      "SL = previous candle high, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.62,
+    "opt_key": "NSE_FO|144692",
+    "score": 62,
+    "grade": "B",
+    "score_parts": {
+      "Trend strength": 15.0,
+      "Breakout candle": 12.7,
+      "Volume": 0.5,
+      "OI build-up": 5.5,
+      "PCR": 5.0,
+      "Room to OI wall": 3.5,
+      "Option IV": 9.7,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "strong breakout candle closing near its low",
+        "premium fairly priced (IV 36.1)"
+      ],
+      "minus": [
+        "volume only just above average",
+        "big put OI wall at 165 before the target"
+      ]
+    },
+    "created_at": "2026-11-18 11:08:31",
+    "blocked": true,
+    "block_reason": "grade B (62/100): volume only just above average; big put OI wall at 165 before the target",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
