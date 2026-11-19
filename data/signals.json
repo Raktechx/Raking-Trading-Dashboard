@@ -688,8 +688,8 @@
       "minus": []
     },
     "created_at": "2026-11-19 09:35:47",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "SL",
+    "alt_r": -1.0,
     "exit_by": "live premium"
   },
   "2026-11-19|BANKNIFTY|09:50": {
@@ -830,8 +830,8 @@
     "created_at": "2026-11-19 09:56:00",
     "blocked": true,
     "block_reason": "grade B (65/100): volume only just above average; broader market against the trade",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "SL",
+    "alt_r": -1.0,
     "exit_by": "live premium"
   },
   "2026-11-19|TECHM|10:00": {
