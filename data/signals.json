@@ -866,13 +866,13 @@
       "Opening range low 1710.1 broken, volume 1.2x (vs 20-candle avg)",
       "SL = previous candle high, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "SL",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "11:07",
+    "r": -1.0,
+    "points": -10.9,
+    "opt_exit": 13.85,
+    "opt_points": -5.7,
     "group": "STOCK",
     "delta": 0.44,
     "opt_key": "NSE_FO|147496",
@@ -904,6 +904,7 @@
     "blocked": true,
     "block_reason": "grade B (65/100): volume only just above average; broader market against the trade",
     "alt_result": "OPEN",
-    "alt_r": null
+    "alt_r": null,
+    "exit_by": "live premium"
   }
 }
