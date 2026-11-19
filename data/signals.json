@@ -691,5 +691,74 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "exit_by": "live premium"
+  },
+  "2026-11-19|BANKNIFTY|09:50": {
+    "id": "2026-11-19|BANKNIFTY|09:50",
+    "index": "BANKNIFTY",
+    "day": "2026-11-19",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "09:50",
+    "future": "BANKNIFTY FUT 23 NOV 26",
+    "entry": 62298.6,
+    "sl": 62106.2,
+    "tp": 62683.4,
+    "risk_pts": 192.4,
+    "strike": 62300.0,
+    "expiry": "2026-11-23",
+    "option": "BANKNIFTY 62300 CE",
+    "opt_entry": 418.4,
+    "opt_sl": 321.65,
+    "opt_tp": 611.9,
+    "orb_high": 62169.0,
+    "orb_low": 61817.0,
+    "vwap": 62117.52,
+    "volume_x": 4.45,
+    "atm_oi_pct": 12.57,
+    "writing_oi_pct": 28.03,
+    "lot_size": 30,
+    "reasons": [
+      "Trend: price above VWAP 62117.5, EMA20 > EMA50",
+      "ATM 62300 CE long build-up: premium +48.6%, OI +12.6%",
+      "Put writing (62300, 62200, 62100): OI +28.0%",
+      "Opening range high 62169.0 broken, volume 4.4x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "INDEX",
+    "delta": 0.5,
+    "opt_key": "NSE_FO|62483",
+    "score": 77,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 9.7,
+      "Breakout candle": 12.6,
+      "Volume": 10.0,
+      "OI build-up": 15.0,
+      "PCR": 9.3,
+      "Room to OI wall": 5.4,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 0.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong breakout candle closing near its high",
+        "volume 4.5x average",
+        "heavy fresh OI build-up and writing"
+      ],
+      "minus": [
+        "broader market against the trade"
+      ]
+    },
+    "created_at": "2026-11-19 09:50:08",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
