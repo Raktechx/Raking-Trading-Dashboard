@@ -724,13 +724,13 @@
       "Opening range high 62169.0 broken, volume 4.4x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "TP",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "12:37",
+    "r": 2.0,
+    "points": 384.8,
+    "opt_exit": 631.75,
+    "opt_points": 213.35,
     "group": "INDEX",
     "delta": 0.5,
     "opt_key": "NSE_FO|62483",
@@ -759,7 +759,8 @@
     },
     "created_at": "2026-11-19 09:50:08",
     "alt_result": "TP",
-    "alt_r": 2.0
+    "alt_r": 2.0,
+    "exit_by": "live premium"
   },
   "2026-11-19|PGEL|09:55": {
     "id": "2026-11-19|PGEL|09:55",
