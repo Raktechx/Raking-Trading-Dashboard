@@ -832,5 +832,77 @@
     "block_reason": "grade B (65/100): volume only just above average; broader market against the trade",
     "alt_result": "OPEN",
     "alt_r": null
+  },
+  "2026-11-19|TECHM|10:00": {
+    "id": "2026-11-19|TECHM|10:00",
+    "index": "TECHM",
+    "day": "2026-11-19",
+    "side": "PE",
+    "setup": "Breakout",
+    "signal_time": "10:00",
+    "future": "TECHM FUT 23 NOV 26",
+    "entry": 1707.3,
+    "sl": 1718.2,
+    "tp": 1685.5,
+    "risk_pts": 10.9,
+    "strike": 1700.0,
+    "expiry": "2026-11-23",
+    "option": "TECHM 1700 PE",
+    "opt_entry": 19.55,
+    "opt_sl": 14.7,
+    "opt_tp": 29.2,
+    "orb_high": 1735.6,
+    "orb_low": 1710.1,
+    "vwap": 1719.06,
+    "volume_x": 1.17,
+    "atm_oi_pct": 1.1,
+    "writing_oi_pct": 4.27,
+    "lot_size": 600,
+    "reasons": [
+      "Trend: price below VWAP 1719.1, EMA20 < EMA50",
+      "ATM 1700 PE long build-up: premium +22.2%, OI +1.1%",
+      "Call writing (1700, 1720, 1740): OI +4.3%",
+      "Opening range low 1710.1 broken, volume 1.2x (vs 20-candle avg)",
+      "SL = previous candle high, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.44,
+    "opt_key": "NSE_FO|147496",
+    "score": 65,
+    "grade": "B",
+    "score_parts": {
+      "Trend strength": 15.0,
+      "Breakout candle": 14.4,
+      "Volume": 1.1,
+      "OI build-up": 8.1,
+      "PCR": 4.2,
+      "Room to OI wall": 7.4,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 0.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "strong breakout candle closing near its low",
+        "premium fairly priced (IV 32.1)"
+      ],
+      "minus": [
+        "volume only just above average",
+        "broader market against the trade"
+      ]
+    },
+    "created_at": "2026-11-19 10:01:05",
+    "blocked": true,
+    "block_reason": "grade B (65/100): volume only just above average; broader market against the trade",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
