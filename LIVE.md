@@ -1,14 +1,10 @@
 # 📈 Raking the Trader — Live
 
-**Last update:** 19 Nov 2026, 15:45:00 IST · ⚪ Market closed
+**Last update:** 20 Nov 2026, 09:22:18 IST · 🟢 Market open
 
 ## Today's signals
 
-| Time | Signal | Premium entry | Premium SL | Premium target | Result |
-|---|---|---|---|---|---|
-| 09:50 | **BUY BANKNIFTY 62300 CE** | 418.4 | 321.65 | 611.9 | TP |
-| 09:35 | **BUY INFY 1074 PE** | 15.95 | 12.65 | 22.55 | SL |
-| 11:40 | **BUY INDUSTOWER 385 PE** | 3.65 | 2.75 | 5.45 | SL |
+No signal yet today.
 
 ## Paper trading record
 
