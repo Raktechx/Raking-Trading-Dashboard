@@ -977,5 +977,74 @@
     "alt_result": "SL",
     "alt_r": -1.0,
     "exit_by": "live premium"
+  },
+  "2026-11-20|HCLTECH|09:35": {
+    "id": "2026-11-20|HCLTECH|09:35",
+    "index": "HCLTECH",
+    "day": "2026-11-20",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "09:35",
+    "future": "HCLTECH FUT 23 NOV 26",
+    "entry": 1360.1,
+    "sl": 1348.7,
+    "tp": 1382.9,
+    "risk_pts": 11.4,
+    "strike": 1360.0,
+    "expiry": "2026-11-23",
+    "option": "HCLTECH 1360 CE",
+    "opt_entry": 17.35,
+    "opt_sl": 11.55,
+    "opt_tp": 28.9,
+    "orb_high": 1354.4,
+    "orb_low": 1317.7,
+    "vwap": 1352.89,
+    "volume_x": 6.34,
+    "atm_oi_pct": 9.13,
+    "writing_oi_pct": 1.71,
+    "lot_size": 400,
+    "reasons": [
+      "Trend: price above VWAP 1352.9, EMA20 > EMA50",
+      "ATM 1360 CE long build-up: premium +39.4%, OI +9.1%",
+      "Put writing (1360, 1340, 1320): OI +1.7%",
+      "Opening range high 1354.4 broken, volume 6.3x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.51,
+    "opt_key": "NSE_FO|96854",
+    "score": 76,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 15.0,
+      "Breakout candle": 6.4,
+      "Volume": 10.0,
+      "OI build-up": 10.1,
+      "PCR": 0.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "volume 6.3x average",
+        "no big OI wall before target (next at 1400)"
+      ],
+      "minus": [
+        "PCR 0.50 against the trade"
+      ]
+    },
+    "created_at": "2026-11-20 09:35:48",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
