@@ -1044,8 +1044,8 @@
       ]
     },
     "created_at": "2026-11-20 09:35:48",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "SL",
+    "alt_r": -1.0,
     "exit_by": "live premium"
   },
   "2026-11-20|KALYANKJIL|09:35": {
@@ -1183,6 +1183,75 @@
       ]
     },
     "created_at": "2026-11-20 09:50:07",
+    "alt_result": "OPEN",
+    "alt_r": null
+  },
+  "2026-11-20|NIFTY|09:55": {
+    "id": "2026-11-20|NIFTY|09:55",
+    "index": "NIFTY",
+    "day": "2026-11-20",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "09:55",
+    "future": "NIFTY FUT 23 NOV 26",
+    "entry": 25500.3,
+    "sl": 25440.0,
+    "tp": 25620.9,
+    "risk_pts": 60.3,
+    "strike": 25550.0,
+    "expiry": "2026-11-23",
+    "option": "NIFTY 25550 CE",
+    "opt_entry": 111.6,
+    "opt_sl": 84.95,
+    "opt_tp": 164.9,
+    "orb_high": 25460.0,
+    "orb_low": 25333.0,
+    "vwap": 25433.41,
+    "volume_x": 1.26,
+    "atm_oi_pct": 35.27,
+    "writing_oi_pct": 21.98,
+    "lot_size": 65,
+    "reasons": [
+      "Trend: price above VWAP 25433.4, EMA20 > EMA50",
+      "ATM 25550 CE long build-up: premium +44.3%, OI +35.3%",
+      "Put writing (25550, 25500, 25450): OI +22.0%",
+      "Opening range high 25460.0 broken, volume 1.3x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "INDEX",
+    "delta": 0.44,
+    "opt_key": "NSE_FO|64475",
+    "score": 82,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 15.0,
+      "Breakout candle": 10.4,
+      "Volume": 1.7,
+      "OI build-up": 15.0,
+      "PCR": 5.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "heavy fresh OI build-up and writing",
+        "no big OI wall before target (next at 26000)"
+      ],
+      "minus": [
+        "volume only just above average"
+      ]
+    },
+    "created_at": "2026-11-20 10:00:06",
     "alt_result": "OPEN",
     "alt_r": null
   }
