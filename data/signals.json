@@ -1080,13 +1080,13 @@
       "Opening range low 633.0 broken, volume 1.8x (vs 20-candle avg)",
       "SL = previous candle high, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "TP",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "10:59",
+    "r": 2.0,
+    "points": 14.1,
+    "opt_exit": 17.35,
+    "opt_points": 6.45,
     "group": "STOCK",
     "delta": 0.46,
     "opt_key": "NSE_FO|134454",
@@ -1115,7 +1115,8 @@
     },
     "created_at": "2026-11-20 09:40:46",
     "alt_result": "OPEN",
-    "alt_r": null
+    "alt_r": null,
+    "exit_by": "live premium"
   },
   "2026-11-20|BANKNIFTY|09:45": {
     "id": "2026-11-20|BANKNIFTY|09:45",
