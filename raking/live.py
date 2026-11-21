@@ -8,7 +8,7 @@ import pandas as pd
 from . import config, data, demo, notify, quality, store
 from .config import STRATEGY as S
 from .strategy import opt_levels, public, r05, simulate, simulate_option
-from .strategy import day_trades
+from .strategy import _t, day_trades, evaluate, orb_levels
 from .upstox import Upstox, UpstoxError, chain_delta, skey
 
 
@@ -39,6 +39,26 @@ def _checklist(ev: dict | None) -> dict | None:
                      "Volume > 20-candle avg": e["volume"]}
         out[side + "_atm"] = e["oi"].get("atm")
     return out
+
+
+def _price_rules_timeline(d, day, side: str) -> tuple[str | None, float | None]:
+    """First time today the 3 price rules (trend + range break + volume) all held, and the latest volume x avg."""
+    dd = d.fut[d.fut["day"] == day]
+    orb = orb_levels(dd) if not dd.empty else None
+    if orb is None:
+        return None, None
+    first, es = None, _t(S["entry_start"])
+    for pos in dd.index:
+        bc = dd.loc[pos, "bar_close"]
+        if bc.time() <= es:
+            continue
+        e = evaluate(d, pos, orb, full=False)[side]
+        if e["trend"] and e["breakout"] and e["volume"]:
+            first = bc.strftime("%H:%M")
+            break
+    row = dd.iloc[-1]
+    vx = float(row["volume"] / row["vol_avg"]) if pd.notna(row["vol_avg"]) and row["vol_avg"] else None
+    return first, (round(vx, 1) if vx is not None else None)
 
 
 def _group(sig: dict) -> str:
@@ -175,6 +195,11 @@ def scan(api: Upstox | None = None, send_alerts: bool = True, demo_mode: bool = 
                 e = (st_evs.get(r["symbol"]) or {}).get(r["side"])
                 if e:
                     r["rules"] = int(bool(e["trend"])) + int(bool(e["breakout"])) + int(bool(e["volume"]))
+                if r["symbol"] in stock_days:
+                    try:
+                        r["rules3_at"], r["vol_x"] = _price_rules_timeline(stock_days[r["symbol"]], today, r["side"])
+                    except Exception:
+                        pass
             _store_new(st_trades, saved, tday, "STOCK", config.STOCKS["max_trades_per_day"], api, demo_mode,
                        send_alerts, stock_days, ctx)
 
