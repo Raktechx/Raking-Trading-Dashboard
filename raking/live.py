@@ -117,11 +117,25 @@ def _store_new(trades: list, saved: dict, tday: str, group: str, max_total: int,
         except Exception:
             pass
         rec["created_at"] = now_ist().strftime("%Y-%m-%d %H:%M:%S")
-        if not quality.passes(rec, S["min_quality"]):
+        if group == "STOCK":   # late-move check: the stock already made its move before the breakout
+            try:
+                d = (days or {}).get(t["index"])
+                dd = d.fut[d.fut["day"] == pd.Timestamp(tday).date()]
+                rng = (float(rec["orb_high"]) - float(rec["orb_low"])) / float(rec["orb_low"]) * 100
+                mv = abs(float(rec["entry"]) / float(dd["open"].iloc[0]) - 1) * 100
+                rec["range_pct"], rec["day_move_pct"] = round(rng, 2), round(mv, 2)
+                rec["late_move"] = bool(rng > config.STOCKS.get("max_range_pct", 2.5)
+                                        or mv > config.STOCKS.get("max_day_move_pct", 3.0))
+            except Exception:
+                pass
+        late = bool(rec.get("late_move"))
+        if late or not quality.passes(rec, S["min_quality"]):
             if len(n_blocked) >= S["max_blocked_per_index"]:
                 continue
             rec["blocked"] = True   # quality pre-check failed: logged, result tracked, never alerted
-            rec["block_reason"] = ("quality could not be checked" if rec.get("score") is None else
+            rec["block_reason"] = (f"late move: opening range {rec.get('range_pct')}%, day move "
+                                   f"{rec.get('day_move_pct')}% (measuring)" if late else
+                                   "quality could not be checked" if rec.get("score") is None else
                                    f"grade {rec.get('grade')} ({rec.get('score')}/100): "
                                    + ("; ".join((rec.get("score_notes") or {}).get("minus") or []) or "overall quality too low"))
         for k in ("result", "exit", "exit_time", "r", "points", "opt_exit", "opt_points", "alt_result", "alt_r"):
