@@ -1,0 +1,39 @@
+name: Wake dashboard
+
+# The free Streamlit host puts the app to sleep when nobody opens it for a while.
+# This opens the page in a headless browser before the market opens and presses the
+# wake-up button if the app is asleep. No secrets are used.
+on:
+  schedule:
+    - cron: "0 3 * * 1-5"     # 08:30 IST
+    - cron: "30 3 * * 1-5"    # 09:00 IST
+    - cron: "0 6 * * 1-5"     # 11:30 IST
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  wake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - run: pip install -q playwright && python -m playwright install --with-deps chromium
+      - name: Open the dashboard and wake it if asleep
+        shell: python
+        run: |
+          from playwright.sync_api import sync_playwright
+          URL = "https://raking-the-trader.streamlit.app/"
+          with sync_playwright() as p:
+              b = p.chromium.launch()
+              pg = b.new_page()
+              pg.goto(URL, timeout=90000)
+              pg.wait_for_timeout(8000)
+              btn = pg.get_by_role("button", name="Yes, get this app back up!")
+              if btn.count():
+                  btn.first.click()
+                  print("App was asleep - wake-up pressed.")
+                  pg.wait_for_timeout(90000)
+              else:
+                  print("App already awake.")
+              b.close()
