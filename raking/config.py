@@ -59,6 +59,14 @@ INDICES = {
         "segment": "NSE_FO",
         "step": 100,
     },
+    "FINNIFTY": {
+        "label": "Fin Nifty",
+        "spot_key": "NSE_INDEX|Nifty Fin Service",
+        "fut_symbol": "FINNIFTY",
+        "master": "NSE",
+        "segment": "NSE_FO",
+        "step": 50,
+    },
     "SENSEX": {
         "label": "Sensex",
         "spot_key": "BSE_INDEX|SENSEX",
@@ -79,7 +87,7 @@ STOCKS = {
     "enabled": True,
     "max_candidates_per_scan": 25,  # top-25 strongest F&O stocks checked in full each scan
     "max_break_pct": 3.0,           # more than 3% past the opening range = too late to chase
-    "max_trades_per_day": 2,        # stock trades a day (separate from the index limit)
+    "max_trades_per_day": 50,       # practice mode: no real daily cap - every grade A stock signal is sent
 }
 
 
@@ -121,8 +129,8 @@ STRATEGY = {
     "min_premium": 3.0,            # skip options cheaper than Rs 3 (too illiquid, costs eat the move)
     "atr_period": 14,
     # 6. Limits
-    "max_trades_per_day": 2,       # index trades a day (Nifty + Bank Nifty + Sensex together)
-    "max_trades_per_index": 2,
+    "max_trades_per_day": 50,      # practice mode: no real daily cap - every grade A index signal is sent
+    "max_trades_per_index": 10,    # re-entry allowed after the previous trade on that instrument has closed
     "last_entry": "15:00",         # no new entry after 3:00 PM
     "exit_time": "15:15",          # open trade squared off at this time
     "skip_expiry_day": True,       # on expiry day use the next expiry's options
@@ -137,7 +145,7 @@ STRATEGY = {
     "pullback_touch_atr": 0.3,     # candle low/high must come within 0.3 ATR of VWAP or EMA20
     "max_blocked_per_index": 3,    # blocked signals logged per instrument per day (to measure the pre-check)
     # 9. Accuracy upgrades - each one is backtested on its own; switched on only if it adds profit
-    "htf_trend": False,            # also need the 15-min trend (EMA60 > EMA150 on 5-min = 15-min EMA20/50)
+    "htf_trend": True,              # also need the 15-min trend (EMA60 > EMA150 on 5-min = 15-min EMA20/50)
     "breakeven_at_r": 0.0,         # move SL to entry once price is +1R in profit (0 = off)
     "skip_entry_window": None,     # e.g. ["12:00", "13:30"]: no new entries in the midday chop
     "max_losses_per_day": 0,       # stop new entries after this many losing trades in a day (0 = off)
