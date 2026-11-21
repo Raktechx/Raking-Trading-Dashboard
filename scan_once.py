@@ -13,7 +13,7 @@ import sys
 
 import pandas as pd
 
-from raking import config, live, notify, site, store
+from raking import analysis, config, live, notify, site, store
 
 STATE = config.DATA_DIR / "state.json"
 
@@ -29,8 +29,8 @@ def load_state(today: str) -> dict:
 
 
 def lot_pnl(s: dict) -> float | None:
-    pts, lot = s.get("opt_points"), s.get("lot_size")
-    return float(pts) * float(lot) if isinstance(pts, (int, float)) and lot else None
+    """1-lot P&L after brokerage, taxes and slippage."""
+    return analysis.net_pnl(s)
 
 
 def eod_text(saved: dict, today: str, everything: dict | None = None) -> str:
@@ -54,7 +54,7 @@ def eod_text(saved: dict, today: str, everything: dict | None = None) -> str:
         rs = [float(s["r"]) for s in sigs if s.get("r") is not None]
         ps = [lot_pnl(s) for s in sigs if lot_pnl(s) is not None]
         if rs:
-            lines.append(f"Today: <b>{sum(rs):+.1f}R · ₹{sum(ps):+,.0f}</b> (1 lot each)")
+            lines.append(f"Today: <b>{sum(rs):+.1f}R · ₹{sum(ps):+,.0f}</b> (1 lot, after costs)")
     blk = [s for s in (everything or {}).values() if s.get("blocked") and s.get("day") == today]
     if blk:
         lines.append("")
@@ -68,7 +68,7 @@ def eod_text(saved: dict, today: str, everything: dict | None = None) -> str:
         r = pd.Series([float(s["r"]) for s in done])
         p = sum(lot_pnl(s) or 0 for s in done)
         lines += ["", f"📈 All-time: {len(done)} trades · win {(r > 0).mean() * 100:.0f}% · "
-                      f"<b>{r.sum():+.1f}R · ₹{p:+,.0f}</b> (1 lot each)"]
+                      f"<b>{r.sum():+.1f}R · ₹{p:+,.0f}</b> (1 lot, after costs)"]
     return "\n".join(lines)
 
 
@@ -95,7 +95,7 @@ def week_text(saved: dict, today: str) -> str:
     pnl = sum(lot_pnl(s) or 0 for s in done)
     lines.append(f"Trades: <b>{len(done)}</b> · 🎯 {int((r > 0).sum())} · 🛑 {int((r <= 0).sum())} · "
                  f"win {(r > 0).mean() * 100:.0f}%")
-    lines.append(f"Week: <b>{r.sum():+.1f}R · ₹{pnl:+,.0f}</b> (1 lot each)")
+    lines.append(f"Week: <b>{r.sum():+.1f}R · ₹{pnl:+,.0f}</b> (1 lot, after costs)")
     lines.append("")
     for day in sorted({s["day"] for s in done}):
         ds = [s for s in done if s["day"] == day]
