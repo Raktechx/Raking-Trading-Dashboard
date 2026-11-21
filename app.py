@@ -36,7 +36,7 @@ st.markdown("""
 .lv{display:inline-block;margin-right:16px;margin-top:6px}.lv b{font-size:1.15rem}
 .ok{color:#16c784}.no{color:#6b7280}.refresh{text-align:right;color:#9aa4b2;font-size:.9rem}
 .tag{display:inline-block;padding:1px 8px;border-radius:10px;background:#1f2937;font-size:.8rem;margin-left:6px}
-.tops{width:100%;border-collapse:collapse;font-size:.78rem}.tops th,.tops td{padding:3px 3px;border-bottom:1px solid #2a3142;text-align:left;white-space:nowrap}.tops th{color:#9aa4b2;font-weight:600}.dn{color:#ea3943}.warn{color:#f5c542}
+.tops{width:100%;border-collapse:collapse;font-size:.78rem}.tops th,.tops td{padding:3px 3px;border-bottom:1px solid #2a3142;text-align:left;white-space:nowrap}.tops th{color:#9aa4b2;font-weight:600}.dn{color:#ea3943}.warn{color:#f5c542}.tm{font-size:.68rem;color:#9aa4b2}
 .ts{display:inline-block;padding:2px 10px;border-radius:10px;background:#0f2a1f;color:#16c784;font-weight:600}
 </style>""", unsafe_allow_html=True)
 
@@ -193,24 +193,29 @@ with tab_live:
             g = s.get("grade") or "?"
             col = {"A": "ok", "B": "warn", "C": "dn"}.get(g, "no")
             what = "⛔" if s.get("blocked") else {"TP": "🎯", "SL": "🛑", "OPEN": "✅"}.get(s.get("result"), "✅")
-            return f"<b class='{col}'>{g}</b> {what}"
+            return f"<b class='{col}'>{g}</b> {what}<br><span class='tm'>{s.get('signal_time', '')}</span>"
 
         def _rules(r: dict) -> str:
             n = r.get("rules")
-            if n is None:
-                return "<span class='no'>—</span>"
-            return f"<span class='{'ok' if n == 3 else 'no'}'>{n}/3</span>"
+            cur = "<span class='no'>—</span>" if n is None else f"<span class='{'ok' if n == 3 else 'no'}'>{n}/3</span>"
+            at = r.get("rules3_at")
+            return cur + (f"<br><span class='tm'>3/3 {at}</span>" if at else "")
+
+        def _vol(r: dict) -> str:
+            v = r.get("vol_x")
+            return "<span class='no'>—</span>" if v is None else f"<span class='{'ok' if v > 1 else 'no'}'>{v}×</span>"
 
         rows = "".join(
             f"<tr><td>{i + 1}</td><td><b>{r['symbol']}</b></td>"
             f"<td class='{'ok' if r['side'] == 'CE' else 'dn'}'>{'CE ▲' if r['side'] == 'CE' else 'PE ▼'}</td>"
             f"<td>{r['ltp']:,.1f}</td><td>{r['day_pct']:+.2f}%</td><td><b>{r['strength']:.0f}</b></td>"
-            f"<td>{_rules(r)}</td><td>{_grade(r['symbol'])}</td></tr>"
+            f"<td>{_vol(r)}</td><td>{_rules(r)}</td><td>{_grade(r['symbol'])}</td></tr>"
             for i, r in enumerate(top))
         st.markdown("<table class='tops'><tr><th>#</th><th>Stock</th><th>Side</th><th>Price</th>"
-                    f"<th>Day</th><th>Str</th><th>Rules</th><th>Grade</th></tr>{rows}</table>"
-                    "<div class='muted' style='margin-top:4px'>Rules = trend + range break + volume met now. "
-                    "When all 3 line up the option chain is checked and the signal gets a grade: "
+                    f"<th>Day</th><th>Str</th><th>Vol</th><th>Rules</th><th>Grade</th></tr>{rows}</table>"
+                    "<div class='muted' style='margin-top:4px'>Vol = latest candle volume vs 20-candle average. "
+                    "Rules = trend + range break + volume met now; time below = first time all 3 lined up today. "
+                    "Then the option chain is checked and the signal gets a grade (time = signal time): "
                     "<b class='ok'>A</b> = sent to Telegram, B/C ⛔ = blocked (logged only).</div>",
                     unsafe_allow_html=True)
     else:
