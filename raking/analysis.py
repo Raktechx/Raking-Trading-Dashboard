@@ -87,3 +87,35 @@ def excel(saved: dict, path) -> None:
         for by, name in (("grade", "By grade"), ("instrument", "By instrument"), ("side", "By side"), ("hour", "By hour"),
                          ("weekday", "By weekday"), ("day", "By day")):
             breakdown(ds, by).to_excel(xw, sheet_name=name, index=False)
+
+
+# ---------------------------------------------------------------------------
+# Realistic paper P&L: 1 lot, after brokerage, taxes and slippage (Indian option buying).
+# ---------------------------------------------------------------------------
+COSTS = {
+    "brokerage_per_order": 20.0,   # flat Rs per order (buy + sell = 2 orders)
+    "stt_sell_pct": 0.10,          # STT on the sell premium
+    "exchange_pct": 0.0355,        # exchange transaction charge, both sides
+    "gst_pct": 18.0,               # GST on brokerage + exchange charge
+    "stamp_buy_pct": 0.003,        # stamp duty on the buy side
+    "slippage_pct": 1.0,           # worse fill than the screen price, each side
+}
+
+
+def gross_pnl(s: dict) -> float | None:
+    pts, lot = s.get("opt_points"), s.get("lot_size")
+    return float(pts) * float(lot) if isinstance(pts, (int, float)) and lot else None
+
+
+def trade_costs(s: dict) -> float:
+    c, lot = COSTS, float(s.get("lot_size") or 0)
+    buy, sell = float(s.get("opt_entry") or 0) * lot, float(s.get("opt_exit") or 0) * lot
+    brk = 2 * c["brokerage_per_order"]
+    exch = (buy + sell) * c["exchange_pct"] / 100
+    return (brk + exch + (brk + exch) * c["gst_pct"] / 100 + sell * c["stt_sell_pct"] / 100
+            + buy * c["stamp_buy_pct"] / 100 + (buy + sell) * c["slippage_pct"] / 100)
+
+
+def net_pnl(s: dict) -> float | None:
+    g = gross_pnl(s)
+    return None if g is None else g - trade_costs(s)
