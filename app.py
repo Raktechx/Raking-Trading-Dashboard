@@ -160,8 +160,7 @@ with tab_live:
     closed = [s for s in todays if s.get("result") in analysis.CLOSED]
 
     def _lot(s):
-        p, n = s.get("opt_points"), s.get("lot_size")
-        return float(p) * float(n) if isinstance(p, (int, float)) and n else 0.0
+        return analysis.net_pnl(s) or 0.0
 
     every_closed = [s for s in saved.values() if s.get("result") in analysis.CLOSED and not s.get("blocked")]
     m = st.columns(5)
@@ -169,9 +168,9 @@ with tab_live:
     m[1].metric("Won / lost", f"{sum(1 for s in closed if float(s['r']) > 0)} / "
                               f"{sum(1 for s in closed if float(s['r']) <= 0)}")
     m[2].metric("Today's R", round(sum(float(s["r"]) for s in closed), 2) if closed else 0)
-    m[3].metric("Today's P&L (1 lot)", f"₹{sum(_lot(s) for s in closed):,.0f}")
-    m[4].metric("All-time P&L (1 lot)", f"₹{sum(_lot(s) for s in every_closed):,.0f}",
-                help=f"{len(every_closed)} closed trades, {sum(float(s['r']) for s in every_closed):+.1f}R")
+    m[3].metric("Today's P&L (net)", f"₹{sum(_lot(s) for s in closed):,.0f}")
+    m[4].metric("All-time P&L (net)", f"₹{sum(_lot(s) for s in every_closed):,.0f}",
+                help=f"1 lot each, after brokerage, taxes and 1% slippage. {len(every_closed)} closed trades, {sum(float(s['r']) for s in every_closed):+.1f}R")
     nblk = len([s for s in store.today_signals(saved, today, include_blocked=True) if s.get("blocked")])
     st.caption(f"🛡️ Quality pre-check: only grade A signals are shown and alerted. "
                f"Blocked today: {nblk} weaker signal(s) — see the Signal log tab.")
