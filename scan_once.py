@@ -28,6 +28,11 @@ def load_state(today: str) -> dict:
     return st
 
 
+def lot_pnl(s: dict) -> float | None:
+    pts, lot = s.get("opt_points"), s.get("lot_size")
+    return float(pts) * float(lot) if isinstance(pts, (int, float)) and lot else None
+
+
 def eod_text(saved: dict, today: str, everything: dict | None = None) -> str:
     """Market-close report: today's trades, result of each, today's R and the running record."""
     icon = {"TP": "🎯", "SL": "🛑", "TIME": "⏱️", "OPEN": "🟡"}
@@ -43,11 +48,13 @@ def eod_text(saved: dict, today: str, everything: dict | None = None) -> str:
         for s in sigs:
             r = s.get("r")
             lines.append(f"{icon.get(s.get('result'), '•')} {s['signal_time']} <b>{s['option']}</b> "
-                         f"(grade {s.get('grade') or '-'}) ₹{s.get('opt_entry')} → ₹{s.get('opt_exit')}"
-                         + (f" · {float(r):+.1f}R" if r is not None else ""))
+                         f"{s.get('grade') or '-'} ₹{s.get('opt_entry')}→₹{s.get('opt_exit')}"
+                         + (f" {float(r):+.1f}R" if r is not None else "")
+                         + (f" ₹{lot_pnl(s):+,.0f}" if lot_pnl(s) is not None else ""))
         rs = [float(s["r"]) for s in sigs if s.get("r") is not None]
+        ps = [lot_pnl(s) for s in sigs if lot_pnl(s) is not None]
         if rs:
-            lines.append(f"Today: <b>{sum(rs):+.1f}R</b>")
+            lines.append(f"Today: <b>{sum(rs):+.1f}R · ₹{sum(ps):+,.0f}</b> (1 lot each)")
     blk = [s for s in (everything or {}).values() if s.get("blocked") and s.get("day") == today]
     if blk:
         lines.append("")
@@ -59,7 +66,9 @@ def eod_text(saved: dict, today: str, everything: dict | None = None) -> str:
     done = [s for s in saved.values() if s.get("result") in ("TP", "SL", "TIME")]
     if done:
         r = pd.Series([float(s["r"]) for s in done])
-        lines += ["", f"📈 All-time: {len(done)} trades · win {(r > 0).mean() * 100:.0f}% · <b>{r.sum():+.1f}R</b>"]
+        p = sum(lot_pnl(s) or 0 for s in done)
+        lines += ["", f"📈 All-time: {len(done)} trades · win {(r > 0).mean() * 100:.0f}% · "
+                      f"<b>{r.sum():+.1f}R · ₹{p:+,.0f}</b> (1 lot each)"]
     return "\n".join(lines)
 
 
