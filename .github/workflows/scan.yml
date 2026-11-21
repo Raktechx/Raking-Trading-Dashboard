@@ -5,6 +5,7 @@ name: Raking the Trader - live scan
 # extra starts simply wait in the queue and exit at once.
 on:
   schedule:
+    - cron: "15 3 * * 1-5"        # 08:45 IST - early start (GitHub timers often run late)
     - cron: "40 3 * * 1-5"        # 09:10 IST - main start
     - cron: "10 4 * * 1-5"        # 09:40 IST - backup start
     - cron: "0 5-9 * * 1-5"       # hourly backup starts
