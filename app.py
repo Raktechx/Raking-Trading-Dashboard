@@ -157,12 +157,21 @@ with tab_live:
     for k, v in bad.items():
         st.warning(f"{config.label(k)}: {v}")
     todays = store.today_signals(saved, today)
-    m = st.columns(4)
-    m[0].metric("Signals today", len(todays))
-    m[1].metric("Open trades", sum(1 for s in todays if s.get("result") == "OPEN"))
     closed = [s for s in todays if s.get("result") in analysis.CLOSED]
-    m[2].metric("Closed today", len(closed))
-    m[3].metric("Today's R", round(sum(float(s["r"]) for s in closed), 2) if closed else 0)
+
+    def _lot(s):
+        p, n = s.get("opt_points"), s.get("lot_size")
+        return float(p) * float(n) if isinstance(p, (int, float)) and n else 0.0
+
+    every_closed = [s for s in saved.values() if s.get("result") in analysis.CLOSED and not s.get("blocked")]
+    m = st.columns(5)
+    m[0].metric("Signals today", len(todays))
+    m[1].metric("Won / lost", f"{sum(1 for s in closed if float(s['r']) > 0)} / "
+                              f"{sum(1 for s in closed if float(s['r']) <= 0)}")
+    m[2].metric("Today's R", round(sum(float(s["r"]) for s in closed), 2) if closed else 0)
+    m[3].metric("Today's P&L (1 lot)", f"₹{sum(_lot(s) for s in closed):,.0f}")
+    m[4].metric("All-time P&L (1 lot)", f"₹{sum(_lot(s) for s in every_closed):,.0f}",
+                help=f"{len(every_closed)} closed trades, {sum(float(s['r']) for s in every_closed):+.1f}R")
     nblk = len([s for s in store.today_signals(saved, today, include_blocked=True) if s.get("blocked")])
     st.caption(f"🛡️ Quality pre-check: only grade A signals are shown and alerted. "
                f"Blocked today: {nblk} weaker signal(s) — see the Signal log tab.")
@@ -303,7 +312,7 @@ SL previous candle low · target 1:2.
 **SL size:** never tighter than {S['min_risk_atr']} ATR or {S['min_risk_pct']}% of the price, and the option SL is at
 least {S['min_opt_sl_pct']:.0f}% below the entry premium (target = 2× that). Options under ₹{S['min_premium']:.0f} are skipped.
 
-**Limits:** {S['max_trades_per_day']} index trades and {config.STOCKS['max_trades_per_day']} stock trades a day ·
+**Limits (practice mode):** no daily cap - every grade A signal is sent; one open trade per instrument at a time ·
 no new entry after {S['last_entry']} · open trades closed at {S['exit_time']} · alerts never older than
 {S['fresh_minutes']} minutes.
 
