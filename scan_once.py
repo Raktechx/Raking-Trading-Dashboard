@@ -83,20 +83,31 @@ def token_days_left() -> int | None:
 
 
 def week_text(saved: dict, today: str) -> str:
+    """Weekly report: results and P&L for the last 7 days, day by day."""
     start = str((pd.Timestamp(today) - pd.Timedelta(days=6)).date())
     week = [s for s in saved.values() if start <= s["day"] <= today]
     done = [s for s in week if s.get("result") in ("TP", "SL", "TIME")]
-    lines = [f"🗓️ <b>{config.APP_NAME}</b> — weekly report ({start} to {today})",
-             f"Signals: {len(week)} · closed: {len(done)}"]
-    if done:
-        r = pd.Series([float(s["r"]) for s in done])
-        lines.append(f"Win rate {(r > 0).mean() * 100:.0f}% · total {r.sum():.2f} R · best {r.max():.2f} R · worst {r.min():.2f} R")
-    alt = [s for s in saved.values() if s.get("alt_result") in ("TP", "SL", "TIME")]
-    main = [s for s in saved.values() if s.get("result") in ("TP", "SL", "TIME")]
-    if alt and main:
-        a, m = sum(float(s["alt_r"]) for s in alt), sum(float(s["r"]) for s in main)
-        lines.append(f"Exit test (all time): current method {m:.2f} R ({len(main)} trades) vs "
-                     f"option-candle SL {a:.2f} R ({len(alt)} trades)")
+    lines = [f"🗓️ <b>WEEKLY REPORT</b>", f"{pd.Timestamp(start):%d %b} – {pd.Timestamp(today):%d %b %Y}", ""]
+    if not done:
+        lines.append("No closed trades this week.")
+        return "\n".join(lines)
+    r = pd.Series([float(s["r"]) for s in done])
+    pnl = sum(lot_pnl(s) or 0 for s in done)
+    lines.append(f"Trades: <b>{len(done)}</b> · 🎯 {int((r > 0).sum())} · 🛑 {int((r <= 0).sum())} · "
+                 f"win {(r > 0).mean() * 100:.0f}%")
+    lines.append(f"Week: <b>{r.sum():+.1f}R · ₹{pnl:+,.0f}</b> (1 lot each)")
+    lines.append("")
+    for day in sorted({s["day"] for s in done}):
+        ds = [s for s in done if s["day"] == day]
+        lines.append(f"{pd.Timestamp(day):%a %d}: {len(ds)} trades · {sum(float(s['r']) for s in ds):+.1f}R · "
+                     f"₹{sum(lot_pnl(s) or 0 for s in ds):+,.0f}")
+    idx = [s for s in done if s["index"] in config.INDICES]
+    stk = [s for s in done if s["index"] not in config.INDICES]
+    lines.append("")
+    for name, grp in (("Index", idx), ("Stocks", stk)):
+        if grp:
+            lines.append(f"{name}: {len(grp)} · {sum(float(s['r']) for s in grp):+.1f}R · "
+                         f"₹{sum(lot_pnl(s) or 0 for s in grp):+,.0f}")
     return "\n".join(lines)
 
 
