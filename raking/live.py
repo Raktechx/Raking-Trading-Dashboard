@@ -237,6 +237,15 @@ def scan(api: Upstox | None = None, send_alerts: bool = True, demo_mode: bool = 
             if res["result"] != "OPEN":
                 res.pop("_exit_ts", None)
                 res["exit_by"] = "5-min candle"
+                try:   # judge the result on the option premium we would really hold, not the underlying
+                    risk = float(s["opt_entry"]) - float(s["opt_sl"])
+                    if res.get("opt_exit") is not None and risk > 0:
+                        pr = round((float(res["opt_exit"]) - float(s["opt_entry"])) / risk, 2)
+                        res["r"] = max(min(pr, float(S["reward_risk"])), -1.0) if res["result"] != "TIME" else pr
+                        if res["result"] == "TP" and pr <= 0:
+                            res["result"] = "SL" if pr <= -1 else "TIME"
+                except (TypeError, ValueError, KeyError):
+                    pass
                 s.update(res)
                 if send_alerts and not s.get("blocked"):
                     notify.result_alert(s)
