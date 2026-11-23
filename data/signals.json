@@ -1591,13 +1591,13 @@
       "Opening range high 1194.1 broken, volume 1.1x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "SL",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "11:56",
+    "r": -1.0,
+    "points": -6.5,
+    "opt_exit": 44.5,
+    "opt_points": -6.2,
     "group": "STOCK",
     "delta": 0.55,
     "opt_key": "NSE_FO|138813",
@@ -1632,7 +1632,8 @@
     "blocked": true,
     "block_reason": "grade B (67/100): volume only just above average; broader market against the trade",
     "alt_result": "SL",
-    "alt_r": -1.0
+    "alt_r": -1.0,
+    "exit_by": "live premium"
   },
   "2026-11-23|HEROMOTOCO|11:40": {
     "id": "2026-11-23|HEROMOTOCO|11:40",
