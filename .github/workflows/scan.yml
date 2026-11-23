@@ -1,5 +1,7 @@
 name: Raking the Trader - live scan
 
+# Self-chaining: a run lives ~5.5 h, then starts the next one, so the bot runs 24/7 without
+# depending on GitHub's unreliable timers (they remain only as a backup).
 # One run stays alive for the whole market day and scans every 5 minutes, so the bot
 # does not depend on GitHub's 5-minute timer. The timers below only START the day's run;
 # extra starts simply wait in the queue and exit at once.
@@ -31,6 +33,9 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-scan.txt
       - run: pip install -r requirements-scan.txt
+      - name: Install headless browser (to keep the dashboard awake)
+        continue-on-error: true
+        run: pip install -q playwright && python -m playwright install --with-deps chromium
       - id: day
         run: echo "day=$(TZ=Asia/Kolkata date +%F)" >> "$GITHUB_OUTPUT"
       - name: Reuse today's instrument lists (downloaded once a day)
@@ -49,18 +54,25 @@ jobs:
           git config user.name "raking-bot"
           git config user.email "actions@users.noreply.github.com"
           start=$(date +%s)
+          python wake_app.py
+          last_wake=$(date +%s); woke=""
           while true; do
             dow=$(TZ=Asia/Kolkata date +%u)
             hm=$(TZ=Asia/Kolkata date +%H%M)
-            if [ "$dow" -gt 5 ] || [ "$((10#$hm))" -gt 1545 ]; then
-              echo "Market day over - stopping."
+            if [ $(( $(date +%s) - start )) -gt 19800 ]; then
+              gh workflow run scan.yml --ref main && echo "Handed over to a fresh run."
               break
             fi
-            if [ "$((10#$hm))" -lt 915 ]; then
-              sleep 30
+            if [ "$dow" -gt 5 ] || [ "$((10#$hm))" -gt 1545 ] || [ "$((10#$hm))" -lt 915 ]; then
+              # outside market hours: stay alive (so tomorrow starts on time), wake the dashboard at ~9:05
+              if [ "$dow" -le 5 ] && [ "$((10#$hm))" -ge 900 ] && [ "$((10#$hm))" -lt 915 ] && [ "$woke" != "$(date +%F)" ]; then
+                python wake_app.py; woke=$(date +%F); last_wake=$(date +%s)
+              fi
+              sleep 60
               continue
             fi
             python scan_once.py || echo "Scan failed - trying again next cycle."
+            if [ $(( $(date +%s) - last_wake )) -gt 3600 ]; then python wake_app.py; last_wake=$(date +%s); fi
             git add -A data docs LIVE.md
             if ! git diff --cached --quiet; then
               git commit -q -m "live update"
