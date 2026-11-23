@@ -1631,5 +1631,80 @@
     "block_reason": "grade B (67/100): volume only just above average; broader market against the trade",
     "alt_result": "SL",
     "alt_r": -1.0
+  },
+  "2026-11-23|HEROMOTOCO|11:40": {
+    "id": "2026-11-23|HEROMOTOCO|11:40",
+    "index": "HEROMOTOCO",
+    "day": "2026-11-23",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "11:40",
+    "future": "HEROMOTOCO FUT 23 NOV 26",
+    "entry": 5578.5,
+    "sl": 5564.0,
+    "tp": 5607.5,
+    "risk_pts": 14.5,
+    "strike": 5600.0,
+    "expiry": "2026-12-29",
+    "option": "HEROMOTOCO 5600 CE",
+    "opt_entry": 202.0,
+    "opt_sl": 177.75,
+    "opt_tp": 250.5,
+    "orb_high": 5571.0,
+    "orb_low": 5478.5,
+    "vwap": 5524.65,
+    "volume_x": 1.61,
+    "atm_oi_pct": 4.23,
+    "writing_oi_pct": 2.52,
+    "lot_size": 150,
+    "reasons": [
+      "Trend: price above VWAP 5524.6, EMA20 > EMA50",
+      "ATM 5600 CE long build-up: premium +5.2%, OI +4.2%",
+      "Put writing (5600, 5550, 5500): OI +2.5%",
+      "Opening range high 5571.0 broken, volume 1.6x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.53,
+    "opt_key": "NSE_FO|118415",
+    "score": 66,
+    "grade": "B",
+    "score_parts": {
+      "Trend strength": 5.6,
+      "Breakout candle": 11.2,
+      "Volume": 4.1,
+      "OI build-up": 10.1,
+      "PCR": 5.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 0.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong breakout candle closing near its high",
+        "no big OI wall before target (next at 6000)",
+        "premium fairly priced (IV 27.5)"
+      ],
+      "minus": [
+        "price stretched 3.3 ATR from VWAP",
+        "broader market against the trade"
+      ]
+    },
+    "created_at": "2026-11-23 11:40:45",
+    "range_pct": 1.69,
+    "day_move_pct": 0.69,
+    "late_move": false,
+    "blocked": true,
+    "block_reason": "grade B (66/100): price stretched 3.3 ATR from VWAP; broader market against the trade",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
