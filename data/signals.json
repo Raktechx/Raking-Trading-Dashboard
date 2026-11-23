@@ -1861,5 +1861,81 @@
     "block_reason": "late move: opening range 3.16%, day move 2.08% (measuring)",
     "alt_result": "OPEN",
     "alt_r": null
+  },
+  "2026-11-23|MOTILALOFS|13:25": {
+    "id": "2026-11-23|MOTILALOFS|13:25",
+    "index": "MOTILALOFS",
+    "day": "2026-11-23",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "13:25",
+    "future": "MOTILALOFS FUT 23 NOV 26",
+    "entry": 1234.0,
+    "sl": 1229.0,
+    "tp": 1244.0,
+    "risk_pts": 5.0,
+    "strike": 1240.0,
+    "expiry": "2026-12-29",
+    "option": "MOTILALOFS 1240 CE",
+    "opt_entry": 64.7,
+    "opt_sl": 56.95,
+    "opt_tp": 80.25,
+    "orb_high": 1233.8,
+    "orb_low": 1203.35,
+    "vwap": 1219.98,
+    "volume_x": 6.08,
+    "atm_oi_pct": 2.62,
+    "writing_oi_pct": 1.75,
+    "lot_size": 775,
+    "reasons": [
+      "Trend: price above VWAP 1220.0, EMA20 > EMA50",
+      "ATM 1240 CE long build-up: premium +4.9%, OI +2.6%",
+      "Put writing (1240, 1220, 1200): OI +1.7%",
+      "Opening range high 1233.8 broken, volume 6.1x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.53,
+    "opt_key": "NSE_FO|138245",
+    "score": 57,
+    "grade": "B",
+    "score_parts": {
+      "Trend strength": 7.5,
+      "Breakout candle": 3.9,
+      "Volume": 10.0,
+      "OI build-up": 6.6,
+      "PCR": 0.5,
+      "Room to OI wall": 15.0,
+      "Option IV": 8.4,
+      "India VIX": 5.0,
+      "Market alignment": 0.0
+    },
+    "score_notes": {
+      "plus": [
+        "volume 6.1x average",
+        "no big OI wall before target (next at 1300)",
+        "premium fairly priced (IV 40.8)"
+      ],
+      "minus": [
+        "price stretched 4.1 ATR from VWAP",
+        "weak breakout candle (small body / long wick)",
+        "PCR 0.76 against the trade"
+      ]
+    },
+    "created_at": "2026-11-23 13:25:57",
+    "range_pct": 2.53,
+    "day_move_pct": 0.02,
+    "late_move": true,
+    "blocked": true,
+    "block_reason": "late move: opening range 2.53%, day move 0.02% (measuring)",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
