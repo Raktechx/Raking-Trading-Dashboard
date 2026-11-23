@@ -1936,8 +1936,8 @@
     "late_move": true,
     "blocked": true,
     "block_reason": "late move: opening range 2.53%, day move 0.02% (measuring)",
-    "alt_result": "OPEN",
-    "alt_r": null
+    "alt_result": "SL",
+    "alt_r": -1.0
   },
   "2026-11-23|INOXWIND|14:05": {
     "id": "2026-11-23|INOXWIND|14:05",
