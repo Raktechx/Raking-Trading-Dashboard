@@ -1257,5 +1257,79 @@
     "alt_result": "TP",
     "alt_r": 2.0,
     "exit_by": "live premium"
+  },
+  "2026-11-23|HCLTECH|10:15": {
+    "id": "2026-11-23|HCLTECH|10:15",
+    "index": "HCLTECH",
+    "day": "2026-11-23",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "10:15",
+    "future": "HCLTECH FUT 23 NOV 26",
+    "entry": 1370.5,
+    "sl": 1363.4,
+    "tp": 1384.7,
+    "risk_pts": 7.1,
+    "strike": 1380.0,
+    "expiry": "2026-12-29",
+    "option": "HCLTECH 1380 CE",
+    "opt_entry": 54.1,
+    "opt_sl": 47.6,
+    "opt_tp": 67.1,
+    "orb_high": 1364.8,
+    "orb_low": 1349.6,
+    "vwap": 1358.75,
+    "volume_x": 1.26,
+    "atm_oi_pct": 18.95,
+    "writing_oi_pct": 3.1,
+    "lot_size": 400,
+    "reasons": [
+      "Trend: price above VWAP 1358.7, EMA20 > EMA50",
+      "ATM 1380 CE long build-up: premium +11.5%, OI +19.0%",
+      "Put writing (1380, 1360, 1340): OI +3.1%",
+      "Opening range high 1364.8 broken, volume 1.3x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.54,
+    "opt_key": "NSE_FO|95330",
+    "score": 70,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 15.0,
+      "Breakout candle": 11.5,
+      "Volume": 1.7,
+      "OI build-up": 12.2,
+      "PCR": 0.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 0.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "strong breakout candle closing near its high",
+        "heavy fresh OI build-up and writing"
+      ],
+      "minus": [
+        "volume only just above average",
+        "PCR 0.63 against the trade",
+        "broader market against the trade"
+      ]
+    },
+    "created_at": "2026-11-23 10:17:55",
+    "range_pct": 1.13,
+    "day_move_pct": 1.07,
+    "late_move": false,
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
