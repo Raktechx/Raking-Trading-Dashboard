@@ -1938,5 +1938,79 @@
     "block_reason": "late move: opening range 2.53%, day move 0.02% (measuring)",
     "alt_result": "OPEN",
     "alt_r": null
+  },
+  "2026-11-23|INOXWIND|14:05": {
+    "id": "2026-11-23|INOXWIND|14:05",
+    "index": "INOXWIND",
+    "day": "2026-11-23",
+    "side": "PE",
+    "setup": "Breakout",
+    "signal_time": "14:05",
+    "future": "INOXWIND FUT 23 NOV 26",
+    "entry": 53.95,
+    "sl": 54.15,
+    "tp": 53.55,
+    "risk_pts": 0.2,
+    "strike": 54.0,
+    "expiry": "2026-12-29",
+    "option": "INOXWIND 54 PE",
+    "opt_entry": 3.3,
+    "opt_sl": 2.9,
+    "opt_tp": 4.1,
+    "orb_high": 56.66,
+    "orb_low": 54.02,
+    "vwap": 54.99,
+    "volume_x": 1.65,
+    "atm_oi_pct": 120.0,
+    "writing_oi_pct": 1.64,
+    "lot_size": 6400,
+    "reasons": [
+      "Trend: price below VWAP 55.0, EMA20 < EMA50",
+      "ATM 54 PE long build-up: premium +0.3%, OI +120.0%",
+      "Call writing (54, 55, 56): OI +1.6%",
+      "Opening range low 54.0 broken, volume 1.6x (vs 20-candle avg)",
+      "SL = previous candle high, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.45,
+    "opt_key": "NSE_FO|130937",
+    "score": 71,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 7.5,
+      "Breakout candle": 14.1,
+      "Volume": 4.3,
+      "OI build-up": 10.0,
+      "PCR": 5.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 5.5,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong breakout candle closing near its low",
+        "no big OI wall before target (next at 50)",
+        "broader market moving the same way"
+      ],
+      "minus": [
+        "price stretched 5.4 ATR from VWAP"
+      ]
+    },
+    "created_at": "2026-11-23 14:06:03",
+    "range_pct": 4.89,
+    "day_move_pct": 0.13,
+    "late_move": true,
+    "blocked": true,
+    "block_reason": "late move: opening range 4.89%, day move 0.13% (measuring)",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
