@@ -128,12 +128,19 @@ def _store_new(trades: list, saved: dict, tday: str, group: str, max_total: int,
                                         or mv > config.STOCKS.get("max_day_move_pct", 3.0))
             except Exception:
                 pass
+        why = None
+        if group == "STOCK":
+            nb = (ctx.get("market") or {}).get("NIFTY")
+            if config.STOCKS.get("need_nifty_trend", True) and nb != (1 if rec["side"] == "CE" else -1):
+                why = "against Nifty trend (" + {1: "Nifty up", -1: "Nifty down"}.get(nb, "Nifty mixed") + ")"
+            elif rec["signal_time"] > config.STOCKS.get("last_entry", "13:30"):
+                why = f"after {config.STOCKS.get('last_entry', '13:30')} (afternoon stock entries)"
         late = bool(rec.get("late_move"))
-        if late or not quality.passes(rec, S["min_quality"]):
+        if why or late or not quality.passes(rec, S["min_quality"]):
             if len(n_blocked) >= S["max_blocked_per_index"]:
                 continue
             rec["blocked"] = True   # quality pre-check failed: logged, result tracked, never alerted
-            rec["block_reason"] = (f"late move: opening range {rec.get('range_pct')}%, day move "
+            rec["block_reason"] = (why if why else f"late move: opening range {rec.get('range_pct')}%, day move "
                                    f"{rec.get('day_move_pct')}% (measuring)" if late else
                                    "quality could not be checked" if rec.get("score") is None else
                                    f"grade {rec.get('grade')} ({rec.get('score')}/100): "
