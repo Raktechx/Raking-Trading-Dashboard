@@ -1709,5 +1709,80 @@
     "block_reason": "grade B (66/100): price stretched 3.3 ATR from VWAP; broader market against the trade",
     "alt_result": "OPEN",
     "alt_r": null
+  },
+  "2026-11-23|AUROPHARMA|12:35": {
+    "id": "2026-11-23|AUROPHARMA|12:35",
+    "index": "AUROPHARMA",
+    "day": "2026-11-23",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "12:35",
+    "future": "AUROPHARMA FUT 23 NOV 26",
+    "entry": 1815.0,
+    "sl": 1812.2,
+    "tp": 1820.6,
+    "risk_pts": 2.8,
+    "strike": 1820.0,
+    "expiry": "2026-12-29",
+    "option": "AUROPHARMA 1820 CE",
+    "opt_entry": 60.55,
+    "opt_sl": 53.3,
+    "opt_tp": 75.1,
+    "orb_high": 1814.0,
+    "orb_low": 1786.9,
+    "vwap": 1805.27,
+    "volume_x": 1.99,
+    "atm_oi_pct": 5.88,
+    "writing_oi_pct": 1.28,
+    "lot_size": 550,
+    "reasons": [
+      "Trend: price above VWAP 1805.3, EMA20 > EMA50",
+      "ATM 1820 CE long build-up: premium +2.3%, OI +5.9%",
+      "Put writing (1820, 1800, 1780): OI +1.3%",
+      "Opening range high 1814.0 broken, volume 2.0x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.54,
+    "opt_key": "NSE_FO|73391",
+    "score": 59,
+    "grade": "B",
+    "score_parts": {
+      "Trend strength": 7.5,
+      "Breakout candle": 5.2,
+      "Volume": 6.6,
+      "OI build-up": 9.4,
+      "PCR": 0.4,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 0.0
+    },
+    "score_notes": {
+      "plus": [
+        "no big OI wall before target (next at 1920)",
+        "premium fairly priced (IV 24.2)"
+      ],
+      "minus": [
+        "price stretched 3.4 ATR from VWAP",
+        "PCR 0.74 against the trade",
+        "broader market against the trade"
+      ]
+    },
+    "created_at": "2026-11-23 12:40:51",
+    "range_pct": 1.52,
+    "day_move_pct": 0.06,
+    "late_move": false,
+    "blocked": true,
+    "block_reason": "grade B (59/100): price stretched 3.4 ATR from VWAP; PCR 0.74 against the trade; broader market against the trade",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
