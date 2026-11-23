@@ -1364,13 +1364,13 @@
       "Opening range high 1962.6 broken, volume 2.5x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "SL",
+    "exit": 1958.0,
+    "exit_time": "10:25",
+    "r": -1.0,
+    "points": -10.0,
+    "opt_exit": 98.0,
+    "opt_points": -2.55,
     "group": "STOCK",
     "delta": 0.53,
     "opt_key": "NSE_FO|44278",
@@ -1403,6 +1403,8 @@
     "day_move_pct": 1.57,
     "late_move": false,
     "alt_result": "OPEN",
-    "alt_r": null
+    "alt_r": null,
+    "breakeven": false,
+    "exit_by": "5-min candle"
   }
 }
