@@ -1290,13 +1290,13 @@
       "Opening range high 1364.8 broken, volume 1.3x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "SL",
+    "exit": 1363.4,
+    "exit_time": "10:50",
+    "r": -1.0,
+    "points": -7.1,
+    "opt_exit": 50.45,
+    "opt_points": -3.65,
     "group": "STOCK",
     "delta": 0.54,
     "opt_key": "NSE_FO|95330",
@@ -1329,8 +1329,10 @@
     "range_pct": 1.13,
     "day_move_pct": 1.07,
     "late_move": false,
-    "alt_result": "OPEN",
-    "alt_r": null
+    "alt_result": "SL",
+    "alt_r": -1.0,
+    "breakeven": false,
+    "exit_by": "5-min candle"
   },
   "2026-11-23|ATHERENERG|10:20": {
     "id": "2026-11-23|ATHERENERG|10:20",
