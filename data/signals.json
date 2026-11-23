@@ -1667,13 +1667,13 @@
       "Opening range high 5571.0 broken, volume 1.6x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "SL",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "13:12",
+    "r": -1.0,
+    "points": -14.5,
+    "opt_exit": 177.3,
+    "opt_points": -24.7,
     "group": "STOCK",
     "delta": 0.53,
     "opt_key": "NSE_FO|118415",
@@ -1708,7 +1708,8 @@
     "blocked": true,
     "block_reason": "grade B (66/100): price stretched 3.3 ATR from VWAP; broader market against the trade",
     "alt_result": "OPEN",
-    "alt_r": null
+    "alt_r": null,
+    "exit_by": "live premium"
   },
   "2026-11-23|AUROPHARMA|12:35": {
     "id": "2026-11-23|AUROPHARMA|12:35",
