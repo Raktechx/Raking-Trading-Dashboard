@@ -1556,5 +1556,80 @@
     "block_reason": "grade B (68/100): volume only just above average; PCR 0.63 against the trade; broader market against the trade",
     "alt_result": "OPEN",
     "alt_r": null
+  },
+  "2026-11-23|NAUKRI|11:25": {
+    "id": "2026-11-23|NAUKRI|11:25",
+    "index": "NAUKRI",
+    "day": "2026-11-23",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "11:25",
+    "future": "NAUKRI FUT 23 NOV 26",
+    "entry": 1200.5,
+    "sl": 1194.0,
+    "tp": 1213.5,
+    "risk_pts": 6.5,
+    "strike": 1200.0,
+    "expiry": "2026-12-29",
+    "option": "NAUKRI 1200 CE",
+    "opt_entry": 50.7,
+    "opt_sl": 44.6,
+    "opt_tp": 62.85,
+    "orb_high": 1194.1,
+    "orb_low": 1179.7,
+    "vwap": 1191.15,
+    "volume_x": 1.13,
+    "atm_oi_pct": 1.8,
+    "writing_oi_pct": 2.24,
+    "lot_size": 550,
+    "reasons": [
+      "Trend: price above VWAP 1191.1, EMA20 > EMA50",
+      "ATM 1200 CE long build-up: premium +10.8%, OI +1.8%",
+      "Put writing (1200, 1180, 1160): OI +2.2%",
+      "Opening range high 1194.1 broken, volume 1.1x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.55,
+    "opt_key": "NSE_FO|138813",
+    "score": 67,
+    "grade": "B",
+    "score_parts": {
+      "Trend strength": 15.0,
+      "Breakout candle": 9.6,
+      "Volume": 0.9,
+      "OI build-up": 6.1,
+      "PCR": 5.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 0.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "no big OI wall before target (next at 1300)",
+        "premium fairly priced (IV 30.0)"
+      ],
+      "minus": [
+        "volume only just above average",
+        "broader market against the trade"
+      ]
+    },
+    "created_at": "2026-11-23 11:25:54",
+    "range_pct": 1.22,
+    "day_move_pct": 1.76,
+    "late_move": false,
+    "blocked": true,
+    "block_reason": "grade B (67/100): volume only just above average; broader market against the trade",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
