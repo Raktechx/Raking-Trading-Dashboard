@@ -1784,5 +1784,81 @@
     "block_reason": "grade B (59/100): price stretched 3.4 ATR from VWAP; PCR 0.74 against the trade; broader market against the trade",
     "alt_result": "OPEN",
     "alt_r": null
+  },
+  "2026-11-23|CDSL|13:05": {
+    "id": "2026-11-23|CDSL|13:05",
+    "index": "CDSL",
+    "day": "2026-11-23",
+    "side": "PE",
+    "setup": "Breakout",
+    "signal_time": "13:05",
+    "future": "CDSL FUT 23 NOV 26",
+    "entry": 1401.0,
+    "sl": 1404.5,
+    "tp": 1394.0,
+    "risk_pts": 3.5,
+    "strike": 1400.0,
+    "expiry": "2026-12-29",
+    "option": "CDSL 1400 PE",
+    "opt_entry": 46.7,
+    "opt_sl": 41.1,
+    "opt_tp": 57.9,
+    "orb_high": 1446.0,
+    "orb_low": 1401.7,
+    "vwap": 1414.56,
+    "volume_x": 1.65,
+    "atm_oi_pct": 1.17,
+    "writing_oi_pct": 1.47,
+    "lot_size": 475,
+    "reasons": [
+      "Trend: price below VWAP 1414.6, EMA20 < EMA50",
+      "ATM 1400 PE long build-up: premium +3.8%, OI +1.2%",
+      "Call writing (1400, 1420, 1440): OI +1.5%",
+      "Opening range low 1401.7 broken, volume 1.7x (vs 20-candle avg)",
+      "SL = previous candle high, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.45,
+    "opt_key": "NSE_FO|95479",
+    "score": 53,
+    "grade": "C",
+    "score_parts": {
+      "Trend strength": 7.5,
+      "Breakout candle": 10.5,
+      "Volume": 4.3,
+      "OI build-up": 4.0,
+      "PCR": 3.7,
+      "Room to OI wall": 3.2,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong breakout candle closing near its low",
+        "premium fairly priced (IV 29.5)",
+        "broader market moving the same way"
+      ],
+      "minus": [
+        "price stretched 4.3 ATR from VWAP",
+        "OI build-up only marginal",
+        "big put OI wall at 1400 before the target"
+      ]
+    },
+    "created_at": "2026-11-23 13:05:55",
+    "range_pct": 3.16,
+    "day_move_pct": 2.08,
+    "late_move": true,
+    "blocked": true,
+    "block_reason": "late move: opening range 3.16%, day move 2.08% (measuring)",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
