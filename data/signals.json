@@ -1743,13 +1743,13 @@
       "Opening range high 1814.0 broken, volume 2.0x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "SL",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "13:28",
+    "r": -1.0,
+    "points": -2.8,
+    "opt_exit": 50.2,
+    "opt_points": -10.35,
     "group": "STOCK",
     "delta": 0.54,
     "opt_key": "NSE_FO|73391",
@@ -1784,7 +1784,8 @@
     "blocked": true,
     "block_reason": "grade B (59/100): price stretched 3.4 ATR from VWAP; PCR 0.74 against the trade; broader market against the trade",
     "alt_result": "OPEN",
-    "alt_r": null
+    "alt_r": null,
+    "exit_by": "live premium"
   },
   "2026-11-23|CDSL|13:05": {
     "id": "2026-11-23|CDSL|13:05",
