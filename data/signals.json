@@ -1515,13 +1515,13 @@
       "Opening range high 1962.6 broken, volume 1.0x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "SL",
+    "exit": 1961.5,
+    "exit_time": "13:05",
+    "r": -1.0,
+    "points": -10.4,
+    "opt_exit": 94.0,
+    "opt_points": -6.85,
     "group": "STOCK",
     "delta": 0.54,
     "opt_key": "NSE_FO|44278",
@@ -1556,8 +1556,10 @@
     "late_move": false,
     "blocked": true,
     "block_reason": "grade B (68/100): volume only just above average; PCR 0.63 against the trade; broader market against the trade",
-    "alt_result": "OPEN",
-    "alt_r": null
+    "alt_result": "SL",
+    "alt_r": -1.0,
+    "breakeven": false,
+    "exit_by": "5-min candle"
   },
   "2026-11-23|NAUKRI|11:25": {
     "id": "2026-11-23|NAUKRI|11:25",
