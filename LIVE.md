@@ -1,6 +1,6 @@
 # 📈 Raking the Trader — Live
 
-**Last update:** 23 Nov 2026, 15:26:29 IST · 🟢 Market open
+**Last update:** 23 Nov 2026, 15:31:15 IST · ⚪ Market closed
 
 ## Today's signals
 
