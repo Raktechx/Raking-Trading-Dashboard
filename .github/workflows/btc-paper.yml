@@ -1,0 +1,26 @@
+name: BTCUSD paper trade
+on:
+  schedule:
+    - cron: "17 0 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: btc-paper
+jobs:
+  paper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements-scan.txt
+      - run: python btc_paper.py
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      - run: |
+          git config user.name "raking-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/btc_paper.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then git commit -q -m "btc paper update"; git pull -q --rebase && git push -q; fi
