@@ -58,6 +58,35 @@ def strategies(h):
     S["Seasonality + uptrend"] = hr.isin([21, 22]).astype(float) * up
     # 6 Combo: trend blend (vol-targeted) + seasonality overlay
     S["Combo trend + season"] = (S["Trend blend + vol target"] * 0.7 + S["Seasonality + uptrend"] * 0.3)
+    # 7 China #1 (Xueqiu): close > close 20d ago AND > MA20 -> buy; both below -> sell;
+    #   MA20<MA60<MA120 forces cash; mixed MAs = sell-only. Long only.
+    m20, m60, m120 = d.rolling(20).mean(), d.rolling(60).mean(), d.rolling(120).mean()
+    p, cur = [], 0
+    for c, c20, a, b, e in zip(d, d.shift(20), m20, m60, m120):
+        bull, bear = a > b > e, a < b < e
+        if bear or (c < c20 and c < a): cur = 0
+        elif bull and c > c20 and c > a: cur = 1
+        p.append(cur)
+    S["CN dual-cond N20 + MA align"] = daily_to_hourly(h, pd.Series(p, index=d.index))
+    # 8 China #2 (TradingView CN): 4h, EMA144 side + Donchian20 breakout + 3xATR chandelier
+    f = h.resample("4h").agg({"open": "first", "high": "max", "low": "min", "close": "last"}).dropna()
+    e144 = f.close.ewm(span=144, adjust=False).mean()
+    tr = pd.concat([f.high - f.low, (f.high - f.close.shift()).abs(), (f.low - f.close.shift()).abs()], axis=1).max(axis=1)
+    a4 = tr.rolling(14).mean(); hi, lo = f.high.rolling(20).max().shift(), f.low.rolling(20).min().shift()
+    p, cur, ext = [], 0, 0.0
+    for c, e, x, y, at in zip(f.close, e144, hi, lo, a4):
+        if cur == 1:
+            ext = max(ext, c)
+            if c < ext - 3 * at: cur = 0
+        elif cur == -1:
+            ext = min(ext, c)
+            if c > ext + 3 * at: cur = 0
+        if cur == 0:
+            if c > e and c > x: cur, ext = 1, c
+            elif c < e and c < y: cur, ext = -1, c
+        p.append(cur)
+    S["CN EMA144+Donchian+ATR 4h"] = daily_to_hourly(h, pd.Series(p, index=f.index))
+    S["CN EMA144 4h long-only"] = S["CN EMA144+Donchian+ATR 4h"].clip(lower=0)
     S["Buy & hold"] = pd.Series(1.0, index=h.index)
     return S
 
