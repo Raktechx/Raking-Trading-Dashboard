@@ -1,0 +1,27 @@
+name: MCX backtest
+on:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: Days of history to test
+        default: "365"
+permissions:
+  contents: read
+jobs:
+  bt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-scan.txt
+      - env:
+          UPSTOX_ANALYTICS_TOKEN: ${{ secrets.UPSTOX_ANALYTICS_TOKEN }}
+          UPSTOX_ACCESS_TOKEN: ${{ secrets.UPSTOX_ACCESS_TOKEN }}
+          DAYS: ${{ inputs.days }}
+        run: |
+          case "$DAYS" in ''|*[!0-9]*) DAYS=365 ;; esac
+          mkdir -p data/cache
+          python mcx_backtest.py "$DAYS" | tee -a "$GITHUB_STEP_SUMMARY"
