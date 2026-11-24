@@ -1,13 +1,10 @@
 # 📈 Raking the Trader — Live
 
-**Last update:** 23 Nov 2026, 15:45:01 IST · ⚪ Market closed
+**Last update:** 24 Nov 2026, 09:15:14 IST · 🟢 Market open
 
 ## Today's signals
 
-| Time | Signal | Premium entry | Premium SL | Premium target | Result |
-|---|---|---|---|---|---|
-| 10:15 | **BUY HCLTECH 1380 CE** | 54.1 | 47.6 | 67.1 | SL |
-| 10:20 | **BUY ATHERENERG 1960 CE** | 100.55 | 88.5 | 124.7 | SL |
+No signal yet today.
 
 ## Paper trading record
 
