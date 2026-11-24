@@ -18,7 +18,7 @@ def fetch(sym, res="1d", start=1546300800):   # from 2019-01-01
         t = t2; time.sleep(0.3)
     if not rows: return None
     df = pd.DataFrame(rows).drop_duplicates("time").sort_values("time")
-    df.index = pd.to_datetime(df["time"], unit="s").normalize()
+    df.index = pd.DatetimeIndex(pd.to_datetime(df["time"], unit="s")).normalize()
     return df[["open", "high", "low", "close", "volume"]].astype(float)
 
 def ret_of(d, pos):
