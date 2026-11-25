@@ -90,6 +90,7 @@ STOCKS = {
     "max_trades_per_day": 50,       # practice mode: no real daily cap - every grade A stock signal is sent
     "last_entry": "11:00",          # no new stock entry after 11:00 (later breakouts mostly failed)
     "max_risk_pct": 0.6,            # skip chasing: SL more than 0.6% of price away from entry
+    "need_nifty_trend": False,      # off: blocked trades won 67%; nifty_trend is still logged on every stock signal
 }
 
 
