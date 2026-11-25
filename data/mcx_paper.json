@@ -2,7 +2,8 @@
  "sent": [
   "2026-11-25-Morning-1:in",
   "2026-11-25-Morning-1:out",
-  "2026-11-25-Morning-2:in"
+  "2026-11-25-Morning-2:in",
+  "2026-11-25-Morning-2:out"
  ],
  "trades": [
   {
@@ -15,6 +16,17 @@
    "why": "SL",
    "R": -1.0,
    "opt_pnl_lot": -5
+  },
+  {
+   "id": "2026-11-25-Morning-2",
+   "side": -1,
+   "entry": 7474.0,
+   "sl": 7481.0,
+   "tg": 7460.0,
+   "exit": 7481.0,
+   "why": "SL",
+   "R": -1.0,
+   "opt_pnl_lot": -12
   }
  ],
  "opt": {
@@ -29,21 +41,22 @@
    "sym": "CRUDEOILM 7450 PE 16 DEC 26",
    "key": "MCX_FO|586382",
    "lot": 10,
-   "ltp": 352.85
+   "ltp": 352.85,
+   "exit": 351.7
   }
  },
  "day": "2026-11-25",
  "live": {
-  "updated": "11:21",
+  "updated": "11:26",
   "symbol": "CRUDEOIL FUT 18 DEC 26",
-  "price": 7476.0,
+  "price": 7511.0,
   "prev_close": 7583.0,
-  "chg_pct": -1.41,
+  "chg_pct": -0.95,
   "day_high": 7534.0,
   "day_low": 7462.0,
-  "vwap": 7498.8,
+  "vwap": 7498.9,
   "trend": "Down",
-  "above_vwap": false,
+  "above_vwap": true,
   "window": "Waiting (09:00-09:30, 19:30-20:00)",
   "candles": [
    [
@@ -157,6 +170,10 @@
    [
     "11:15",
     7476.0
+   ],
+   [
+    "11:20",
+    7511.0
    ]
   ]
  }
