@@ -2915,8 +2915,8 @@
     "late_move": true,
     "blocked": true,
     "block_reason": "late move: opening range 3.42%, day move 2.45% (measuring)",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "SL",
+    "alt_r": -1.0,
     "breakeven": false,
     "exit_by": "5-min candle"
   },
@@ -3729,7 +3729,7 @@
     "range_pct": 1.31,
     "day_move_pct": 0.88,
     "late_move": false,
-    "alt_result": "OPEN",
-    "alt_r": null
+    "alt_result": "TP",
+    "alt_r": 2.0
   }
 }
