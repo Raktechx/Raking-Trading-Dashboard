@@ -2650,13 +2650,13 @@
       "Opening range low 501.4 broken, volume 2.0x (vs 20-candle avg)",
       "SL = previous candle high, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "TP",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "11:27",
+    "r": 2.0,
+    "points": 7.7,
+    "opt_exit": 19.65,
+    "opt_points": 3.85,
     "group": "STOCK",
     "delta": 0.49,
     "opt_key": "NSE_FO|133925",
@@ -2690,7 +2690,8 @@
     "blocked": true,
     "block_reason": "against Nifty trend (Nifty up)",
     "alt_result": "TP",
-    "alt_r": 2.0
+    "alt_r": 2.0,
+    "exit_by": "live premium"
   },
   "2026-11-25|VOLTAS|09:55": {
     "id": "2026-11-25|VOLTAS|09:55",
