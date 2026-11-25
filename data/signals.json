@@ -2353,13 +2353,13 @@
       "Opening range high 1924.0 broken, volume 1.5x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "TP",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "11:10",
+    "r": 2.0,
+    "points": 23.0,
+    "opt_exit": 82.35,
+    "opt_points": 16.85,
     "group": "STOCK",
     "delta": 0.55,
     "opt_key": "NSE_FO|85269",
@@ -2391,7 +2391,8 @@
     "day_move_pct": 1.87,
     "late_move": false,
     "alt_result": "SL",
-    "alt_r": -1.0
+    "alt_r": -1.0,
+    "exit_by": "live premium"
   },
   "2026-11-25|INFY|09:45": {
     "id": "2026-11-25|INFY|09:45",
