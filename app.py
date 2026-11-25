@@ -43,13 +43,26 @@ st.markdown("""
 
 # Read the newest scan straight from GitHub (the scanner commits every few minutes), so the page
 # never waits for the hosting service to redeploy. Falls back to the copy bundled with the app.
-RAW = "https://raw.githubusercontent.com/Raktechx/Raking-Trading-Dashboard/main/data/"
+RAW = "https://raw.githubusercontent.com/Raktechx/Raking-Trading-Dashboard/{}/data/"
 
 
-@st.cache_data(ttl=50, show_spinner=False)
+@st.cache_data(ttl=75, show_spinner=False)
+def head_sha() -> str:
+    """Newest commit id. A file read by commit id skips GitHub's 5-minute file cache."""
+    try:
+        r = requests.get("https://api.github.com/repos/Raktechx/Raking-Trading-Dashboard/commits/main",
+                         headers={"Accept": "application/vnd.github.sha"}, timeout=5)
+        if r.ok and len(r.text.strip()) == 40:
+            return r.text.strip()
+    except requests.RequestException:
+        pass
+    return "main"
+
+
+@st.cache_data(ttl=20, show_spinner=False)
 def fetch_json(name: str, bucket: int):
     try:
-        r = requests.get(RAW + name, params={"t": bucket}, timeout=8)
+        r = requests.get(RAW.format(head_sha()) + name, timeout=8)
         if r.ok:
             return r.json()
     except (requests.RequestException, ValueError):
@@ -84,6 +97,7 @@ h2.markdown(f"<div class='refresh'>Last scan<br><b>{state.get('updated') or stat
             f"<br>{state.get('market', '')}</div>", unsafe_allow_html=True)
 if h2.button("🔄 Refresh now", width="stretch"):
     fetch_json.clear()
+    head_sha.clear()
     st.rerun()
 
 
@@ -111,6 +125,10 @@ def signal_card(s: dict) -> None:
         f"<span class='lv'>Entry <b>₹{s.get('opt_entry')}</b></span>"
         f"<span class='lv'>SL <b style='color:#ea3943'>₹{s.get('opt_sl')}</b></span>"
         f"<span class='lv'>Target <b style='color:#16c784'>₹{s.get('opt_tp')}</b></span>"
+        + (f"<span class='lv'>1 lot <b>{s['lot_size']} qty</b></span>"
+           f"<span class='lv'>Capital/lot <b>₹{float(s['opt_entry']) * s['lot_size']:,.0f}</b></span>"
+           if s.get('lot_size') and s.get('opt_entry') else "") +
+        
         f"<div style='margin-top:8px;font-size:.88rem'>{'<br>'.join('✅ ' + r for r in s.get('reasons', []))}</div></div>",
         unsafe_allow_html=True)
 
