@@ -2763,8 +2763,8 @@
     "range_pct": 1.73,
     "day_move_pct": 1.8,
     "late_move": false,
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "SL",
+    "alt_r": -1.0,
     "exit_by": "live premium"
   },
   "2026-11-25|INOXWIND|10:00": {
