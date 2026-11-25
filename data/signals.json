@@ -2835,5 +2835,81 @@
     "block_reason": "against Nifty trend (Nifty up)",
     "alt_result": "TP",
     "alt_r": 2.0
+  },
+  "2026-11-25|AUBANK|10:10": {
+    "id": "2026-11-25|AUBANK|10:10",
+    "index": "AUBANK",
+    "day": "2026-11-25",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "10:10",
+    "future": "AUBANK FUT 29 DEC 26",
+    "entry": 1013.6,
+    "sl": 1009.85,
+    "tp": 1021.1,
+    "risk_pts": 3.75,
+    "strike": 1010.0,
+    "expiry": "2026-12-29",
+    "option": "AUBANK 1010 CE",
+    "opt_entry": 40.0,
+    "opt_sl": 35.2,
+    "opt_tp": 49.6,
+    "orb_high": 1011.0,
+    "orb_low": 977.6,
+    "vwap": 1005.45,
+    "volume_x": 1.05,
+    "atm_oi_pct": 44.58,
+    "writing_oi_pct": 1.64,
+    "lot_size": 500,
+    "reasons": [
+      "Trend: price above VWAP 1005.4, EMA20 > EMA50",
+      "ATM 1010 CE long build-up: premium +5.8%, OI +44.6%",
+      "Put writing (1010, 1000, 990): OI +1.6%",
+      "Opening range high 1011.0 broken, volume 1.1x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.54,
+    "opt_key": "NSE_FO|73083",
+    "score": 61,
+    "grade": "B",
+    "score_parts": {
+      "Trend strength": 15.0,
+      "Breakout candle": 1.0,
+      "Volume": 0.3,
+      "OI build-up": 10.0,
+      "PCR": 0.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "no big OI wall before target (next at 1100)",
+        "premium fairly priced (IV 30.6)"
+      ],
+      "minus": [
+        "weak breakout candle (small body / long wick)",
+        "volume only just above average",
+        "PCR 0.63 against the trade"
+      ]
+    },
+    "created_at": "2026-11-25 10:10:44",
+    "range_pct": 3.42,
+    "day_move_pct": 2.45,
+    "late_move": true,
+    "blocked": true,
+    "block_reason": "late move: opening range 3.42%, day move 2.45% (measuring)",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
