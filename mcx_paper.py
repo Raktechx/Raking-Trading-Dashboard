@@ -35,7 +35,10 @@ def candles(api, today, now):
     m = api.master("MCX")
     fut = near(m, "CRUDEOIL", ["FUT"], today + timedelta(days=ROLL_DAYS)).iloc[0]
     hist = api.historical(fut.instrument_key, today - timedelta(days=6), today - timedelta(days=1))
-    d = pd.concat([hist, api.intraday(fut.instrument_key)]).sort_values("ts").drop_duplicates("ts")
+    parts = [x for x in (hist, api.intraday(fut.instrument_key)) if x is not None and len(x)]
+    d = pd.concat(parts)
+    d["ts"] = pd.to_datetime(d["ts"], utc=True).dt.tz_convert(config.TZ)
+    d = d.sort_values("ts").drop_duplicates("ts")
     d = d[d.ts + pd.Timedelta(minutes=5) <= now]          # completed candles only
     return prepare(d.reset_index(drop=True)), m
 
