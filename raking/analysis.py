@@ -32,7 +32,7 @@ def frame(saved: dict) -> pd.DataFrame:
     for c, _ in COLUMNS:
         if c not in df:
             df[c] = None
-    for c in ("r", "alt_r", "opt_entry", "opt_exit", "opt_points"):
+    for c in ("r", "alt_r", "opt_entry", "opt_exit", "opt_points", "pnl_gross", "pnl_net"):
         df[c] = pd.to_numeric(df[c], errors="coerce")
     df["score"] = pd.to_numeric(df["score"], errors="coerce")
     df["grade"] = df["grade"].fillna("-")
@@ -65,7 +65,7 @@ def breakdown(df: pd.DataFrame, by: str) -> pd.DataFrame:
         return pd.DataFrame(columns=[by, "Trades", "Win %", "Total R", "Avg R"])
     g = d.groupby(by)["r"]
     return pd.DataFrame({"Trades": g.size(), "Win %": g.apply(lambda x: round((x > 0).mean() * 100, 1)),
-                         "Total R": g.sum().round(2), "Avg R": g.mean().round(2)}).reset_index()
+                         "Total R": g.sum().round(2), "Avg R": g.mean().round(2), "Net P&L 1 lot ₹": d.groupby(by)["pnl_net"].sum().round(0)}).reset_index()
 
 
 def equity(df: pd.DataFrame) -> pd.DataFrame:
@@ -87,6 +87,10 @@ def excel(saved: dict, path) -> None:
         df[[c for c, _ in COLUMNS]].rename(columns=dict(COLUMNS)).to_excel(xw, sheet_name="Signals", index=False)
         summary.to_excel(xw, sheet_name="Summary", index=False)
         breakdown(df, "status").to_excel(xw, sheet_name="Sent vs blocked", index=False)
+        db = df[df["status"] == "Blocked"]
+        db[[c for c, _ in COLUMNS]].rename(columns=dict(COLUMNS)).to_excel(xw, sheet_name="Blocked signals", index=False)
+        for by, name in (("block_reason", "Blocked by reason"), ("instrument", "Blocked by instrument"), ("day", "Blocked by day")):
+            breakdown(db, by).to_excel(xw, sheet_name=name, index=False)
         for by, name in (("grade", "By grade"), ("instrument", "By instrument"), ("side", "By side"), ("hour", "By hour"),
                          ("weekday", "By weekday"), ("day", "By day")):
             breakdown(ds, by).to_excel(xw, sheet_name=name, index=False)
