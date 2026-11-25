@@ -1,6 +1,6 @@
 # 📈 Raking the Trader — Live
 
-**Last update:** 25 Nov 2026, 10:20:38 IST · 🟢 Market open
+**Last update:** 25 Nov 2026, 10:25:44 IST · 🟢 Market open
 
 ## Today's signals
 
@@ -14,9 +14,10 @@
 | 10:20 | **BUY ITC 307.5 CE** | 8.55 | 7.5 | 10.6 | OPEN |
 | 10:20 | **BUY VBL 430 CE** | 16.75 | 14.75 | 20.75 | OPEN |
 | 10:20 | **BUY GLENMARK 2720 CE** | 106.0 | 93.3 | 131.45 | OPEN |
+| 10:25 | **BUY TRENT 3300 CE** | 121.35 | 106.8 | 150.45 | OPEN |
 
 ## Paper trading record
 
-Signals 23 · closed 18 · win rate 38.9% · total 4.12 R · max drawdown -3.88 R · since 2026-11-16
+Signals 24 · closed 18 · win rate 38.9% · total 4.12 R · max drawdown -3.88 R · since 2026-11-16
 
 _Updated about every 5 minutes during market hours. Full page: `docs/index.html`._
