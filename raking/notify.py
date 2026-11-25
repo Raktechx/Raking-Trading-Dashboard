@@ -47,7 +47,22 @@ def _pnl(s: dict) -> str:
     if not isinstance(pts, (int, float)):
         return ""
     sign = "+" if pts >= 0 else "-"
-    return f"{pts:+.2f}/unit" + (f" ({sign}₹{abs(pts * lot):,.0f} per lot)" if lot else "")
+    return f"{pts:+.2f}/unit" + (f" ({sign}₹{abs(pts * lot):,.0f} per lot of {lot} qty)" if lot else "")
+
+
+def _lot(s: dict) -> list:
+    """Lot quantity + capital / risk / reward for 1 lot."""
+    lot, e = s.get("lot_size"), s.get("opt_entry")
+    if not lot:
+        return []
+    out = ["", f"📦 1 lot = <b>{lot} qty</b>"]
+    try:
+        e = float(e)
+        out.append(f"💰 Capital ≈ <b>₹{e * lot:,.0f}</b> · Risk ≈ ₹{(e - float(s['opt_sl'])) * lot:,.0f}"
+                   f" · Reward ≈ ₹{(float(s['opt_tp']) - e) * lot:,.0f} (per lot)")
+    except (TypeError, ValueError, KeyError):
+        pass
+    return out
 
 
 def signal_alert(s: dict) -> bool:
@@ -63,6 +78,7 @@ def signal_alert(s: dict) -> bool:
                   f"🎯 Target : <b>₹{s.get('opt_tp')}</b>"]
     else:
         lines.append("Premium not available - check the option price in your broker app first.")
+    lines += _lot(s)
     lines += ["", f"⏰ {s['signal_time']} · exit by {config.STRATEGY['exit_time']}"]
     return send("\n".join(lines))
 
