@@ -14,6 +14,7 @@ COLUMNS = [
     ("opt_exit", "Premium exit"), ("opt_points", "Premium P/L (pts)"), ("result", "Result"),
     ("exit_time", "Exit time"), ("exit_by", "Exit checked on"), ("r", "R"), ("alt_result", "Method B result"), ("alt_r", "Method B R"),
     ("atm_oi_pct", "ATM OI %"), ("writing_oi_pct", "Writing OI %"), ("volume_x", "Volume x avg"),
+    ("lot_size", "Lot qty"), ("pnl_gross", "P&L 1 lot ₹ (gross)"), ("pnl_net", "P&L 1 lot ₹ (net)"),
     ("reasons", "Why (all conditions)"),
 ]
 
@@ -26,6 +27,8 @@ def frame(saved: dict) -> pd.DataFrame:
     df["instrument"] = df["index"].map(config.label)
     df["group"] = df["index"].map(lambda x: "Index" if x in config.INDICES else "Stock")
     df["reasons"] = df["reasons"].map(lambda r: " | ".join(r) if isinstance(r, list) else r)
+    df["pnl_gross"] = [None if (v := gross_pnl(s)) is None else round(v) for s in saved.values()]
+    df["pnl_net"] = [None if (v := net_pnl(s)) is None else round(v) for s in saved.values()]
     for c, _ in COLUMNS:
         if c not in df:
             df[c] = None
