@@ -3770,13 +3770,13 @@
       "Opening range low 3738.0 broken, volume 1.6x (vs 20-candle avg)",
       "SL = previous candle high, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "TP",
+    "exit": 3706.7,
+    "exit_time": "13:20",
+    "r": 0.66,
+    "points": 30.0,
+    "opt_exit": 152.2,
+    "opt_points": 11.15,
     "group": "STOCK",
     "delta": 0.45,
     "opt_key": "NSE_FO|107682",
@@ -3811,7 +3811,9 @@
     "blocked": true,
     "block_reason": "against Nifty trend (Nifty up)",
     "alt_result": "OPEN",
-    "alt_r": null
+    "alt_r": null,
+    "breakeven": false,
+    "exit_by": "5-min candle"
   },
   "2026-11-25|DATAPATTNS|12:40": {
     "id": "2026-11-25|DATAPATTNS|12:40",
