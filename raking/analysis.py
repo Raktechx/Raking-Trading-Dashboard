@@ -91,6 +91,10 @@ def excel(saved: dict, path) -> None:
         db[[c for c, _ in COLUMNS]].rename(columns=dict(COLUMNS)).to_excel(xw, sheet_name="Blocked signals", index=False)
         for by, name in (("block_reason", "Blocked by reason"), ("instrument", "Blocked by instrument"), ("day", "Blocked by day")):
             breakdown(db, by).to_excel(xw, sheet_name=name, index=False)
+        cf = crude_frame()
+        if len(cf):
+            cf.to_excel(xw, sheet_name="Crude Oil trades", index=False)
+            crude_summary(cf).to_excel(xw, sheet_name="Crude Oil summary", index=False)
         for by, name in (("grade", "By grade"), ("instrument", "By instrument"), ("side", "By side"), ("hour", "By hour"),
                          ("weekday", "By weekday"), ("day", "By day")):
             breakdown(ds, by).to_excel(xw, sheet_name=name, index=False)
@@ -126,3 +130,42 @@ def trade_costs(s: dict) -> float:
 def net_pnl(s: dict) -> float | None:
     g = gross_pnl(s)
     return None if g is None else g - trade_costs(s)
+
+
+def crude_frame() -> pd.DataFrame:
+    """Every closed MCX Crude Oil option trade (data/mcx_paper.json) with 1-lot P&L, oldest first."""
+    import json
+    try:
+        trades = json.loads((config.DATA_DIR / "mcx_paper.json").read_text(encoding="utf-8")).get("trades", [])
+    except (OSError, ValueError):
+        return pd.DataFrame()
+    rows = []
+    for t in trades:
+        oe, ox, lot = t.get("opt_entry"), t.get("opt_exit"), t.get("lot")
+        s = {"opt_entry": oe, "opt_exit": ox, "lot_size": lot,
+             "opt_points": round(ox - oe, 2) if oe is not None and ox is not None else None}
+        g = gross_pnl(s)
+        rows.append({
+            "Date": t["id"][:10], "Window": t.get("window") or t["id"].split("-")[3],
+            "Side": "BUY CE" if t.get("side", 0) > 0 else "BUY PE", "Option": t.get("sym"),
+            "Entry time": t.get("t"), "Exit time": t.get("exit_t"),
+            "Future entry": t.get("entry"), "Future SL": t.get("sl"), "Future target": t.get("tg"),
+            "Future exit": t.get("exit"), "Premium entry": oe, "Premium SL": t.get("opt_sl"),
+            "Premium target": t.get("opt_tp"), "Premium exit": ox, "Premium P/L (pts)": s["opt_points"],
+            "Result": t.get("why"), "R": t.get("R"), "Lot qty": lot,
+            "P&L 1 lot ₹ (gross)": round(g) if g is not None else t.get("opt_pnl_lot"),
+            "P&L 1 lot ₹ (net)": round(net_pnl(s)) if g is not None else None})
+    return pd.DataFrame(rows)
+
+
+def crude_summary(cf: pd.DataFrame) -> pd.DataFrame:
+    """Crude Oil results overall and per window: trades, win %, R and 1-lot P&L."""
+    def one(name, d):
+        r = pd.to_numeric(d["R"], errors="coerce")
+        return {"Group": name, "Trades": len(d), "Win %": round((r > 0).mean() * 100, 1) if len(d) else None,
+                "Total R": round(r.sum(), 2), "Avg R": round(r.mean(), 2) if len(d) else None,
+                "P&L 1 lot ₹ (gross)": pd.to_numeric(d["P&L 1 lot ₹ (gross)"], errors="coerce").sum(),
+                "P&L 1 lot ₹ (net)": pd.to_numeric(d["P&L 1 lot ₹ (net)"], errors="coerce").sum()}
+    out = ([one("All", cf)] + [one(f"Window: {w}", d) for w, d in cf.groupby("Window")]
+           + [one(f"Side: {s}", d) for s, d in cf.groupby("Side")])
+    return pd.DataFrame(out)
