@@ -2203,13 +2203,13 @@
       "Opening range high 601.0 broken, volume 1.2x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "SL",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "12:25",
+    "r": -1.0,
+    "points": -5.1,
+    "opt_exit": 20.0,
+    "opt_points": -3.0,
     "group": "STOCK",
     "delta": 0.55,
     "opt_key": "NSE_FO|117529",
@@ -2244,7 +2244,8 @@
     "blocked": true,
     "block_reason": "late move: opening range 2.38%, day move 3.05% (measuring)",
     "alt_result": "TP",
-    "alt_r": 2.0
+    "alt_r": 2.0,
+    "exit_by": "live premium"
   },
   "2026-11-25|TATACONSUM|09:40": {
     "id": "2026-11-25|TATACONSUM|09:40",
