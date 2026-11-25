@@ -85,7 +85,7 @@ INDICES = {
 # ---------------------------------------------------------------------------
 STOCKS = {
     "enabled": True,
-    "max_candidates_per_scan": 25,  # top-25 strongest F&O stocks checked in full each scan
+    "max_candidates_per_scan": 50,  # top-50 strongest F&O stocks checked in full each scan
     "max_break_pct": 3.0,           # more than 3% past the opening range = too late to chase
     "max_trades_per_day": 50,       # practice mode: no real daily cap - every grade A stock signal is sent
     "last_entry": "11:00",          # no new stock entry after 11:00 (later breakouts mostly failed)
