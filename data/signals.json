@@ -2608,8 +2608,8 @@
     "range_pct": 1.34,
     "day_move_pct": 0.73,
     "late_move": false,
-    "alt_result": "OPEN",
-    "alt_r": null
+    "alt_result": "SL",
+    "alt_r": -1.0
   },
   "2026-11-25|JSWENERGY|09:50": {
     "id": "2026-11-25|JSWENERGY|09:50",
