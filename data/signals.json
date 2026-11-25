@@ -4044,8 +4044,8 @@
     "late_move": false,
     "blocked": true,
     "block_reason": "against Nifty trend (Nifty mixed)",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "SL",
+    "alt_r": -1.0,
     "ltp": 4.81,
     "ltp_time": "13:23",
     "exit_by": "live premium"
