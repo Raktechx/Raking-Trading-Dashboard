@@ -185,6 +185,34 @@ with tab_live:
             if not any(s.get("result") == "OPEN" for s in sigs):
                 checklist("Live checklist", (state.get("checks") or {}).get(idx))
 
+    # ---- MCX Crude Oil (state written by mcx_paper.py every 5 min)
+    mcx = fetch_json("mcx_paper.json", int(time.time() // 30)) or {}
+    lv = mcx.get("live") or {}
+    st.markdown("### 🛢 Crude Oil (MCX)")
+    if lv:
+        k = st.columns(5)
+        k[0].metric(lv.get("symbol", "CRUDEOIL"), f"₹{lv['price']:,.0f}",
+                    f"{lv['chg_pct']:+.2f}%" if lv.get("chg_pct") is not None else None)
+        k[1].metric("Day high / low", f"{lv.get('day_high') or 0:,.0f} / {lv.get('day_low') or 0:,.0f}")
+        k[2].metric("VWAP", f"{lv['vwap']:,.0f}" if lv.get("vwap") else "–",
+                    ("Above" if lv.get("above_vwap") else "Below") if lv.get("above_vwap") is not None else None)
+        k[3].metric("Trend (EMA 20/50)", lv.get("trend", "–"))
+        k[4].metric("Signal window", lv.get("window", "–"))
+        if lv.get("candles"):
+            cd = pd.DataFrame(lv["candles"], columns=["time", "price"])
+            fig = go.Figure(go.Scatter(x=cd.time, y=cd.price, mode="lines", line=dict(color="#f0b90b")))
+            if lv.get("vwap"):
+                fig.add_hline(y=lv["vwap"], line_dash="dot", line_color="#888", annotation_text="VWAP")
+            fig.update_layout(height=220, margin=dict(l=10, r=10, t=10, b=10), template="plotly_dark")
+            st.plotly_chart(fig, width="stretch")
+        ct = [t for t in mcx.get("trades", []) if t["id"].startswith(today)]
+        opn = [k2 for k2 in (mcx.get("opt") or {}) if k2.startswith(today) and k2 not in {t["id"] for t in ct}]
+        st.caption(f"Updated {lv.get('updated')} IST · Today: {len(ct)} closed, {len(opn)} open · "
+                   f"All-time: {len(mcx.get('trades', []))} trades, "
+                   f"{sum(t['R'] for t in mcx.get('trades', [])):+.1f}R")
+    else:
+        st.caption("Waiting for first update (MCX opens 09:00 IST).")
+
     st.markdown("### Stock options")
     top = state.get("top_stocks") or []
     if top:
