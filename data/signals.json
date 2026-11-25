@@ -2387,5 +2387,77 @@
     "late_move": false,
     "alt_result": "OPEN",
     "alt_r": null
+  },
+  "2026-11-25|INFY|09:45": {
+    "id": "2026-11-25|INFY|09:45",
+    "index": "INFY",
+    "day": "2026-11-25",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "09:45",
+    "future": "INFY FUT 29 DEC 26",
+    "entry": 1156.1,
+    "sl": 1149.2,
+    "tp": 1169.9,
+    "risk_pts": 6.9,
+    "strike": 1154.0,
+    "expiry": "2026-12-29",
+    "option": "INFY 1154 CE",
+    "opt_entry": 44.45,
+    "opt_sl": 39.1,
+    "opt_tp": 55.1,
+    "orb_high": 1153.0,
+    "orb_low": 1141.0,
+    "vwap": 1149.27,
+    "volume_x": 1.48,
+    "atm_oi_pct": 11.01,
+    "writing_oi_pct": 16.42,
+    "lot_size": 400,
+    "reasons": [
+      "Trend: price above VWAP 1149.3, EMA20 > EMA50",
+      "ATM 1154 CE long build-up: premium +9.9%, OI +11.0%",
+      "Put writing (1154, 1140, 1134): OI +16.4%",
+      "Opening range high 1153.0 broken, volume 1.5x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.52,
+    "opt_key": "NSE_FO|102811",
+    "score": 75,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 15.0,
+      "Breakout candle": 2.2,
+      "Volume": 3.2,
+      "OI build-up": 15.0,
+      "PCR": 5.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "heavy fresh OI build-up and writing",
+        "no big OI wall before target (next at 1200)"
+      ],
+      "minus": [
+        "weak breakout candle (small body / long wick)"
+      ]
+    },
+    "created_at": "2026-11-25 09:45:42",
+    "range_pct": 1.05,
+    "day_move_pct": 0.97,
+    "late_move": false,
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
