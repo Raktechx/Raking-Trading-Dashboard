@@ -156,7 +156,7 @@ def _load(api, idx, today, demo_mode, status, days):
     try:
         d = demo.live_day(idx, today) if demo_mode else data.live_day(api, idx, today)
         if d is None:
-            status[idx] = "No data today (market closed / holiday?)"
+            status[idx] = ("OK (waiting for first candle)" if now_ist().strftime("%H:%M") < "09:35" else "No candles after 9:35 - Upstox data delayed (or exchange holiday)")
             return
         days[idx] = d
         status[idx] = "OK"
