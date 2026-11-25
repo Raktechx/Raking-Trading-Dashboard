@@ -17,6 +17,7 @@ from raking.upstox import Upstox, UpstoxError
 WINDOWS = {"Morning": (dtime(9, 0), dtime(9, 30)), "US open": (dtime(19, 30), dtime(20, 0))}
 STATE = config.DATA_DIR / "mcx_paper.json"
 DELTA = 0.5
+MIN_SL_ATR = 0.5   # crude SL at least half an ATR from entry (tight stops were hit by normal noise)
 
 
 def load():
@@ -51,7 +52,7 @@ def events(d, today):
         orw = g[(g.t >= a) & (g.t < b)]
         if len(orw) < 6:
             continue
-        hi, lo, n, pos = orw.high.max(), orw.low.min(), 0, None
+        hi, lo, n, pos, used = orw.high.max(), orw.low.min(), 0, None, set()
         rows = g[g.t >= b].reset_index(drop=True)
         for i in range(1, len(rows)):
             r, p = rows.iloc[i], rows.iloc[i - 1]
@@ -75,8 +76,11 @@ def events(d, today):
                 continue
             px = float(r.close)   # enter at the breakout candle's close, so the alert goes out right after it closes
             risk = (px - sl) * side
-            if risk <= 0 or risk > 2 * r.atr:
+            if risk <= 0 or risk > 2 * r.atr or side in used:   # one entry per window per direction
                 continue
+            risk = max(risk, MIN_SL_ATR * float(r.atr))
+            sl = px - risk * side
+            used.add(side)
             n += 1
             pos = dict(id=f"{today}-{name}-{n}", window=name, side=side,
                        t=(r.ts + pd.Timedelta(minutes=5)).strftime("%H:%M"),
