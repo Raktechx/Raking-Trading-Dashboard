@@ -28,9 +28,9 @@ jobs:
           api = Upstox()
           d, m = candles(api, today, now)
           px = float(d.iloc[-1]["close"])
-          sym, lot, ltp = option_for(api, m, today, px, 1)
-          prem = f"₹{ltp:.1f}" if ltp else "n/a (market closed)"
-          send(f"🧪 TEST — MCX Crude alert check\nCrude future last: {px:.0f}\nATM option: {sym} (lot {lot})\nPremium: {prem}\nSystem OK. Paper only, not a trade signal.")
+          sym, lot, ltp, _ = option_for(api, m, today, px, 1)
+          prem = f"₹{ltp:.1f} · Capital/lot ≈ ₹{ltp * lot:,.0f}" if ltp else "n/a (market closed)"
+          send(f"🧪 TEST — MCX Crude signal check\nCrude future last: {px:.0f}\nATM option: {sym} (lot {lot})\nPremium: {prem}\nSystem OK. Not a trade signal.")
           print("sent", sym, lot, ltp)
           EOF
           python /tmp/t.py
