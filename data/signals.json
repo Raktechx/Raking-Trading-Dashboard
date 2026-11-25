@@ -2843,7 +2843,7 @@
     "alt_result": "TP",
     "alt_r": 2.0,
     "ltp": 3.5,
-    "ltp_time": "13:28"
+    "ltp_time": "13:29"
   },
   "2026-11-25|AUBANK|10:10": {
     "id": "2026-11-25|AUBANK|10:10",
@@ -3366,7 +3366,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 86.55,
-    "ltp_time": "13:28"
+    "ltp_time": "13:29"
   },
   "2026-11-25|BANKNIFTY|11:00": {
     "id": "2026-11-25|BANKNIFTY|11:00",
@@ -3969,8 +3969,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 203.6,
-    "ltp_time": "13:28"
+    "ltp": 200.95,
+    "ltp_time": "13:29"
   },
   "2026-11-25|TATASTEEL|13:00": {
     "id": "2026-11-25|TATASTEEL|13:00",
@@ -4124,8 +4124,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 93.9,
-    "ltp_time": "13:28"
+    "ltp": 95.0,
+    "ltp_time": "13:29"
   },
   "2026-11-25|MUTHOOTFIN|13:10": {
     "id": "2026-11-25|MUTHOOTFIN|13:10",
@@ -4280,6 +4280,6 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 40.6,
-    "ltp_time": "13:28"
+    "ltp_time": "13:29"
   }
 }
