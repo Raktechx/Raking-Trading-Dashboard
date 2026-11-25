@@ -3431,8 +3431,8 @@
     "created_at": "2026-11-25 11:00:12",
     "blocked": true,
     "block_reason": "grade B (67/100): volume only just above average",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "TP",
+    "alt_r": 2.0,
     "breakeven": false,
     "exit_by": "5-min candle"
   },
