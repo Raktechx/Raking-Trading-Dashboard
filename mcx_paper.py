@@ -64,7 +64,7 @@ def events(d, today):
                                R=round((px - pos["entry"]) * pos["side"] / abs(pos["entry"] - pos["sl"]), 2))
                     pos = None
                 continue
-            if i == len(rows) - 1 or n >= 2 or r.t > LAST_ENTRY or pd.isna(r.vavg) or pd.isna(r.atr):
+            if n >= 2 or r.t > LAST_ENTRY or pd.isna(r.vavg) or pd.isna(r.atr):
                 continue
             ok = r.volume > r.vavg
             if r.close > hi and r.close > r.vwap and r.e20 > r.e50 and ok:
@@ -73,13 +73,14 @@ def events(d, today):
                 side, sl = -1, p.high
             else:
                 continue
-            nx = rows.iloc[i + 1]
-            risk = (nx.open - sl) * side
+            px = float(r.close)   # enter at the breakout candle's close, so the alert goes out right after it closes
+            risk = (px - sl) * side
             if risk <= 0 or risk > 2 * r.atr:
                 continue
             n += 1
-            pos = dict(id=f"{today}-{name}-{n}", window=name, side=side, t=str(nx.t)[:5],
-                       entry=float(nx.open), sl=float(sl), tg=float(nx.open + 2 * risk * side))
+            pos = dict(id=f"{today}-{name}-{n}", window=name, side=side,
+                       t=(r.ts + pd.Timedelta(minutes=5)).strftime("%H:%M"),
+                       entry=px, sl=float(sl), tg=float(px + 2 * risk * side))
             out.append(pos)
     return out
 
@@ -123,6 +124,9 @@ def main():
     for e in events(d, today):
         up = e["side"] > 0
         risk = abs(e["entry"] - e["sl"])
+        if e["id"] + ":in" not in st["sent"] and e["t"] < (now - timedelta(minutes=15)).strftime("%H:%M"):
+            st["sent"] += [e["id"] + ":in", e["id"] + ":out"]   # too old to act on (e.g. after a restart): never alert late
+            continue
         if e["id"] + ":in" not in st["sent"]:
             sym, lot, ltp, key = option_for(api, m, today, e["entry"], e["side"])
             lines = [f"{'🟢' if up else '🔴'} <b>NEW SIGNAL · BUY {sym or 'CRUDEOIL ' + ('CE' if up else 'PE')}</b>",
@@ -166,7 +170,7 @@ def main():
             st["sent"].append(e["id"] + ":out")
             t = {k: e[k] for k in ("id", "side", "entry", "sl", "tg", "exit", "why", "R", "t", "exit_t", "window")}
             if o and "exit" in o:
-                t.update(sym=o["sym"], lot=o["lot"], opt_entry=o["ltp"], opt_exit=o["exit"],
+                t.update(sym=o["sym"], lot=o["lot"], opt_entry=o["ltp"], opt_exit=o["exit"], opt_sl=o.get("sl"), opt_tp=o.get("tp"),
                          opt_pnl_lot=round((o["exit"] - o["ltp"]) * o["lot"]))
             st["trades"].append(t)
     if now.time() >= dtime(23, 25) and "summary" not in st["sent"]:
@@ -190,7 +194,7 @@ def main():
             trend="Up" if last.e20 > last.e50 else "Down",
             above_vwap=bool(last.close > last.vwap) if not pd.isna(last.vwap) else None,
             window=win or "Waiting (09:00-09:30, 19:30-20:00)",
-            candles=[[str(t.ts)[11:16], float(t.close)] for t in g.tail(60).itertuples()])
+            candles=[[str(t.ts)[11:16], float(t.open), float(t.high), float(t.low), float(t.close)] for t in g.tail(150).itertuples()], ranges={n: [float(x.high.max()), float(x.low.min())] for n, (a, b) in WINDOWS.items() if len(x := g[(g.t >= a) & (g.t < b)]) >= 6}, events=[{k: e.get(k) for k in ("id", "window", "side", "t", "entry", "sl", "tg", "exit", "exit_t", "why", "R")} for e in events(d, today)])
     STATE.write_text(json.dumps(st, indent=1))
 
 
