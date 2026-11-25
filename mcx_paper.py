@@ -10,7 +10,7 @@ from datetime import datetime, timedelta, time as dtime
 import pandas as pd
 
 from mcx_backtest import prepare, LAST_ENTRY, SQUARE_OFF, ROLL_DAYS
-from raking import config
+from raking import config, holidays
 from raking.notify import send
 from raking.upstox import Upstox, UpstoxError
 
@@ -114,6 +114,9 @@ def main():
     st.setdefault("opt", {})
     if st.get("day") != str(today):
         st["day"], st["sent"] = str(today), []
+    if holidays.gate("MCX", st, now.to_pydatetime(), send):
+        STATE.write_text(json.dumps(st, indent=1))
+        return
     api = Upstox()
     d, m = candles(api, today, now)
     for e in events(d, today):
