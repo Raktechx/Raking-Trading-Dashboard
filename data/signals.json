@@ -3514,8 +3514,8 @@
     "late_move": true,
     "blocked": true,
     "block_reason": "late move: opening range 2.6%, day move 2.17% (measuring)",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "SL",
+    "alt_r": -1.0,
     "exit_by": "live premium"
   },
   "2026-11-25|BAJFINANCE|11:15": {
