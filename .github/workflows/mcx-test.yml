@@ -1,0 +1,35 @@
+name: MCX Crude test alert
+on:
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-scan.txt
+      - env:
+          UPSTOX_ANALYTICS_TOKEN: ${{ secrets.UPSTOX_ANALYTICS_TOKEN }}
+          UPSTOX_ACCESS_TOKEN: ${{ secrets.UPSTOX_ACCESS_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          mkdir -p data/cache
+          cat > /tmp/t.py <<'EOF'
+          import pandas as pd
+          from mcx_paper import candles, option_for, Upstox, config, send
+          now = pd.Timestamp.now(tz=config.TZ); today = now.date()
+          api = Upstox()
+          d, m = candles(api, today, now)
+          px = float(d.iloc[-1]["close"])
+          sym, lot, ltp = option_for(api, m, today, px, 1)
+          prem = f"₹{ltp:.1f}" if ltp else "n/a (market closed)"
+          send(f"🧪 TEST — MCX Crude alert check\nCrude future last: {px:.0f}\nATM option: {sym} (lot {lot})\nPremium: {prem}\nSystem OK. Paper only, not a trade signal.")
+          print("sent", sym, lot, ltp)
+          EOF
+          python /tmp/t.py
