@@ -3656,5 +3656,78 @@
     "late_move": false,
     "alt_result": "OPEN",
     "alt_r": null
+  },
+  "2026-11-25|INDIGO|11:40": {
+    "id": "2026-11-25|INDIGO|11:40",
+    "index": "INDIGO",
+    "day": "2026-11-25",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "11:40",
+    "future": "INDIGO FUT 29 DEC 26",
+    "entry": 5723.7,
+    "sl": 5704.1,
+    "tp": 5762.9,
+    "risk_pts": 19.6,
+    "strike": 5700.0,
+    "expiry": "2026-12-29",
+    "option": "INDIGO 5700 CE",
+    "opt_entry": 195.75,
+    "opt_sl": 172.25,
+    "opt_tp": 242.75,
+    "orb_high": 5714.0,
+    "orb_low": 5640.0,
+    "vwap": 5671.29,
+    "volume_x": 1.33,
+    "atm_oi_pct": 1.39,
+    "writing_oi_pct": 3.06,
+    "lot_size": 150,
+    "reasons": [
+      "Trend: price above VWAP 5671.3, EMA20 > EMA50",
+      "ATM 5700 CE long build-up: premium +3.6%, OI +1.4%",
+      "Put writing (5700, 5650, 5600): OI +3.1%",
+      "Opening range high 5714.0 broken, volume 1.3x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.54,
+    "opt_key": "NSE_FO|128379",
+    "score": 71,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 7.5,
+      "Breakout candle": 13.5,
+      "Volume": 2.2,
+      "OI build-up": 6.7,
+      "PCR": 6.1,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong breakout candle closing near its high",
+        "no big OI wall before target (next at 6000)",
+        "premium fairly priced (IV 26.3)"
+      ],
+      "minus": [
+        "price stretched 3.7 ATR from VWAP",
+        "volume only just above average"
+      ]
+    },
+    "created_at": "2026-11-25 11:40:52",
+    "range_pct": 1.31,
+    "day_move_pct": 0.88,
+    "late_move": false,
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }

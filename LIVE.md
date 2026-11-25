@@ -1,6 +1,6 @@
 # 📈 Raking the Trader — Live
 
-**Last update:** 25 Nov 2026, 11:35:54 IST · 🟢 Market open
+**Last update:** 25 Nov 2026, 11:40:52 IST · 🟢 Market open
 
 ## Today's signals
 
@@ -19,9 +19,10 @@
 | 10:50 | **BUY GRASIM 3160 CE** | 82.55 | 72.35 | 103.0 | OPEN |
 | 11:15 | **BUY BAJFINANCE 1140 CE** | 40.35 | 35.5 | 50.05 | TP |
 | 11:20 | **BUY SBICARD 590 CE** | 25.5 | 22.45 | 31.6 | OPEN |
+| 11:40 | **BUY INDIGO 5700 CE** | 195.75 | 172.25 | 242.75 | OPEN |
 
 ## Paper trading record
 
-Signals 28 · closed 26 · win rate 53.8% · total 10.54 R · max drawdown -2.0 R · since 2026-11-16
+Signals 29 · closed 26 · win rate 53.8% · total 10.54 R · max drawdown -2.0 R · since 2026-11-16
 
 _Updated about every 5 minutes during market hours. Full page: `docs/index.html`._
