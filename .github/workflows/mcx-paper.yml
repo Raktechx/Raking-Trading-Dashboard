@@ -1,0 +1,43 @@
+name: MCX Crude paper alerts
+on:
+  schedule:
+    - cron: "35 3 * * 1-5"
+    - cron: "20 9 * * 1-5"
+    - cron: "5 15 * * 1-5"
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: mcx-paper
+  cancel-in-progress: false
+jobs:
+  paper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-scan.txt
+      - env:
+          UPSTOX_ANALYTICS_TOKEN: ${{ secrets.UPSTOX_ANALYTICS_TOKEN }}
+          UPSTOX_ACCESS_TOKEN: ${{ secrets.UPSTOX_ACCESS_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          git config user.name "raking-bot"
+          git config user.email "actions@users.noreply.github.com"
+          mkdir -p data/cache
+          start=$(date +%s)
+          while true; do
+            dow=$(TZ=Asia/Kolkata date +%u); hm=$(TZ=Asia/Kolkata date +%H%M)
+            if [ "$dow" -gt 5 ] || [ "$((10#$hm))" -gt 2335 ]; then break; fi
+            if [ $(( $(date +%s) - start )) -gt 20100 ]; then break; fi
+            if [ "$((10#$hm))" -ge 900 ]; then
+              python mcx_paper.py || echo "scan error"
+              git add -f data/mcx_paper.json
+              git commit -q -m "mcx paper update" && for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
+            fi
+            sleep 300
+          done
