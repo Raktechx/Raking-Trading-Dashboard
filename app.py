@@ -28,16 +28,40 @@ st.set_page_config(page_title=config.APP_NAME, page_icon="📈", layout="wide", 
 st_autorefresh(interval=60_000, key="auto")
 st.markdown("""
 <style>
+:root{--bg:#0b0f17;--panel:#111827;--panel2:#0f1623;--line:#1f2a3a;--txt:#e5e7eb;--mut:#8b97a8;--up:#16c784;--dn:#ea3943;--acc:#3b82f6;--warn:#f5c542}
+html,body,[data-testid="stAppViewContainer"]{background:var(--bg)}
+[data-testid="stHeader"]{background:transparent}
 [data-testid="stSidebar"], [data-testid="collapsedControl"] {display:none}
-.block-container{padding-top:1rem}
-.card{border-radius:14px;padding:14px 18px;margin-bottom:10px;border:1px solid #2a3142;background:#121826}
-.ce{border-left:6px solid #16c784}.pe{border-left:6px solid #ea3943}.wait{border-left:6px solid #6b7280}
-.big{font-size:1.25rem;font-weight:700}.muted{color:#9aa4b2;font-size:.85rem}
-.lv{display:inline-block;margin-right:16px;margin-top:6px}.lv b{font-size:1.15rem}
-.ok{color:#16c784}.no{color:#6b7280}.refresh{text-align:right;color:#9aa4b2;font-size:.9rem}
-.tag{display:inline-block;padding:1px 8px;border-radius:10px;background:#1f2937;font-size:.8rem;margin-left:6px}
-.tops{width:100%;border-collapse:collapse;font-size:.78rem}.tops th,.tops td{padding:3px 3px;border-bottom:1px solid #2a3142;text-align:left;white-space:nowrap}.tops th{color:#9aa4b2;font-weight:600}.dn{color:#ea3943}.warn{color:#f5c542}.tm{font-size:.68rem;color:#9aa4b2}
-.ts{display:inline-block;padding:2px 10px;border-radius:10px;background:#0f2a1f;color:#16c784;font-weight:600}
+.block-container{padding-top:.6rem;max-width:1500px}
+*{font-variant-numeric:tabular-nums}
+h3{font-size:1.02rem!important;letter-spacing:.04em;text-transform:uppercase;color:#cbd5e1!important;border-bottom:1px solid var(--line);padding-bottom:6px;margin-top:1.2rem!important}
+.topbar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(90deg,#0f1a2e,#0b0f17);border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:10px}
+.brand{font-size:1.15rem;font-weight:800;letter-spacing:.06em;color:#fff}.brand span{color:var(--acc)}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.75rem;font-weight:700;margin-left:6px;border:1px solid var(--line);background:var(--panel2);color:var(--mut)}
+.pill.on{color:var(--up);border-color:#14532d;background:#052e1a}.pill.off{color:var(--mut)}
+.kpis{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-bottom:6px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.kpi .l{font-size:.68rem;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+.kpi .v{font-size:1.35rem;font-weight:800;color:var(--txt);margin-top:2px;white-space:nowrap}
+.kpi .s{font-size:.72rem;color:var(--mut)}
+.up{color:var(--up)!important}.dn{color:var(--dn)!important}
+.card{border-radius:10px;padding:12px 16px;margin-bottom:10px;border:1px solid var(--line);background:var(--panel)}
+.ce{border-left:4px solid var(--up)}.pe{border-left:4px solid var(--dn)}.wait{border-left:4px solid #475569}
+.big{font-size:1.05rem;font-weight:700}.muted{color:var(--mut);font-size:.82rem}
+.lv{display:inline-block;margin-right:16px;margin-top:6px}.lv b{font-size:1.05rem}
+.ok{color:var(--up)}.no{color:#64748b}.warn{color:var(--warn)}.tm{font-size:.68rem;color:var(--mut)}
+.tag{display:inline-block;padding:1px 8px;border-radius:6px;background:#1f2937;font-size:.75rem;margin-left:6px}
+.ts{display:inline-block;padding:2px 10px;border-radius:6px;background:#0f2a1f;color:var(--up);font-weight:600}
+.tops,.blot{width:100%;border-collapse:collapse;font-size:.8rem}
+.tops th,.tops td,.blot th,.blot td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.tops th,.blot th{color:var(--mut);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;background:var(--panel2)}
+.blot tr:hover td{background:#131c2b}
+[data-testid="stMetric"]{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+[data-testid="stMetricLabel"]{color:var(--mut)!important;text-transform:uppercase;font-size:.7rem!important;letter-spacing:.06em}
+.stTabs [data-baseweb="tab-list"]{gap:4px;border-bottom:1px solid var(--line)}
+.stTabs [data-baseweb="tab"]{background:var(--panel2);border-radius:8px 8px 0 0;padding:6px 14px;font-weight:600}
+.stTabs [aria-selected="true"]{background:var(--panel);color:#fff}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{flex-direction:column;align-items:flex-start;gap:6px}}
 </style>""", unsafe_allow_html=True)
 
 
@@ -90,15 +114,7 @@ state = load_state()
 now = pd.Timestamp.now(tz=config.TZ)
 today = str(now.date())
 
-# ------------------------------------------------------------------ header
-h1, h2 = st.columns([3, 1])
-h1.markdown(f"## 📈 {config.APP_NAME}")
-h2.markdown(f"<div class='refresh'>Last scan<br><b>{state.get('updated') or state.get('checked_at') or '—'} IST</b>"
-            f"<br>{state.get('market', '')}</div>", unsafe_allow_html=True)
-if h2.button("🔄 Refresh now", width="stretch"):
-    fetch_json.clear()
-    head_sha.clear()
-    st.rerun()
+
 
 
 def signal_card(s: dict) -> None:
@@ -167,61 +183,181 @@ def chart(idx: str, c: dict, sigs: list[dict]) -> go.Figure:
     return fig
 
 
-tab_live, tab_log, tab_rules = st.tabs(["🔴 Live signals", "📊 Signal log & analysis", "📘 Strategy"])
+# ------------------------------------------------------------------ all books: index, stocks, crude (MCX)
+mcx = fetch_json("mcx_paper.json", int(time.time() // 30)) or {}
+lv = mcx.get("live") or {}
+todays = store.today_signals(saved, today)
 
-# ------------------------------------------------------------------ live
-with tab_live:
-    bad = {k: v for k, v in (state.get("status") or {}).items() if not str(v).startswith("OK")}
-    for k, v in bad.items():
-        st.warning(f"{config.label(k)}: {v}")
-    todays = store.today_signals(saved, today)
-    closed = [s for s in todays if s.get("result") in analysis.CLOSED]
 
-    def _lot(s):
-        return analysis.net_pnl(s) or 0.0
+def _crude_net(t: dict) -> float:
+    oe, ox, lot = t.get("opt_entry"), t.get("opt_exit"), t.get("lot")
+    if oe is not None and ox is not None and lot:
+        v = analysis.net_pnl({"opt_entry": oe, "opt_exit": ox, "lot_size": lot, "opt_points": round(ox - oe, 2)})
+        if v is not None:
+            return v
+    return float(t.get("opt_pnl_lot") or 0)
 
-    every_closed = [s for s in saved.values() if s.get("result") in analysis.CLOSED and not s.get("blocked")]
-    m = st.columns(5)
-    m[0].metric("Signals today", len(todays))
-    m[1].metric("Won / lost", f"{sum(1 for s in closed if float(s['r']) > 0)} / "
-                              f"{sum(1 for s in closed if float(s['r']) <= 0)}")
-    m[2].metric("Today's R", round(sum(float(s["r"]) for s in closed), 2) if closed else 0)
-    m[3].metric("Today's P&L (net)", f"₹{sum(_lot(s) for s in closed):,.0f}")
-    m[4].metric("All-time P&L (net)", f"₹{sum(_lot(s) for s in every_closed):,.0f}",
-                help=f"1 lot each, after brokerage, taxes and 1% slippage. {len(every_closed)} closed trades, {sum(float(s['r']) for s in every_closed):+.1f}R")
-    nblk = len([s for s in store.today_signals(saved, today, include_blocked=True) if s.get("blocked")])
-    st.caption(f"🛡️ Quality pre-check: only grade A signals are shown and alerted. "
-               f"Blocked today: {nblk} weaker signal(s) — see the Signal log tab.")
 
-    # ---- every running trade (index, stock, crude) with live premium and live P&L for 1 lot
-    _mcx = fetch_json("mcx_paper.json", int(time.time() // 30)) or {}
-    _done = {t["id"] for t in _mcx.get("trades", [])}
-    run = []
-    for s in todays:
-        if s.get("result") == "OPEN" and s.get("opt_entry"):
-            e, px, lot = float(s["opt_entry"]), s.get("ltp"), s.get("lot_size")
-            run.append({"Instrument": config.label(s["index"]), "Option": s["option"], "Since": s["signal_time"],
-                        "Entry ₹": e, "Live ₹": px, "SL ₹": s.get("opt_sl"), "Target ₹": s.get("opt_tp"),
-                        "Lot qty": lot, "Live P&L/lot ₹": round((float(px) - e) * lot) if px and lot else None,
-                        "Updated": s.get("ltp_time") or "-"})
-    for k, o in (_mcx.get("opt") or {}).items():
-        if k.startswith(today) and k not in _done:
-            px = o.get("now")
-            run.append({"Instrument": "Crude Oil (MCX)", "Option": o["sym"], "Since": o.get("time", "-"),
-                        "Entry ₹": o["ltp"], "Live ₹": px, "SL ₹": o.get("sl"), "Target ₹": o.get("tp"),
-                        "Lot qty": o["lot"], "Live P&L/lot ₹": round((px - o["ltp"]) * o["lot"]) if px else None,
-                        "Updated": o.get("now_t") or "-"})
-    st.markdown("### 🟡 Running trades (live)")
+book = []      # every closed trade: one row per trade, 1 lot, after costs
+for s in saved.values():
+    if s.get("result") in analysis.CLOSED and not s.get("blocked"):
+        book.append({"day": s["day"], "time": s.get("signal_time", ""), "exit": s.get("exit_time") or "",
+                     "book": "Index" if s["index"] in config.INDICES else "Stocks",
+                     "inst": config.label(s["index"]), "option": s.get("option"), "side": s.get("side"),
+                     "entry": s.get("opt_entry"), "out": s.get("opt_exit"), "result": s.get("result"),
+                     "r": float(s.get("r") or 0), "pnl": analysis.net_pnl(s) or 0.0, "lot": s.get("lot_size")})
+for t in mcx.get("trades", []):
+    book.append({"day": t["id"][:10], "time": t.get("t", ""), "exit": t.get("exit_t") or "", "book": "Crude",
+                 "inst": "Crude Oil", "option": t.get("sym") or ("CE" if t.get("side", 0) > 0 else "PE"),
+                 "side": "CE" if t.get("side", 0) > 0 else "PE", "entry": t.get("opt_entry"),
+                 "out": t.get("opt_exit"), "result": {"Target": "TP"}.get(t.get("why"), t.get("why")),
+                 "r": float(t.get("R") or 0), "pnl": _crude_net(t), "lot": t.get("lot")})
+bk = pd.DataFrame(book, columns=["day", "time", "exit", "book", "inst", "option", "side", "entry", "out",
+                                 "result", "r", "pnl", "lot"])
+
+run = []       # every open trade with live premium
+for s in todays:
+    if s.get("result") == "OPEN" and s.get("opt_entry"):
+        e, px, lot = float(s["opt_entry"]), s.get("ltp"), s.get("lot_size")
+        run.append({"Book": "Index" if s["index"] in config.INDICES else "Stocks", "Instrument": config.label(s["index"]),
+                    "Option": s["option"], "Since": s["signal_time"], "Entry": e, "LTP": px, "SL": s.get("opt_sl"),
+                    "Target": s.get("opt_tp"), "Qty": lot,
+                    "P&L": round((float(px) - e) * lot) if px and lot else None, "Updated": s.get("ltp_time") or "-"})
+_done = {t["id"] for t in mcx.get("trades", [])}
+for k, o in (mcx.get("opt") or {}).items():
+    if k.startswith(today) and k not in _done:
+        px = o.get("now")
+        run.append({"Book": "Crude", "Instrument": "Crude Oil", "Option": o["sym"], "Since": o.get("time", "-"),
+                    "Entry": o["ltp"], "LTP": px, "SL": o.get("sl"), "Target": o.get("tp"), "Qty": o["lot"],
+                    "P&L": round((px - o["ltp"]) * o["lot"]) if px else None, "Updated": o.get("now_t") or "-"})
+
+td = bk[bk["day"] == today]
+open_pnl = sum(r["P&L"] or 0 for r in run)
+eq_daily = bk.groupby("day")["pnl"].sum().sort_index()
+cum = eq_daily.cumsum()
+max_dd = float((cum - cum.cummax()).min()) if len(cum) else 0.0
+gain, loss = bk.loc[bk["pnl"] > 0, "pnl"].sum(), -bk.loc[bk["pnl"] <= 0, "pnl"].sum()
+pf = gain / loss if loss > 0 else None
+
+
+def _c(v: float) -> str:
+    return "up" if v > 0 else "dn" if v < 0 else ""
+
+
+def _rs(v: float) -> str:
+    return ("+" if v > 0 else "-" if v < 0 else "") + f"₹{abs(v):,.0f}"
+
+
+# ------------------------------------------------------------------ top bar
+nse_on = "open" in str(state.get("market", "")).lower()
+mcx_on = bool(lv.get("updated")) and (9, 0) <= (now.hour, now.minute) <= (23, 30) and now.weekday() < 5
+h1, h2 = st.columns([5, 1])
+h1.markdown(
+    f"<div class='topbar'><div class='brand'>RAKING<span>·</span>TRADER <span style='font-size:.7rem;color:#8b97a8;"
+    f"font-weight:600;letter-spacing:.1em'>OPTIONS DESK</span></div><div>"
+    f"<span class='pill {'on' if nse_on else 'off'}'>● NSE {'OPEN' if nse_on else 'CLOSED'}</span>"
+    f"<span class='pill {'on' if mcx_on else 'off'}'>● MCX {'OPEN' if mcx_on else 'CLOSED'}</span>"
+    f"<span class='pill'>🕒 {now:%a %d %b · %H:%M} IST</span>"
+    f"<span class='pill'>Scan {str(state.get('updated') or state.get('checked_at') or '—')[11:16] or '—'}</span>"
+    f"<span class='pill'>MCX {lv.get('updated') or '—'}</span></div></div>", unsafe_allow_html=True)
+if h2.button("🔄 Refresh", width="stretch"):
+    fetch_json.clear()
+    head_sha.clear()
+    st.rerun()
+bad = {k: v for k, v in (state.get("status") or {}).items() if not str(v).startswith("OK")}
+for k, v in bad.items():
+    st.warning(f"{config.label(k)}: {v}")
+
+t_pnl = float(td["pnl"].sum())
+t_win = (td["pnl"] > 0).mean() * 100 if len(td) else None
+a_win = (bk["pnl"] > 0).mean() * 100 if len(bk) else None
+tiles = [
+    ("Day P&L (net)", _rs(t_pnl), _c(t_pnl), f"{len(td)} closed · {td['r'].sum():+.1f}R"),
+    ("Open P&L", _rs(open_pnl), _c(open_pnl), f"{len(run)} running"),
+    ("Day win rate", f"{t_win:.0f}%" if t_win is not None else "—", "",
+     f"{int((td['pnl'] > 0).sum())}W / {int((td['pnl'] <= 0).sum())}L"),
+    ("Total P&L (net)", _rs(float(bk["pnl"].sum())), _c(float(bk["pnl"].sum())), f"{len(bk)} trades · {bk['r'].sum():+.1f}R"),
+    ("Win rate", f"{a_win:.0f}%" if a_win is not None else "—", "", "all books"),
+    ("Profit factor", f"{pf:.2f}" if pf else "—", "", "gross win / gross loss"),
+    ("Max drawdown", _rs(max_dd), "dn" if max_dd < 0 else "", "daily equity"),
+]
+st.markdown("<div class='kpis'>" + "".join(
+    f"<div class='kpi'><div class='l'>{l}</div><div class='v {c}'>{v}</div><div class='s'>{s}</div></div>"
+    for l, v, c, s in tiles) + "</div>", unsafe_allow_html=True)
+st.caption("All P&L is for 1 lot per trade after brokerage, taxes and 1% slippage (crude: before costs where the "
+           "premium was not recorded). Paper-trading record, not advice.")
+
+tab_desk, tab_idx, tab_stk, tab_crude, tab_log, tab_rules = st.tabs(
+    ["⚡ Desk", "📊 Indices", "🏢 Stocks", "🛢 Crude Oil", "📒 Journal & Analytics", "📘 Strategy"])
+
+# ------------------------------------------------------------------ desk: positions, today's blotter, equity, books
+with tab_desk:
+    st.markdown("### Open positions")
     if run:
-        rdf = pd.DataFrame(run)
-        st.metric("Open P&L (1 lot each, before costs)", f"₹{rdf['Live P&L/lot ₹'].fillna(0).sum():+,.0f}")
-        st.dataframe(rdf.style.map(lambda v: "color:#16c784" if isinstance(v, (int, float)) and v > 0 else
-                                   "color:#ea3943" if isinstance(v, (int, float)) and v < 0 else "",
-                                   subset=["Live P&L/lot ₹"]), hide_index=True, width="stretch")
-        st.caption("Live premium refreshes every minute (index/stock) and every 5 minutes (crude).")
-    else:
-        st.markdown("<div class='card wait'><div class='muted'>No trade running right now.</div></div>",
+        rows = "".join(
+            f"<tr><td>{r['Book']}</td><td><b>{r['Option']}</b></td><td>{r['Since']}</td><td>{r['Entry']:.1f}</td>"
+            f"<td><b>{r['LTP'] if r['LTP'] is not None else '—'}</b></td><td class='dn'>{r['SL']}</td>"
+            f"<td class='up'>{r['Target']}</td><td>{r['Qty']}</td>"
+            f"<td class='{_c(r['P&L'] or 0)}'><b>{_rs(r['P&L'] or 0)}</b></td><td class='tm'>{r['Updated']}</td></tr>"
+            for r in run)
+        st.markdown("<table class='blot'><tr><th>Book</th><th>Contract</th><th>Since</th><th>Entry</th><th>LTP</th>"
+                    "<th>SL</th><th>Target</th><th>Qty</th><th>P&L (1 lot)</th><th>Upd</th></tr>" + rows + "</table>",
                     unsafe_allow_html=True)
+        st.caption("LTP refreshes every minute (index/stock) and after every 5-min candle (crude).")
+    else:
+        st.markdown("<div class='card wait'><div class='muted'>Flat — no open positions.</div></div>",
+                    unsafe_allow_html=True)
+
+    c1, c2 = st.columns([3, 2])
+    with c1:
+        st.markdown("### Equity curve (all books, net)")
+        if len(cum):
+            fig = go.Figure()
+            fig.add_bar(x=eq_daily.index, y=eq_daily.values, name="Day P&L",
+                        marker_color=["#16c784" if v > 0 else "#ea3943" for v in eq_daily.values], opacity=.55)
+            fig.add_scatter(x=cum.index, y=cum.values, name="Cumulative", line=dict(color="#3b82f6", width=2.5))
+            fig.update_layout(height=280, template="plotly_dark", paper_bgcolor="#111827", plot_bgcolor="#111827",
+                              margin=dict(l=10, r=10, t=10, b=10), legend=dict(orientation="h", y=1.12),
+                              yaxis_title="₹")
+            st.plotly_chart(fig, width="stretch", key="eq_all")
+        else:
+            st.caption("Builds up after the first closed trade.")
+    with c2:
+        st.markdown("### Books")
+        rows = []
+        for name in ("Index", "Stocks", "Crude"):
+            b_all, b_td = bk[bk["book"] == name], td[td["book"] == name]
+            rows.append({"Book": name, "Today": round(float(b_td["pnl"].sum())), "Trades": len(b_all),
+                         "Win %": round((b_all["pnl"] > 0).mean() * 100) if len(b_all) else None,
+                         "R": round(float(b_all["r"].sum()), 1), "Total ₹": round(float(b_all["pnl"].sum()))})
+        bdf = pd.DataFrame(rows)
+        st.dataframe(bdf.style.map(lambda v: "color:#16c784" if isinstance(v, (int, float)) and v > 0 else
+                                   "color:#ea3943" if isinstance(v, (int, float)) and v < 0 else "",
+                                   subset=["Today", "Total ₹"]), hide_index=True, width="stretch")
+
+    st.markdown("### Today's executions")
+    if len(td):
+        ic = {"TP": "🎯", "SL": "🛑"}
+        rows = "".join(
+            f"<tr><td>{r.time}→{r.exit}</td><td>{r.book}</td><td><b>{r.option}</b></td>"
+            f"<td class='{'up' if r.side == 'CE' else 'dn'}'>{r.side}</td>"
+            f"<td>{'' if pd.isna(r.entry) or r.entry is None else r.entry}</td>"
+            f"<td>{'' if pd.isna(r.out) or r.out is None else r.out}</td>"
+            f"<td>{ic.get(r.result, '⏱️')} {r.result}</td><td class='{_c(r.r)}'>{r.r:+.1f}R</td>"
+            f"<td class='{_c(r.pnl)}'><b>{_rs(r.pnl)}</b></td></tr>"
+            for r in td.sort_values("time", ascending=False).itertuples())
+        st.markdown("<table class='blot'><tr><th>Time</th><th>Book</th><th>Contract</th><th>Side</th><th>Entry</th>"
+                    "<th>Exit</th><th>Result</th><th>R</th><th>Net P&L</th></tr>" + rows + "</table>",
+                    unsafe_allow_html=True)
+    else:
+        st.markdown("<div class='card wait'><div class='muted'>No closed trade today yet.</div></div>",
+                    unsafe_allow_html=True)
+    nblk = len([s for s in store.today_signals(saved, today, include_blocked=True) if s.get("blocked")])
+    st.caption(f"🛡️ Quality pre-check: only grade A signals are alerted. Blocked today: {nblk} (tracked in the Journal "
+               "and the Excel log).")
+
+# ------------------------------------------------------------------ indices
+with tab_idx:
     cols = st.columns(len(config.INDICES))
     for col, idx in zip(cols, config.INDICES):
         with col:
@@ -232,6 +368,7 @@ with tab_live:
             if not any(s.get("result") == "OPEN" for s in sigs):
                 checklist("Live checklist", (state.get("checks") or {}).get(idx))
 
+with tab_crude:
     # ---- MCX Crude Oil (state written by mcx_paper.py every 5 min)
     mcx = fetch_json("mcx_paper.json", int(time.time() // 30)) or {}
     lv = mcx.get("live") or {}
@@ -332,6 +469,7 @@ with tab_live:
     else:
         st.caption("Waiting for first update (MCX opens 09:00 IST).")
 
+with tab_stk:
     st.markdown("### Stock options")
     top = state.get("top_stocks") or []
     if top:
@@ -382,6 +520,7 @@ with tab_live:
         st.markdown("<div class='card wait'><div class='muted'>No stock option signal yet today.</div></div>",
                     unsafe_allow_html=True)
 
+with tab_idx:
     for idx, c in (state.get("charts") or {}).items():
         if c.get("close"):
             st.plotly_chart(chart(idx, c, store.today_signals(saved, today, idx)), width="stretch", key=f"c_{idx}")
