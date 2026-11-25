@@ -237,32 +237,95 @@ with tab_live:
     lv = mcx.get("live") or {}
     st.markdown("### 🛢 Crude Oil (MCX)")
     if lv:
+        win = lv.get("window", "–")
+        live_win = not str(win).startswith("Waiting")
+        st.markdown(f"{'🟢 **Signal window open: ' + win + '**' if live_win else '⏳ ' + win} · "
+                    f"updated {lv.get('updated')} IST")
         k = st.columns(5)
         k[0].metric(lv.get("symbol", "CRUDEOIL"), f"₹{lv['price']:,.0f}",
                     f"{lv['chg_pct']:+.2f}%" if lv.get("chg_pct") is not None else None)
         k[1].metric("Day high / low", f"{lv.get('day_high') or 0:,.0f} / {lv.get('day_low') or 0:,.0f}")
         k[2].metric("VWAP", f"{lv['vwap']:,.0f}" if lv.get("vwap") else "–",
                     ("Above" if lv.get("above_vwap") else "Below") if lv.get("above_vwap") is not None else None)
-        k[3].metric("Trend (EMA 20/50)", lv.get("trend", "–"))
-        k[4].metric("Signal window", lv.get("window", "–"))
-        if lv.get("candles"):
-            cd = pd.DataFrame(lv["candles"], columns=["time", "price"])
-            fig = go.Figure(go.Scatter(x=cd.time, y=cd.price, mode="lines", line=dict(color="#f0b90b")))
+        k[3].metric("Trend (EMA 20/50)", ("📈 " if lv.get("trend") == "Up" else "📉 ") + lv.get("trend", "–"))
+        k[4].metric("Bias for a breakout", "CALL (CE)" if lv.get("trend") == "Up" and lv.get("above_vwap")
+                    else "PUT (PE)" if lv.get("trend") == "Down" and lv.get("above_vwap") is False else "Mixed")
+
+        trades = mcx.get("trades", [])
+        ct = [t for t in trades if t["id"].startswith(today)]
+        opt = mcx.get("opt") or {}
+        opn = {k2: o for k2, o in opt.items() if k2.startswith(today) and k2 not in {t["id"] for t in ct}}
+        pnl = lambda ts: sum(t.get("opt_pnl_lot") or 0 for t in ts)
+        live_pnl = sum(((o.get("now") or o["ltp"]) - o["ltp"]) * o["lot"] for o in opn.values())
+        wins = [t for t in trades if t.get("R", 0) > 0]
+        s = st.columns(4)
+        s[0].metric("Today closed", f"{len(ct)} · ₹{pnl(ct):+,.0f}", f"{sum(t['R'] for t in ct):+.1f}R" if ct else None)
+        s[1].metric("Running now", f"{len(opn)} · ₹{live_pnl:+,.0f}", "live P&L / lot" if opn else None)
+        s[2].metric("All-time P&L (1 lot)", f"₹{pnl(trades):+,.0f}", f"{sum(t['R'] for t in trades):+.1f}R")
+        s[3].metric("All-time win rate", f"{len(wins) / len(trades) * 100:.0f}%" if trades else "–",
+                    f"{len(trades)} trades")
+
+        cdl = lv.get("candles") or []
+        if cdl:
+            if len(cdl[0]) == 5:
+                cd = pd.DataFrame(cdl, columns=["time", "open", "high", "low", "close"])
+                fig = go.Figure(go.Candlestick(x=cd.time, open=cd.open, high=cd.high, low=cd.low, close=cd.close,
+                                               name="Crude", increasing_line_color="#26a69a",
+                                               decreasing_line_color="#ef5350"))
+            else:
+                cd = pd.DataFrame(cdl, columns=["time", "close"])
+                fig = go.Figure(go.Scatter(x=cd.time, y=cd.close, mode="lines", line=dict(color="#f0b90b")))
             if lv.get("vwap"):
-                fig.add_hline(y=lv["vwap"], line_dash="dot", line_color="#888", annotation_text="VWAP")
-            fig.update_layout(height=220, margin=dict(l=10, r=10, t=10, b=10), template="plotly_dark")
+                fig.add_hline(y=lv["vwap"], line_dash="dot", line_color="#9e9e9e", annotation_text="VWAP")
+            for n, (hi, lo) in (lv.get("ranges") or {}).items():
+                fig.add_hline(y=hi, line_dash="dash", line_color="#42a5f5", annotation_text=f"{n} high {hi:,.0f}")
+                fig.add_hline(y=lo, line_dash="dash", line_color="#ab47bc", annotation_text=f"{n} low {lo:,.0f}",
+                              annotation_position="bottom right")
+            for e in lv.get("events") or []:
+                up = e["side"] > 0
+                fig.add_trace(go.Scatter(x=[e["t"]], y=[e["entry"]], mode="markers+text",
+                                         marker=dict(symbol="triangle-up" if up else "triangle-down", size=14,
+                                                     color="#26a69a" if up else "#ef5350"),
+                                         text=["CE" if up else "PE"], textposition="top center", showlegend=False))
+                if e.get("exit_t"):
+                    fig.add_trace(go.Scatter(x=[e["exit_t"]], y=[e["exit"]], mode="markers+text",
+                                             marker=dict(symbol="x", size=11, color="#ffffff"),
+                                             text=[e.get("why")], textposition="bottom center", showlegend=False))
+                else:
+                    fig.add_hline(y=e["sl"], line_color="#ef5350", annotation_text="SL")
+                    fig.add_hline(y=e["tg"], line_color="#26a69a", annotation_text="Target")
+            fig.update_layout(height=380, margin=dict(l=10, r=10, t=10, b=10), template="plotly_dark",
+                              xaxis_rangeslider_visible=False, showlegend=False)
             st.plotly_chart(fig, width="stretch")
-        ct = [t for t in mcx.get("trades", []) if t["id"].startswith(today)]
-        opn = [k2 for k2 in (mcx.get("opt") or {}) if k2.startswith(today) and k2 not in {t["id"] for t in ct}]
-        st.caption(f"Updated {lv.get('updated')} IST · Today: {len(ct)} closed, {len(opn)} open · "
-                   f"All-time: {len(mcx.get('trades', []))} trades, "
-                   f"{sum(t['R'] for t in mcx.get('trades', [])):+.1f}R")
-        if mcx.get("trades"):
-            tdf = pd.DataFrame(mcx["trades"])
+
+        for k2, o in opn.items():
+            now_px = o.get("now") or o["ltp"]
+            p = (now_px - o["ltp"]) * o["lot"]
+            with st.container(border=True):
+                st.markdown(f"🟡 **RUNNING · BUY {o['sym']}** · {o.get('window', '')} · since {o.get('time', '-')}")
+                c = st.columns(5)
+                c[0].metric("Entry", f"₹{o['ltp']:.1f}")
+                c[1].metric("Live", f"₹{now_px:.1f}", f"at {o.get('now_t', '-')}")
+                c[2].metric("SL / Target", f"₹{o.get('sl', 0):.1f} / ₹{o.get('tp', 0):.1f}")
+                c[3].metric("Lot qty", f"{o['lot']}")
+                c[4].metric("Live P&L / lot", f"₹{p:+,.0f}")
+        for t in reversed(ct):
+            icon = {"Target": "🎯", "SL": "🛑"}.get(t.get("why"), "⏱️")
+            with st.container(border=True):
+                st.markdown(f"{icon} **{t.get('sym') or ('CE' if t['side'] > 0 else 'PE')}** · {t.get('window', '')} · "
+                            f"{t.get('t', '')} → {t.get('exit_t', '')} · **{t.get('why')}** · {t['R']:+.1f}R")
+                if t.get("opt_entry") is not None:
+                    st.caption(f"Entry ₹{t['opt_entry']:.1f} → Exit ₹{t.get('opt_exit', 0):.1f} · Lot {t.get('lot')} qty · "
+                               f"P&L ₹{t.get('opt_pnl_lot', 0):+,.0f} per lot · Future {t['entry']:.0f} → {t['exit']:.0f}")
+        if not ct and not opn:
+            st.caption("No crude trade today yet. Signals only come in the 09:00-09:30 and 19:30-20:00 breakout windows.")
+
+        if trades:
+            tdf = pd.DataFrame(trades)
             tdf["Date"] = tdf["id"].str.slice(0, 10)
             show = {"Date": "Date", "window": "Window", "sym": "Option", "t": "Entry time", "exit_t": "Exit time",
-                    "opt_entry": "Entry ₹", "opt_exit": "Exit ₹", "lot": "Lot qty", "opt_pnl_lot": "P&L/lot ₹",
-                    "why": "Result", "R": "R"}
+                    "opt_entry": "Entry ₹", "opt_sl": "SL ₹", "opt_tp": "Target ₹", "opt_exit": "Exit ₹",
+                    "lot": "Lot qty", "opt_pnl_lot": "P&L/lot ₹", "why": "Result", "R": "R"}
             tdf = tdf[[c for c in show if c in tdf]].rename(columns=show).iloc[::-1]
             with st.expander(f"Crude Oil trade log ({len(tdf)})"):
                 st.dataframe(tdf, hide_index=True, width="stretch")
