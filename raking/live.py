@@ -295,6 +295,8 @@ def fast_exits(api: Upstox | None = None, send_alerts: bool = True) -> list[dict
     closed = []
     for s in open_:
         ltp = (q.get(s.get("opt_key")) or {}).get("last_price")
+        if ltp:                      # live premium for the dashboard's running-trades table
+            s["ltp"], s["ltp_time"] = float(ltp), hhmm
         res = check_exit(s, float(ltp) if ltp else None, hhmm)
         if res:
             s.update(res)
