@@ -193,6 +193,35 @@ with tab_live:
     st.caption(f"🛡️ Quality pre-check: only grade A signals are shown and alerted. "
                f"Blocked today: {nblk} weaker signal(s) — see the Signal log tab.")
 
+    # ---- every running trade (index, stock, crude) with live premium and live P&L for 1 lot
+    _mcx = fetch_json("mcx_paper.json", int(time.time() // 30)) or {}
+    _done = {t["id"] for t in _mcx.get("trades", [])}
+    run = []
+    for s in todays:
+        if s.get("result") == "OPEN" and s.get("opt_entry"):
+            e, px, lot = float(s["opt_entry"]), s.get("ltp"), s.get("lot_size")
+            run.append({"Instrument": config.label(s["index"]), "Option": s["option"], "Since": s["signal_time"],
+                        "Entry ₹": e, "Live ₹": px, "SL ₹": s.get("opt_sl"), "Target ₹": s.get("opt_tp"),
+                        "Lot qty": lot, "Live P&L/lot ₹": round((float(px) - e) * lot) if px and lot else None,
+                        "Updated": s.get("ltp_time") or "-"})
+    for k, o in (_mcx.get("opt") or {}).items():
+        if k.startswith(today) and k not in _done:
+            px = o.get("now")
+            run.append({"Instrument": "Crude Oil (MCX)", "Option": o["sym"], "Since": o.get("time", "-"),
+                        "Entry ₹": o["ltp"], "Live ₹": px, "SL ₹": o.get("sl"), "Target ₹": o.get("tp"),
+                        "Lot qty": o["lot"], "Live P&L/lot ₹": round((px - o["ltp"]) * o["lot"]) if px else None,
+                        "Updated": o.get("now_t") or "-"})
+    st.markdown("### 🟡 Running trades (live)")
+    if run:
+        rdf = pd.DataFrame(run)
+        st.metric("Open P&L (1 lot each, before costs)", f"₹{rdf['Live P&L/lot ₹'].fillna(0).sum():+,.0f}")
+        st.dataframe(rdf.style.map(lambda v: "color:#16c784" if isinstance(v, (int, float)) and v > 0 else
+                                   "color:#ea3943" if isinstance(v, (int, float)) and v < 0 else "",
+                                   subset=["Live P&L/lot ₹"]), hide_index=True, width="stretch")
+        st.caption("Live premium refreshes every minute (index/stock) and every 5 minutes (crude).")
+    else:
+        st.markdown("<div class='card wait'><div class='muted'>No trade running right now.</div></div>",
+                    unsafe_allow_html=True)
     cols = st.columns(len(config.INDICES))
     for col, idx in zip(cols, config.INDICES):
         with col:
@@ -228,6 +257,15 @@ with tab_live:
         st.caption(f"Updated {lv.get('updated')} IST · Today: {len(ct)} closed, {len(opn)} open · "
                    f"All-time: {len(mcx.get('trades', []))} trades, "
                    f"{sum(t['R'] for t in mcx.get('trades', [])):+.1f}R")
+        if mcx.get("trades"):
+            tdf = pd.DataFrame(mcx["trades"])
+            tdf["Date"] = tdf["id"].str.slice(0, 10)
+            show = {"Date": "Date", "window": "Window", "sym": "Option", "t": "Entry time", "exit_t": "Exit time",
+                    "opt_entry": "Entry ₹", "opt_exit": "Exit ₹", "lot": "Lot qty", "opt_pnl_lot": "P&L/lot ₹",
+                    "why": "Result", "R": "R"}
+            tdf = tdf[[c for c in show if c in tdf]].rename(columns=show).iloc[::-1]
+            with st.expander(f"Crude Oil trade log ({len(tdf)})"):
+                st.dataframe(tdf, hide_index=True, width="stretch")
     else:
         st.caption("Waiting for first update (MCX opens 09:00 IST).")
 
