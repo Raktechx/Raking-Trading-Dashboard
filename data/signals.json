@@ -2130,13 +2130,13 @@
       "Opening range high 411.9 broken, volume 3.0x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "TP",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "10:58",
+    "r": 2.0,
+    "points": 8.4,
+    "opt_exit": 20.25,
+    "opt_points": 4.85,
     "group": "STOCK",
     "delta": 0.57,
     "opt_key": "NSE_FO|102503",
@@ -2168,7 +2168,8 @@
     "blocked": true,
     "block_reason": "late move: opening range 2.73%, day move 3.3% (measuring)",
     "alt_result": "OPEN",
-    "alt_r": null
+    "alt_r": null,
+    "exit_by": "live premium"
   },
   "2026-11-25|HDFCLIFE|09:40": {
     "id": "2026-11-25|HDFCLIFE|09:40",
