@@ -135,6 +135,13 @@ def _store_new(trades: list, saved: dict, tday: str, group: str, max_total: int,
                 why = "against Nifty trend (" + {1: "Nifty up", -1: "Nifty down"}.get(nb, "Nifty mixed") + ")"
             elif rec["signal_time"] > config.STOCKS.get("last_entry", "13:30"):
                 why = f"after {config.STOCKS.get('last_entry', '13:30')} (afternoon stock entries)"
+        if not why:   # chasing check: a wide SL means the entry came after the move already happened
+            try:
+                rp = float(rec["risk_pts"]) / float(rec["entry"]) * 100
+                if rp > config.STOCKS.get("max_risk_pct", 0.6):
+                    why = f"chasing: SL {rp:.2f}% away (max {config.STOCKS.get('max_risk_pct', 0.6)}%)"
+            except (TypeError, ValueError, KeyError, ZeroDivisionError):
+                pass
         late = bool(rec.get("late_move"))
         if why or late or not quality.passes(rec, S["min_quality"]):
             if len(n_blocked) >= S["max_blocked_per_index"]:
