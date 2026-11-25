@@ -82,7 +82,7 @@ jobs:
               gh workflow run scan.yml --ref main && echo "Handed over to a fresh run."
               break
             fi
-            next=$(( ($(date +%s) / 300 + 1) * 300 ))
+            next=$(( ($(date +%s) / 300 + 1) * 300 + 20 ))  # +20 s: Upstox publishes the closed candle a few seconds late
             while [ $(( next - $(date +%s) )) -gt 45 ]; do
               sleep $(( 60 - $(date +%s) % 60 ))
               python scan_once.py exits || echo "Exit check failed."
