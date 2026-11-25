@@ -3814,8 +3814,8 @@
     "late_move": true,
     "blocked": true,
     "block_reason": "against Nifty trend (Nifty up)",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "TP",
+    "alt_r": 2.0,
     "breakeven": false,
     "exit_by": "5-min candle"
   },
@@ -4204,5 +4204,80 @@
     "alt_r": null,
     "breakeven": false,
     "exit_by": "5-min candle"
+  },
+  "2026-11-25|COCHINSHIP|13:25": {
+    "id": "2026-11-25|COCHINSHIP|13:25",
+    "index": "COCHINSHIP",
+    "day": "2026-11-25",
+    "side": "PE",
+    "setup": "Breakout",
+    "signal_time": "13:25",
+    "future": "COCHINSHIP FUT 29 DEC 26",
+    "entry": 1089.7,
+    "sl": 1092.6,
+    "tp": 1083.9,
+    "risk_pts": 2.9,
+    "strike": 1080.0,
+    "expiry": "2026-12-29",
+    "option": "COCHINSHIP 1080 PE",
+    "opt_entry": 39.7,
+    "opt_sl": 34.95,
+    "opt_tp": 49.25,
+    "orb_high": 1108.7,
+    "orb_low": 1092.4,
+    "vwap": 1101.31,
+    "volume_x": 1.54,
+    "atm_oi_pct": 25.86,
+    "writing_oi_pct": 2.93,
+    "lot_size": 400,
+    "reasons": [
+      "Trend: price below VWAP 1101.3, EMA20 < EMA50",
+      "ATM 1080 PE long build-up: premium +4.5%, OI +25.9%",
+      "Call writing (1080, 1100, 1120): OI +2.9%",
+      "Opening range low 1092.4 broken, volume 1.5x (vs 20-candle avg)",
+      "SL = previous candle high, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.44,
+    "opt_key": "NSE_FO|98155",
+    "score": 70,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 7.5,
+      "Breakout candle": 7.5,
+      "Volume": 3.6,
+      "OI build-up": 11.9,
+      "PCR": 10.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 0.0
+    },
+    "score_notes": {
+      "plus": [
+        "heavy fresh OI build-up and writing",
+        "PCR 0.58 falling in your favour",
+        "no big OI wall before target (next at 1000)"
+      ],
+      "minus": [
+        "price stretched 3.8 ATR from VWAP",
+        "broader market against the trade"
+      ]
+    },
+    "created_at": "2026-11-25 13:26:16",
+    "range_pct": 1.49,
+    "day_move_pct": 0.58,
+    "late_move": false,
+    "blocked": true,
+    "block_reason": "against Nifty trend (Nifty mixed)",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
