@@ -1,4 +1,4 @@
-"""MCX Crude Oil paper alerts (no orders). Run every ~5 min during MCX hours.
+"""MCX Crude Oil live signals (alerts only, no orders). Run every ~5 min during MCX hours.
 
 Rules = mcx_backtest.py, Crude Oil only, windows 09:00-09:30 and 19:30-20:00 IST.
 Signals use CRUDEOIL futures 5-min candles; the alert names the ATM Crude Oil Mini option
@@ -96,14 +96,22 @@ def option_for(api, m, today, fut_px, side):
             ltp = api.quotes([row.instrument_key]).get(row.instrument_key, {}).get("last_price")
         except UpstoxError:
             ltp = None
-        return row.trading_symbol, int(row.lot_size), ltp
-    return None, None, None
+        return row.trading_symbol, int(row.lot_size), ltp, row.instrument_key
+    return None, None, None, None
+
+
+def opt_ltp(api, key):
+    try:
+        return api.quotes([key]).get(key, {}).get("last_price")
+    except UpstoxError:
+        return None
 
 
 def main():
     now = pd.Timestamp.now(tz=config.TZ)
     today = now.date()
     st = load()
+    st.setdefault("opt", {})
     if st.get("day") != str(today):
         st["day"], st["sent"] = str(today), []
     api = Upstox()
@@ -112,27 +120,41 @@ def main():
         side_txt = "CE (bullish)" if e["side"] > 0 else "PE (bearish)"
         risk = abs(e["entry"] - e["sl"])
         if e["id"] + ":in" not in st["sent"]:
-            sym, lot, ltp = option_for(api, m, today, e["entry"], e["side"])
-            opt = ""
+            sym, lot, ltp, key = option_for(api, m, today, e["entry"], e["side"])
             if sym and ltp:
-                opt = (f"\nOption: {sym} (lot {lot})\nPremium ≈ ₹{ltp:.1f} · SL ≈ ₹{max(ltp - DELTA * risk, 0.5):.1f}"
-                       f" · Target ≈ ₹{ltp + DELTA * 2 * risk:.1f}")
-            elif sym:
-                opt = f"\nOption: {sym} (lot {lot})"
-            send(f"🛢 MCX Crude {side_txt} — PAPER\n{e['window']} breakout at {e['t']} IST\n"
-                 f"Future: entry {e['entry']:.0f} · SL {e['sl']:.0f} · Target {e['tg']:.0f}{opt}\n"
-                 f"Exit by 23:15 IST. Paper only.")
+                osl, otg = max(ltp - DELTA * risk, 0.5), ltp + DELTA * 2 * risk
+                st["opt"][e["id"]] = dict(sym=sym, key=key, lot=lot, ltp=ltp)
+                opt = (f"\n\nBUY {sym}\nPremium ≈ ₹{ltp:.1f} · Lot {lot}\n"
+                       f"Stop-loss ₹{osl:.1f} · Target ₹{otg:.1f}\n"
+                       f"Capital/lot ≈ ₹{ltp * lot:,.0f} · Risk/lot ≈ ₹{(ltp - osl) * lot:,.0f}"
+                       f" · Reward/lot ≈ ₹{(otg - ltp) * lot:,.0f}")
+            else:
+                opt = f"\n\nOption: {sym or 'not found'} (live premium unavailable — check before entering)"
+            send(f"🛢 MCX CRUDE SIGNAL — {side_txt}\n{e['window']} breakout at {e['t']} IST\n"
+                 f"Future: entry {e['entry']:.0f} · SL {e['sl']:.0f} · Target {e['tg']:.0f}{opt}\n\n"
+                 f"Exit if future hits SL/target, or by 23:15 IST. Check premium before entering. "
+                 f"Not advice — your decision.")
             st["sent"].append(e["id"] + ":in")
         if "exit" in e and e["id"] + ":out" not in st["sent"]:
             icon = "✅" if e["R"] > 0 else "❌"
-            send(f"{icon} MCX Crude {e['window']} trade closed ({e['why']}) at {e['exit_t']} IST\n"
-                 f"Future {e['entry']:.0f} → {e['exit']:.0f} = {e['R']:+.2f}R (paper)")
+            o, line = st["opt"].get(e["id"]), ""
+            if o:
+                now_px = opt_ltp(api, o["key"])
+                if now_px:
+                    o["exit"] = now_px
+                    line = (f"\n{o['sym']}: ₹{o['ltp']:.1f} → ₹{now_px:.1f} = "
+                            f"₹{(now_px - o['ltp']) * o['lot']:+,.0f}/lot")
+            send(f"{icon} EXIT NOW — MCX Crude {e['window']} ({e['why']}) at {e['exit_t']} IST\n"
+                 f"Future {e['entry']:.0f} → {e['exit']:.0f} = {e['R']:+.2f}R{line}")
             st["sent"].append(e["id"] + ":out")
-            st["trades"].append({k: e[k] for k in ("id", "side", "entry", "sl", "tg", "exit", "why", "R")})
+            t = {k: e[k] for k in ("id", "side", "entry", "sl", "tg", "exit", "why", "R")}
+            if o and "exit" in o:
+                t["opt_pnl_lot"] = round((o["exit"] - o["ltp"]) * o["lot"])
+            st["trades"].append(t)
     if now.time() >= dtime(23, 25) and "summary" not in st["sent"]:
         tday = [t for t in st["trades"] if t["id"].startswith(str(today))]
         tot = sum(t["R"] for t in st["trades"])
-        send(f"📊 MCX Crude paper — {today}\nToday: {len(tday)} trades, {sum(t['R'] for t in tday):+.2f}R\n"
+        send(f"📊 MCX Crude signals — {today}\nToday: {len(tday)} trades, {sum(t['R'] for t in tday):+.2f}R\n"
              f"Running total: {len(st['trades'])} trades, {tot:+.2f}R")
         st["sent"].append("summary")
     STATE.write_text(json.dumps(st, indent=1))
