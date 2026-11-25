@@ -157,6 +157,22 @@ def main():
         send(f"📊 MCX Crude signals — {today}\nToday: {len(tday)} trades, {sum(t['R'] for t in tday):+.2f}R\n"
              f"Running total: {len(st['trades'])} trades, {tot:+.2f}R")
         st["sent"].append("summary")
+    if len(d):
+        last = d.iloc[-1]
+        prev = d[d.day < today]
+        pc = float(prev.iloc[-1].close) if len(prev) else None
+        g = d[d.day == today]
+        fut = near(m, "CRUDEOIL", ["FUT"], today + timedelta(days=ROLL_DAYS)).iloc[0]
+        win = next((n for n, (a, b) in WINDOWS.items() if a <= now.time() < b), None)
+        st["live"] = dict(
+            updated=now.strftime("%H:%M"), symbol=fut.trading_symbol, price=float(last.close),
+            prev_close=pc, chg_pct=round((last.close / pc - 1) * 100, 2) if pc else None,
+            day_high=float(g.high.max()) if len(g) else None, day_low=float(g.low.min()) if len(g) else None,
+            vwap=None if pd.isna(last.vwap) else round(float(last.vwap), 1),
+            trend="Up" if last.e20 > last.e50 else "Down",
+            above_vwap=bool(last.close > last.vwap) if not pd.isna(last.vwap) else None,
+            window=win or "Waiting (09:00-09:30, 19:30-20:00)",
+            candles=[[str(t.ts)[11:16], float(t.close)] for t in g.tail(60).itertuples()])
     STATE.write_text(json.dumps(st, indent=1))
 
 
