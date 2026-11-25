@@ -39,5 +39,5 @@ jobs:
               git add -f data/mcx_paper.json
               git commit -q -m "mcx paper update" && for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
             fi
-            sleep 300
+            sleep $(( 300 - $(date +%s) % 300 + 20 ))   # wake 20 s after each 5-min candle closes
           done
