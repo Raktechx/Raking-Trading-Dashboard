@@ -5,7 +5,7 @@ from datetime import datetime
 
 import pandas as pd
 
-from . import config, data, demo, notify, quality, store
+from . import config, data, demo, holidays, notify, quality, store
 from .config import STRATEGY as S
 from .strategy import opt_levels, public, r05, simulate, simulate_option
 from .strategy import _t, day_trades, evaluate, orb_levels
@@ -20,7 +20,7 @@ def market_open(t: datetime | None = None) -> bool:
     t = t or now_ist()
     if t.weekday() >= 5:
         return False
-    return (9, 15) <= (t.hour, t.minute) <= (15, 30)
+    return (9, 15) <= (t.hour, t.minute) <= (15, 30) and not holidays.closed("NSE", t)
 
 
 def _checklist(ev: dict | None) -> dict | None:
