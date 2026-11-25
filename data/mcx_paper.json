@@ -3,7 +3,8 @@
   "2026-11-25-Morning-1:in",
   "2026-11-25-Morning-1:out",
   "2026-11-25-Morning-2:in",
-  "2026-11-25-Morning-2:out"
+  "2026-11-25-Morning-2:out",
+  "2026-11-25-US open-1:in"
  ],
  "trades": [
   {
@@ -43,18 +44,31 @@
    "lot": 10,
    "ltp": 352.85,
    "exit": 351.7
+  },
+  "2026-11-25-US open-1": {
+   "sym": "CRUDEOILM 7700 CE 16 DEC 26",
+   "key": "MCX_FO|586227",
+   "lot": 10,
+   "ltp": 393.9,
+   "sl": 377.9,
+   "tp": 425.9,
+   "side": "CE",
+   "time": "20:25",
+   "window": "US open",
+   "now": 393.9,
+   "now_t": "20:25"
   }
  },
  "day": "2026-11-25",
  "live": {
-  "updated": "20:20",
+  "updated": "20:25",
   "symbol": "CRUDEOIL FUT 18 DEC 26",
-  "price": 7692.0,
+  "price": 7707.0,
   "prev_close": 7583.0,
-  "chg_pct": 1.44,
-  "day_high": 7694.0,
+  "chg_pct": 1.64,
+  "day_high": 7712.0,
   "day_low": 7418.0,
-  "vwap": 7564.4,
+  "vwap": 7568.6,
   "trend": "Up",
   "above_vwap": true,
   "window": "Waiting (09:00-09:30, 19:30-20:00)",
@@ -1010,6 +1024,13 @@
     7694.0,
     7675.0,
     7692.0
+   ],
+   [
+    "20:20",
+    7699.0,
+    7712.0,
+    7697.0,
+    7707.0
    ]
   ],
   "ranges": {
@@ -1048,6 +1069,19 @@
     "exit_t": "11:20",
     "why": "SL",
     "R": -1.0
+   },
+   {
+    "id": "2026-11-25-US open-1",
+    "window": "US open",
+    "side": 1,
+    "t": "20:25",
+    "entry": 7707.0,
+    "sl": 7675.0,
+    "tg": 7771.0,
+    "exit": null,
+    "exit_t": null,
+    "why": null,
+    "R": null
    }
   ]
  }
