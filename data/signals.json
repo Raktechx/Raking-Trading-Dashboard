@@ -3128,8 +3128,8 @@
     "range_pct": 1.41,
     "day_move_pct": 1.36,
     "late_move": false,
-    "alt_result": "OPEN",
-    "alt_r": null
+    "alt_result": "SL",
+    "alt_r": -1.0
   },
   "2026-11-25|TRENT|10:25": {
     "id": "2026-11-25|TRENT|10:25",
