@@ -131,6 +131,7 @@ def _store_new(trades: list, saved: dict, tday: str, group: str, max_total: int,
         why = None
         if group == "STOCK":
             nb = (ctx.get("market") or {}).get("NIFTY")
+            rec["nifty_trend"] = "with" if nb == (1 if rec["side"] == "CE" else -1) else "against"   # tracked even with the filter off
             if config.STOCKS.get("need_nifty_trend", True) and nb != (1 if rec["side"] == "CE" else -1):
                 why = "against Nifty trend (" + {1: "Nifty up", -1: "Nifty down"}.get(nb, "Nifty mixed") + ")"
             elif rec["signal_time"] > config.STOCKS.get("last_entry", "13:30"):
