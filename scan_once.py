@@ -48,21 +48,13 @@ def eod_text(saved: dict, today: str, everything: dict | None = None) -> str:
         for s in sigs:
             r = s.get("r")
             lines.append(f"{icon.get(s.get('result'), '•')} {s['signal_time']} <b>{s['option']}</b> "
-                         f"{s.get('grade') or '-'} ₹{s.get('opt_entry')}→₹{s.get('opt_exit')}"
+                         f"entry ₹{s.get('opt_entry')} · SL ₹{s.get('opt_sl')} · TP ₹{s.get('opt_tp')} → exit ₹{s.get('opt_exit')}"
                          + (f" {float(r):+.1f}R" if r is not None else "")
                          + (f" ₹{lot_pnl(s):+,.0f}" if lot_pnl(s) is not None else ""))
         rs = [float(s["r"]) for s in sigs if s.get("r") is not None]
         ps = [lot_pnl(s) for s in sigs if lot_pnl(s) is not None]
         if rs:
             lines.append(f"Today: <b>{sum(rs):+.1f}R · ₹{sum(ps):+,.0f}</b> (1 lot, after costs)")
-    blk = [s for s in (everything or {}).values() if s.get("blocked") and s.get("day") == today]
-    if blk:
-        lines.append("")
-        lines.append(f"🛡️ Blocked (not sent): {len(blk)}")
-        for s in blk:
-            r = s.get("r")
-            lines.append(f"  {s['signal_time']} {s['option']} grade {s.get('grade') or '-'} → "
-                         f"{s.get('result')}" + (f" {float(r):+.1f}R" if r is not None else ""))
     done = [s for s in saved.values() if s.get("result") in ("TP", "SL", "TIME")]
     if done:
         r = pd.Series([float(s["r"]) for s in done])
