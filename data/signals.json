@@ -4364,8 +4364,8 @@
     "block_reason": "grade B (56/100): volume only just above average; PCR 0.69 against the trade; broader market against the trade",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 172.0,
-    "ltp_time": "09:43"
+    "ltp": 171.8,
+    "ltp_time": "09:44"
   },
   "2026-11-26|CDSL|09:40": {
     "id": "2026-11-26|CDSL|09:40",
@@ -4441,8 +4441,8 @@
     "block_reason": "chasing: SL 0.65% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 56.15,
-    "ltp_time": "09:43"
+    "ltp": 56.4,
+    "ltp_time": "09:44"
   },
   "2026-11-26|HDFCBANK|09:40": {
     "id": "2026-11-26|HDFCBANK|09:40",
@@ -4516,8 +4516,8 @@
     "nifty_trend": "against",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 25.25,
-    "ltp_time": "09:43"
+    "ltp": 24.8,
+    "ltp_time": "09:44"
   },
   "2026-11-26|SWIGGY|09:40": {
     "id": "2026-11-26|SWIGGY|09:40",
@@ -4592,7 +4592,7 @@
     "nifty_trend": "against",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 7.67,
-    "ltp_time": "09:43"
+    "ltp": 7.47,
+    "ltp_time": "09:44"
   }
 }
