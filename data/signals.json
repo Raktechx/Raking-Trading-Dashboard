@@ -4320,13 +4320,13 @@
       "Opening range high 3704.0 broken, volume 1.3x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "TP",
+    "exit": 3741.8,
+    "exit_time": "10:15",
+    "r": 0.88,
+    "points": 35.8,
+    "opt_exit": 192.0,
+    "opt_points": 18.25,
     "group": "STOCK",
     "delta": 0.54,
     "opt_key": "NSE_FO|137942",
@@ -4365,7 +4365,9 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 190.35,
-    "ltp_time": "10:15"
+    "ltp_time": "10:15",
+    "breakeven": false,
+    "exit_by": "5-min candle"
   },
   "2026-11-26|CDSL|09:40": {
     "id": "2026-11-26|CDSL|09:40",
@@ -5059,8 +5061,8 @@
     "day_move_pct": 0.06,
     "late_move": false,
     "nifty_trend": "with",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "TP",
+    "alt_r": 2.0,
     "ltp": 48.15,
     "ltp_time": "10:15"
   },
@@ -5096,13 +5098,13 @@
       "Opening range high 406.9 broken, volume 2.1x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "SL",
+    "exit": 409.75,
+    "exit_time": "10:15",
+    "r": -0.57,
+    "points": -1.0,
+    "opt_exit": 11.7,
+    "opt_points": -0.85,
     "group": "STOCK",
     "delta": 0.52,
     "opt_key": "NSE_FO|88696",
@@ -5135,9 +5137,11 @@
     "day_move_pct": 1.31,
     "late_move": false,
     "nifty_trend": "with",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "SL",
+    "alt_r": -1.0,
     "ltp": 11.7,
-    "ltp_time": "10:15"
+    "ltp_time": "10:15",
+    "breakeven": false,
+    "exit_by": "5-min candle"
   }
 }
