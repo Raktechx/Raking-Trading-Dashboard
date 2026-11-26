@@ -5296,5 +5296,80 @@
     "alt_r": null,
     "ltp": 8.55,
     "ltp_time": "11:05"
+  },
+  "2026-11-26|HINDUNILVR|11:05": {
+    "id": "2026-11-26|HINDUNILVR|11:05",
+    "index": "HINDUNILVR",
+    "day": "2026-11-26",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "11:05",
+    "future": "HINDUNILVR FUT 29 DEC 26",
+    "entry": 2171.1,
+    "sl": 2160.0,
+    "tp": 2193.3,
+    "risk_pts": 11.1,
+    "strike": 2160.0,
+    "expiry": "2026-12-29",
+    "option": "HINDUNILVR 2160 CE",
+    "opt_entry": 59.25,
+    "opt_sl": 52.15,
+    "opt_tp": 73.45,
+    "orb_high": 2160.0,
+    "orb_low": 2133.9,
+    "vwap": 2147.25,
+    "volume_x": 2.35,
+    "atm_oi_pct": 1.3,
+    "writing_oi_pct": 4.36,
+    "lot_size": 300,
+    "reasons": [
+      "Trend: price above VWAP 2147.3, EMA20 > EMA50",
+      "ATM 2160 CE long build-up: premium +11.9%, OI +1.3%",
+      "Put writing (2160, 2140, 2120): OI +4.4%",
+      "Opening range high 2160.0 broken, volume 2.4x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.55,
+    "opt_key": "NSE_FO|121424",
+    "score": 79,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 7.5,
+      "Breakout candle": 13.7,
+      "Volume": 9.0,
+      "OI build-up": 8.5,
+      "PCR": 5.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong breakout candle closing near its high",
+        "volume 2.4x average",
+        "no big OI wall before target (next at 2200)"
+      ],
+      "minus": [
+        "price stretched 3.5 ATR from VWAP"
+      ]
+    },
+    "created_at": "2026-11-26 11:06:40",
+    "range_pct": 1.22,
+    "day_move_pct": 0.51,
+    "late_move": false,
+    "nifty_trend": "with",
+    "blocked": true,
+    "block_reason": "after 11:00 (afternoon stock entries)",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
