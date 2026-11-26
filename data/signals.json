@@ -5767,8 +5767,8 @@
     "block_reason": "after 11:00 (afternoon stock entries)",
     "alt_result": "SL",
     "alt_r": -1.0,
-    "ltp": 84.0,
-    "ltp_time": "13:57"
+    "ltp": 82.85,
+    "ltp_time": "13:58"
   },
   "2026-11-26|DIXON|12:45": {
     "id": "2026-11-26|DIXON|12:45",
@@ -6005,7 +6005,7 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "TP",
     "alt_r": 2.0,
-    "ltp": 5.23,
-    "ltp_time": "13:57"
+    "ltp": 5.21,
+    "ltp_time": "13:58"
   }
 }
