@@ -5724,13 +5724,13 @@
       "Opening range high 2510.3 broken, volume 1.3x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "SL",
+    "exit": 2508.4,
+    "exit_time": "14:00",
+    "r": -0.53,
+    "points": -11.7,
+    "opt_exit": 84.05,
+    "opt_points": -5.7,
     "group": "STOCK",
     "delta": 0.52,
     "opt_key": "NSE_FO|135271",
@@ -5768,7 +5768,9 @@
     "alt_result": "SL",
     "alt_r": -1.0,
     "ltp": 84.7,
-    "ltp_time": "14:10"
+    "ltp_time": "14:10",
+    "breakeven": false,
+    "exit_by": "5-min candle"
   },
   "2026-11-26|DIXON|12:45": {
     "id": "2026-11-26|DIXON|12:45",
