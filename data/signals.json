@@ -4364,8 +4364,8 @@
     "block_reason": "grade B (56/100): volume only just above average; PCR 0.69 against the trade; broader market against the trade",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 185.25,
-    "ltp_time": "10:12"
+    "ltp": 188.75,
+    "ltp_time": "10:13"
   },
   "2026-11-26|CDSL|09:40": {
     "id": "2026-11-26|CDSL|09:40",
@@ -4441,8 +4441,8 @@
     "block_reason": "chasing: SL 0.65% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 57.15,
-    "ltp_time": "10:12"
+    "ltp": 57.6,
+    "ltp_time": "10:13"
   },
   "2026-11-26|HDFCBANK|09:40": {
     "id": "2026-11-26|HDFCBANK|09:40",
@@ -4910,8 +4910,8 @@
     "block_reason": "chasing: SL 0.63% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 22.8,
-    "ltp_time": "10:12"
+    "ltp": 21.35,
+    "ltp_time": "10:13"
   },
   "2026-11-26|HYUNDAI|10:00": {
     "id": "2026-11-26|HYUNDAI|10:00",
@@ -4986,7 +4986,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 95.65,
-    "ltp_time": "10:12"
+    "ltp_time": "10:13"
   },
   "2026-11-26|CIPLA|10:00": {
     "id": "2026-11-26|CIPLA|10:00",
@@ -5061,8 +5061,8 @@
     "nifty_trend": "with",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 46.0,
-    "ltp_time": "10:12"
+    "ltp": 46.2,
+    "ltp_time": "10:13"
   },
   "2026-11-26|BEL|10:10": {
     "id": "2026-11-26|BEL|10:10",
@@ -5137,7 +5137,7 @@
     "nifty_trend": "with",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 12.3,
-    "ltp_time": "10:12"
+    "ltp": 12.15,
+    "ltp_time": "10:13"
   }
 }
