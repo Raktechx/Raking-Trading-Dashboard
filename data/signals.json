@@ -4910,8 +4910,8 @@
     "nifty_trend": "with",
     "blocked": true,
     "block_reason": "chasing: SL 0.63% away (max 0.6%)",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "SL",
+    "alt_r": -1.0,
     "ltp": 19.5,
     "ltp_time": "11:17",
     "exit_by": "live premium"
@@ -5456,5 +5456,72 @@
     "alt_r": null,
     "ltp": 109.15,
     "ltp_time": "11:50"
+  },
+  "2026-11-26|SENSEX|11:50": {
+    "id": "2026-11-26|SENSEX|11:50",
+    "index": "SENSEX",
+    "day": "2026-11-26",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "11:50",
+    "future": "SENSEX FUT 26 NOV 26",
+    "entry": 84300.0,
+    "sl": 84173.55,
+    "tp": 84552.9,
+    "risk_pts": 126.45,
+    "strike": 84300.0,
+    "expiry": "2026-12-03",
+    "option": "SENSEX 84300 CE",
+    "opt_entry": 854.25,
+    "opt_sl": 751.75,
+    "opt_tp": 1059.25,
+    "orb_high": 84299.95,
+    "orb_low": 83831.8,
+    "vwap": 84186.22,
+    "volume_x": 2.35,
+    "atm_oi_pct": 4.15,
+    "writing_oi_pct": 3.72,
+    "lot_size": 20,
+    "reasons": [
+      "Trend: price above VWAP 84186.2, EMA20 > EMA50",
+      "ATM 84300 CE long build-up: premium +4.5%, OI +4.2%",
+      "Put writing (84300, 84200, 84100): OI +3.7%",
+      "Opening range high 84299.9 broken, volume 2.3x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "INDEX",
+    "delta": 0.52,
+    "opt_key": "BSE_FO|823878",
+    "score": 89,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 15.0,
+      "Breakout candle": 11.0,
+      "Volume": 9.0,
+      "OI build-up": 11.8,
+      "PCR": 9.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 3.3
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "strong breakout candle closing near its high",
+        "volume 2.4x average"
+      ],
+      "minus": []
+    },
+    "created_at": "2026-11-26 11:50:31",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
