@@ -5521,8 +5521,8 @@
       "minus": []
     },
     "created_at": "2026-11-26 11:50:31",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "TP",
+    "alt_r": 2.0,
     "ltp": 945.0,
     "ltp_time": "12:00"
   },
