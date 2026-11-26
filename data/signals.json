@@ -4443,8 +4443,8 @@
     "block_reason": "chasing: SL 0.65% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 55.8,
-    "ltp_time": "11:48"
+    "ltp": 56.0,
+    "ltp_time": "11:49"
   },
   "2026-11-26|HDFCBANK|09:40": {
     "id": "2026-11-26|HDFCBANK|09:40",
@@ -5223,8 +5223,8 @@
     "block_reason": "chasing: SL 0.61% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 162.6,
-    "ltp_time": "11:48"
+    "ltp": 163.25,
+    "ltp_time": "11:49"
   },
   "2026-11-26|POWERGRID|10:40": {
     "id": "2026-11-26|POWERGRID|10:40",
@@ -5454,7 +5454,7 @@
     "block_reason": "against Nifty trend (Nifty up)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 106.3,
-    "ltp_time": "11:48"
+    "ltp": 107.5,
+    "ltp_time": "11:49"
   }
 }
