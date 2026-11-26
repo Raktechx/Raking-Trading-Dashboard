@@ -4443,8 +4443,8 @@
     "block_reason": "chasing: SL 0.65% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 59.8,
-    "ltp_time": "11:05"
+    "ltp": 59.7,
+    "ltp_time": "11:07"
   },
   "2026-11-26|HDFCBANK|09:40": {
     "id": "2026-11-26|HDFCBANK|09:40",
@@ -4912,8 +4912,8 @@
     "block_reason": "chasing: SL 0.63% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 20.0,
-    "ltp_time": "11:05"
+    "ltp": 19.9,
+    "ltp_time": "11:07"
   },
   "2026-11-26|HYUNDAI|10:00": {
     "id": "2026-11-26|HYUNDAI|10:00",
@@ -5065,8 +5065,8 @@
     "nifty_trend": "with",
     "alt_result": "TP",
     "alt_r": 2.0,
-    "ltp": 48.9,
-    "ltp_time": "11:05"
+    "ltp": 51.5,
+    "ltp_time": "11:07"
   },
   "2026-11-26|BEL|10:10": {
     "id": "2026-11-26|BEL|10:10",
@@ -5221,8 +5221,8 @@
     "block_reason": "chasing: SL 0.61% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 175.25,
-    "ltp_time": "11:05"
+    "ltp": 172.95,
+    "ltp_time": "11:07"
   },
   "2026-11-26|POWERGRID|10:40": {
     "id": "2026-11-26|POWERGRID|10:40",
@@ -5295,7 +5295,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 8.55,
-    "ltp_time": "11:05"
+    "ltp_time": "11:07"
   },
   "2026-11-26|HINDUNILVR|11:05": {
     "id": "2026-11-26|HINDUNILVR|11:05",
@@ -5370,6 +5370,8 @@
     "blocked": true,
     "block_reason": "after 11:00 (afternoon stock entries)",
     "alt_result": "OPEN",
-    "alt_r": null
+    "alt_r": null,
+    "ltp": 62.05,
+    "ltp_time": "11:07"
   }
 }
