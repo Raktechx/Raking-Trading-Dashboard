@@ -6087,8 +6087,8 @@
     "block_reason": "after 11:00 (afternoon stock entries)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 3.55,
-    "ltp_time": "14:53"
+    "ltp": 3.5,
+    "ltp_time": "14:54"
   },
   "2026-11-26|TECHM|14:40": {
     "id": "2026-11-26|TECHM|14:40",
@@ -6165,7 +6165,7 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 65.4,
-    "ltp_time": "14:53"
+    "ltp": 66.55,
+    "ltp_time": "14:54"
   }
 }
