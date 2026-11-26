@@ -6088,7 +6088,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 3.55,
-    "ltp_time": "14:49"
+    "ltp_time": "14:50"
   },
   "2026-11-26|TECHM|14:40": {
     "id": "2026-11-26|TECHM|14:40",
@@ -6165,7 +6165,7 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 64.4,
-    "ltp_time": "14:49"
+    "ltp": 65.6,
+    "ltp_time": "14:50"
   }
 }
