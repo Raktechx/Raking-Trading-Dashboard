@@ -5180,13 +5180,13 @@
       "Opening range high 3923.9 broken, volume 1.0x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "TP",
+    "exit": 4000.0,
+    "exit_time": "12:40",
+    "r": 1.39,
+    "points": 48.0,
+    "opt_exit": 195.5,
+    "opt_points": 27.9,
     "group": "STOCK",
     "delta": 0.52,
     "opt_key": "NSE_FO|78955",
@@ -5224,7 +5224,9 @@
     "alt_result": "TP",
     "alt_r": 2.0,
     "ltp": 195.5,
-    "ltp_time": "12:40"
+    "ltp_time": "12:40",
+    "breakeven": false,
+    "exit_by": "5-min candle"
   },
   "2026-11-26|POWERGRID|10:40": {
     "id": "2026-11-26|POWERGRID|10:40",
@@ -5685,5 +5687,81 @@
     "alt_r": null,
     "ltp": 355.85,
     "ltp_time": "12:40"
+  },
+  "2026-11-26|LAURUSLABS|12:40": {
+    "id": "2026-11-26|LAURUSLABS|12:40",
+    "index": "LAURUSLABS",
+    "day": "2026-11-26",
+    "side": "CE",
+    "setup": "Breakout",
+    "signal_time": "12:40",
+    "future": "LAURUSLABS FUT 29 DEC 26",
+    "entry": 2520.1,
+    "sl": 2508.4,
+    "tp": 2543.5,
+    "risk_pts": 11.7,
+    "strike": 2520.0,
+    "expiry": "2026-12-29",
+    "option": "LAURUSLABS 2520 CE",
+    "opt_entry": 89.75,
+    "opt_sl": 79.0,
+    "opt_tp": 111.3,
+    "orb_high": 2510.3,
+    "orb_low": 2458.1,
+    "vwap": 2502.09,
+    "volume_x": 1.3,
+    "atm_oi_pct": 16.09,
+    "writing_oi_pct": 7.2,
+    "lot_size": 425,
+    "reasons": [
+      "Trend: price above VWAP 2502.1, EMA20 > EMA50",
+      "ATM 2520 CE long build-up: premium +6.4%, OI +16.1%",
+      "Put writing (2520, 2500, 2480): OI +7.2%",
+      "Opening range high 2510.3 broken, volume 1.3x (vs 20-candle avg)",
+      "SL = previous candle low, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.52,
+    "opt_key": "NSE_FO|135271",
+    "score": 74,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 15.0,
+      "Breakout candle": 2.2,
+      "Volume": 2.0,
+      "OI build-up": 15.0,
+      "PCR": 5.2,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "heavy fresh OI build-up and writing",
+        "no big OI wall before target (next at 2600)"
+      ],
+      "minus": [
+        "weak breakout candle (small body / long wick)",
+        "volume only just above average"
+      ]
+    },
+    "created_at": "2026-11-26 12:41:49",
+    "range_pct": 2.12,
+    "day_move_pct": 2.42,
+    "late_move": false,
+    "nifty_trend": "with",
+    "blocked": true,
+    "block_reason": "after 11:00 (afternoon stock entries)",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
