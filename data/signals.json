@@ -4364,8 +4364,8 @@
     "block_reason": "grade B (56/100): volume only just above average; PCR 0.69 against the trade; broader market against the trade",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 169.45,
-    "ltp_time": "09:45"
+    "ltp": 165.6,
+    "ltp_time": "09:47"
   },
   "2026-11-26|CDSL|09:40": {
     "id": "2026-11-26|CDSL|09:40",
@@ -4441,8 +4441,8 @@
     "block_reason": "chasing: SL 0.65% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 56.4,
-    "ltp_time": "09:45"
+    "ltp": 55.8,
+    "ltp_time": "09:47"
   },
   "2026-11-26|HDFCBANK|09:40": {
     "id": "2026-11-26|HDFCBANK|09:40",
@@ -4516,8 +4516,8 @@
     "nifty_trend": "against",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 24.9,
-    "ltp_time": "09:45"
+    "ltp": 24.25,
+    "ltp_time": "09:47"
   },
   "2026-11-26|SWIGGY|09:40": {
     "id": "2026-11-26|SWIGGY|09:40",
@@ -4592,8 +4592,8 @@
     "nifty_trend": "against",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 7.42,
-    "ltp_time": "09:45"
+    "ltp": 7.32,
+    "ltp_time": "09:47"
   },
   "2026-11-26|ANGELONE|09:45": {
     "id": "2026-11-26|ANGELONE|09:45",
@@ -4670,7 +4670,9 @@
     "blocked": true,
     "block_reason": "grade B (57/100): weak breakout candle (small body / long wick); PCR 0.63 against the trade; broader market against the trade",
     "alt_result": "OPEN",
-    "alt_r": null
+    "alt_r": null,
+    "ltp": 18.2,
+    "ltp_time": "09:47"
   },
   "2026-11-26|ADANIENT|09:45": {
     "id": "2026-11-26|ADANIENT|09:45",
@@ -4745,6 +4747,8 @@
     "late_move": false,
     "nifty_trend": "against",
     "alt_result": "OPEN",
-    "alt_r": null
+    "alt_r": null,
+    "ltp": 93.1,
+    "ltp_time": "09:47"
   }
 }
