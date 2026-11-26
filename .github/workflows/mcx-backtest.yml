@@ -10,7 +10,7 @@ permissions:
 jobs:
   bt:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -24,4 +24,4 @@ jobs:
         run: |
           case "$DAYS" in ''|*[!0-9]*) DAYS=365 ;; esac
           mkdir -p data/cache
-          python mcx_backtest.py "$DAYS" | tee -a "$GITHUB_STEP_SUMMARY"
+          python mcx_research.py "$DAYS" | tee -a "$GITHUB_STEP_SUMMARY"
