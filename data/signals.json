@@ -5221,8 +5221,8 @@
     "nifty_trend": "with",
     "blocked": true,
     "block_reason": "chasing: SL 0.61% away (max 0.6%)",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "TP",
+    "alt_r": 2.0,
     "ltp": 192.15,
     "ltp_time": "12:35"
   },
