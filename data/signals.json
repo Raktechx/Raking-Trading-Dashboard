@@ -4947,13 +4947,13 @@
       "Opening range low 2056.7 broken, volume 2.2x (vs 20-candle avg)",
       "SL = previous candle high, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "SL",
+    "exit": 2062.2,
+    "exit_time": "10:20",
+    "r": -0.09,
+    "points": -10.6,
+    "opt_exit": 95.65,
+    "opt_points": -1.1,
     "group": "STOCK",
     "delta": 0.52,
     "opt_key": "NSE_FO|122605",
@@ -4988,7 +4988,9 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 95.65,
-    "ltp_time": "10:20"
+    "ltp_time": "10:20",
+    "breakeven": false,
+    "exit_by": "5-min candle"
   },
   "2026-11-26|CIPLA|10:00": {
     "id": "2026-11-26|CIPLA|10:00",
