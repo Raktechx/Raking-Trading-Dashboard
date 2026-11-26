@@ -1,6 +1,6 @@
 # 📈 Raking the Trader — Live
 
-**Last update:** 26 Nov 2026, 10:36:48 IST · 🟢 Market open
+**Last update:** 26 Nov 2026, 10:41:42 IST · 🟢 Market open
 
 ## Today's signals
 
@@ -13,9 +13,10 @@
 | 10:00 | **BUY HYUNDAI 2080 PE** | 96.75 | 85.15 | 119.95 | SL |
 | 10:00 | **BUY CIPLA 1440 CE** | 41.6 | 36.6 | 51.6 | OPEN |
 | 10:10 | **BUY BEL 410 CE** | 12.55 | 11.05 | 15.55 | SL |
+| 10:40 | **BUY POWERGRID 267.5 CE** | 8.55 | 7.5 | 10.6 | OPEN |
 
 ## Paper trading record
 
-Signals 36 · closed 35 · win rate 45.7% · total 8.94 R · max drawdown -2.91 R · since 2026-11-16
+Signals 37 · closed 35 · win rate 45.7% · total 8.94 R · max drawdown -2.91 R · since 2026-11-16
 
 _Updated about every 5 minutes during market hours. Full page: `docs/index.html`._
