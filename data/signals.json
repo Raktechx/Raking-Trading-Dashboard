@@ -5765,5 +5765,81 @@
     "alt_r": null,
     "ltp": 92.2,
     "ltp_time": "12:45"
+  },
+  "2026-11-26|DIXON|12:45": {
+    "id": "2026-11-26|DIXON|12:45",
+    "index": "DIXON",
+    "day": "2026-11-26",
+    "side": "PE",
+    "setup": "Breakout",
+    "signal_time": "12:45",
+    "future": "DIXON FUT 29 DEC 26",
+    "entry": 12756.0,
+    "sl": 12829.0,
+    "tp": 12610.0,
+    "risk_pts": 73.0,
+    "strike": 12750.0,
+    "expiry": "2026-12-29",
+    "option": "DIXON 12750 PE",
+    "opt_entry": 548.3,
+    "opt_sl": 482.5,
+    "opt_tp": 679.9,
+    "orb_high": 13047.0,
+    "orb_low": 12828.0,
+    "vwap": 12953.65,
+    "volume_x": 3.19,
+    "atm_oi_pct": 2.69,
+    "writing_oi_pct": 1.52,
+    "lot_size": 50,
+    "reasons": [
+      "Trend: price below VWAP 12953.6, EMA20 < EMA50",
+      "ATM 12750 PE long build-up: premium +10.0%, OI +2.7%",
+      "Call writing (12750, 13000, 13250): OI +1.5%",
+      "Opening range low 12828.0 broken, volume 3.2x (vs 20-candle avg)",
+      "SL = previous candle high, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.47,
+    "opt_key": "NSE_FO|88010",
+    "score": 72,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 7.5,
+      "Breakout candle": 13.8,
+      "Volume": 10.0,
+      "OI build-up": 6.3,
+      "PCR": 5.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 9.7,
+      "India VIX": 5.0,
+      "Market alignment": 0.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong breakout candle closing near its low",
+        "volume 3.2x average",
+        "no big OI wall before target (next at 12000)"
+      ],
+      "minus": [
+        "price stretched 5.2 ATR from VWAP",
+        "broader market against the trade"
+      ]
+    },
+    "created_at": "2026-11-26 12:46:53",
+    "range_pct": 1.71,
+    "day_move_pct": 2.05,
+    "late_move": false,
+    "nifty_trend": "against",
+    "blocked": true,
+    "block_reason": "against Nifty trend (Nifty up)",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
