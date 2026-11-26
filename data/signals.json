@@ -4444,7 +4444,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 60.35,
-    "ltp_time": "12:24"
+    "ltp_time": "12:25"
   },
   "2026-11-26|HDFCBANK|09:40": {
     "id": "2026-11-26|HDFCBANK|09:40",
@@ -5223,8 +5223,8 @@
     "block_reason": "chasing: SL 0.61% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 180.95,
-    "ltp_time": "12:24"
+    "ltp": 180.6,
+    "ltp_time": "12:25"
   },
   "2026-11-26|POWERGRID|10:40": {
     "id": "2026-11-26|POWERGRID|10:40",
@@ -5455,7 +5455,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 108.5,
-    "ltp_time": "12:24"
+    "ltp_time": "12:25"
   },
   "2026-11-26|SENSEX|11:50": {
     "id": "2026-11-26|SENSEX|11:50",
@@ -5523,8 +5523,8 @@
     "created_at": "2026-11-26 11:50:31",
     "alt_result": "TP",
     "alt_r": 2.0,
-    "ltp": 935.0,
-    "ltp_time": "12:24"
+    "ltp": 924.85,
+    "ltp_time": "12:25"
   },
   "2026-11-26|ADANIPORTS|11:55": {
     "id": "2026-11-26|ADANIPORTS|11:55",
@@ -5602,7 +5602,7 @@
     "block_reason": "after 11:00 (afternoon stock entries)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 56.3,
-    "ltp_time": "12:24"
+    "ltp": 57.4,
+    "ltp_time": "12:25"
   }
 }
