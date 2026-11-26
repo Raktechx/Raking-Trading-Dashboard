@@ -5843,5 +5843,81 @@
     "alt_r": null,
     "ltp": 534.55,
     "ltp_time": "12:50"
+  },
+  "2026-11-26|ADANIGREEN|12:50": {
+    "id": "2026-11-26|ADANIGREEN|12:50",
+    "index": "ADANIGREEN",
+    "day": "2026-11-26",
+    "side": "PE",
+    "setup": "Breakout",
+    "signal_time": "12:50",
+    "future": "ADANIGREEN FUT 29 DEC 26",
+    "entry": 1341.4,
+    "sl": 1348.2,
+    "tp": 1327.8,
+    "risk_pts": 6.8,
+    "strike": 1340.0,
+    "expiry": "2026-12-29",
+    "option": "ADANIGREEN 1340 PE",
+    "opt_entry": 55.75,
+    "opt_sl": 49.05,
+    "opt_tp": 69.15,
+    "orb_high": 1364.8,
+    "orb_low": 1343.9,
+    "vwap": 1357.18,
+    "volume_x": 2.76,
+    "atm_oi_pct": 35.82,
+    "writing_oi_pct": 3.45,
+    "lot_size": 600,
+    "reasons": [
+      "Trend: price below VWAP 1357.2, EMA20 < EMA50",
+      "ATM 1340 PE long build-up: premium +3.6%, OI +35.8%",
+      "Call writing (1340, 1360, 1380): OI +3.5%",
+      "Opening range low 1343.9 broken, volume 2.8x (vs 20-candle avg)",
+      "SL = previous candle high, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.48,
+    "opt_key": "NSE_FO|68915",
+    "score": 82,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 7.5,
+      "Breakout candle": 12.4,
+      "Volume": 10.0,
+      "OI build-up": 12.7,
+      "PCR": 9.2,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 0.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong breakout candle closing near its low",
+        "volume 2.8x average",
+        "heavy fresh OI build-up and writing"
+      ],
+      "minus": [
+        "price stretched 3.3 ATR from VWAP",
+        "broader market against the trade"
+      ]
+    },
+    "created_at": "2026-11-26 12:51:54",
+    "range_pct": 1.56,
+    "day_move_pct": 1.46,
+    "late_move": false,
+    "nifty_trend": "against",
+    "blocked": true,
+    "block_reason": "against Nifty trend (Nifty up)",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
