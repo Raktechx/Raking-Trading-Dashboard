@@ -4443,8 +4443,8 @@
     "block_reason": "chasing: SL 0.65% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 57.1,
-    "ltp_time": "11:35"
+    "ltp": 58.0,
+    "ltp_time": "11:37"
   },
   "2026-11-26|HDFCBANK|09:40": {
     "id": "2026-11-26|HDFCBANK|09:40",
@@ -5223,8 +5223,8 @@
     "block_reason": "chasing: SL 0.61% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 159.75,
-    "ltp_time": "11:35"
+    "ltp": 158.7,
+    "ltp_time": "11:37"
   },
   "2026-11-26|POWERGRID|10:40": {
     "id": "2026-11-26|POWERGRID|10:40",
@@ -5375,8 +5375,8 @@
     "block_reason": "after 11:00 (afternoon stock entries)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 54.65,
-    "ltp_time": "11:35"
+    "ltp": 54.05,
+    "ltp_time": "11:37"
   },
   "2026-11-26|COFORGE|11:30": {
     "id": "2026-11-26|COFORGE|11:30",
@@ -5453,7 +5453,7 @@
     "block_reason": "against Nifty trend (Nifty up)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 104.45,
-    "ltp_time": "11:35"
+    "ltp": 104.6,
+    "ltp_time": "11:37"
   }
 }
