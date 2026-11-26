@@ -5767,8 +5767,8 @@
     "block_reason": "after 11:00 (afternoon stock entries)",
     "alt_result": "SL",
     "alt_r": -1.0,
-    "ltp": 85.9,
-    "ltp_time": "14:09"
+    "ltp": 84.7,
+    "ltp_time": "14:10"
   },
   "2026-11-26|DIXON|12:45": {
     "id": "2026-11-26|DIXON|12:45",
@@ -6086,6 +6086,6 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 3.63,
-    "ltp_time": "14:09"
+    "ltp_time": "14:10"
   }
 }
