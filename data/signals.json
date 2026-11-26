@@ -4401,13 +4401,13 @@
       "Opening range high 1444.0 broken, volume 2.8x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "SL",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "13:53",
+    "r": -1.0,
+    "points": -9.4,
+    "opt_exit": 51.55,
+    "opt_points": -7.45,
     "group": "STOCK",
     "delta": 0.55,
     "opt_key": "NSE_FO|95480",
@@ -4443,8 +4443,9 @@
     "block_reason": "chasing: SL 0.65% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 53.0,
-    "ltp_time": "13:52"
+    "ltp": 51.55,
+    "ltp_time": "13:53",
+    "exit_by": "live premium"
   },
   "2026-11-26|HDFCBANK|09:40": {
     "id": "2026-11-26|HDFCBANK|09:40",
@@ -5767,7 +5768,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 88.85,
-    "ltp_time": "13:52"
+    "ltp_time": "13:53"
   },
   "2026-11-26|DIXON|12:45": {
     "id": "2026-11-26|DIXON|12:45",
@@ -5925,7 +5926,7 @@
     "alt_result": "SL",
     "alt_r": -1.0,
     "ltp": 54.7,
-    "ltp_time": "13:52"
+    "ltp_time": "13:53"
   },
   "2026-11-26|CANBK|13:15": {
     "id": "2026-11-26|CANBK|13:15",
@@ -6002,7 +6003,7 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "TP",
     "alt_r": 2.0,
-    "ltp": 5.11,
-    "ltp_time": "13:52"
+    "ltp": 5.2,
+    "ltp_time": "13:53"
   }
 }
