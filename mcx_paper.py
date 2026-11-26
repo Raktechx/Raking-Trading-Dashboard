@@ -14,7 +14,7 @@ from raking import config, holidays
 from raking.notify import send
 from raking.upstox import Upstox, UpstoxError
 
-WINDOWS = {"Morning": (dtime(9, 0), dtime(9, 30)), "US open": (dtime(19, 30), dtime(20, 0))}
+WINDOWS = {"US open": (dtime(19, 30), dtime(20, 0))}
 STATE = config.DATA_DIR / "mcx_paper.json"
 DELTA = 0.5
 MIN_SL_ATR = 0.5   # crude SL at least half an ATR from entry (tight stops were hit by normal noise)
@@ -57,12 +57,14 @@ def events(d, today):
         for i in range(1, len(rows)):
             r, p = rows.iloc[i], rows.iloc[i - 1]
             if pos:
+                if (r.close - pos["entry"]) * pos["side"] >= pos["risk"]:   # +1R reached: trail SL to EMA20
+                    pos["sl"] = max(pos["sl"], float(r.e20)) if pos["side"] > 0 else min(pos["sl"], float(r.e20))
                 hit_sl = r.low <= pos["sl"] if pos["side"] > 0 else r.high >= pos["sl"]
-                hit_tg = r.high >= pos["tg"] if pos["side"] > 0 else r.low <= pos["tg"]
+                hit_tg = False   # no fixed target: exit on the trailing SL or at 23:15
                 if hit_sl or hit_tg or r.t >= SQUARE_OFF:
                     px = pos["sl"] if hit_sl else pos["tg"] if hit_tg else r.close
                     pos.update(exit=px, exit_t=str(r.t)[:5], why="SL" if hit_sl else "Target" if hit_tg else "Time",
-                               R=round((px - pos["entry"]) * pos["side"] / abs(pos["entry"] - pos["sl"]), 2))
+                               R=round((px - pos["entry"]) * pos["side"] / pos["risk"], 2))
                     pos = None
                 continue
             if n >= 2 or r.t > LAST_ENTRY or pd.isna(r.vavg) or pd.isna(r.atr):
@@ -75,8 +77,8 @@ def events(d, today):
             else:
                 continue
             px = float(r.close)   # enter at the breakout candle's close, so the alert goes out right after it closes
-            risk = (px - sl) * side
-            if risk <= 0 or risk > 2 * r.atr or side in used:   # one entry per window per direction
+            risk = float(r.atr)   # SL = 1 ATR (backtest: best robust crude rule, US-open window, trailing exit)
+            if risk <= 0 or side in used:   # one entry per window per direction
                 continue
             risk = max(risk, MIN_SL_ATR * float(r.atr))
             sl = px - risk * side
@@ -84,7 +86,7 @@ def events(d, today):
             n += 1
             pos = dict(id=f"{today}-{name}-{n}", window=name, side=side,
                        t=(r.ts + pd.Timedelta(minutes=5)).strftime("%H:%M"),
-                       entry=px, sl=float(sl), tg=float(px + 2 * risk * side))
+                       entry=px, sl=float(sl), tg=float(px + 2 * risk * side), risk=risk)
             out.append(pos)
     return out
 
@@ -147,7 +149,7 @@ def main():
             else:
                 lines.append("Premium not available - check the option price in your broker app first.")
             lines += ["", f"📈 Future: entry {e['entry']:.0f} · SL {e['sl']:.0f} · Target {e['tg']:.0f}",
-                      f"⏰ {e['t']} · exit by 23:15", "Not advice - your decision."]
+                      f"⏰ {e['t']} · target is a guide: at +1R the SL trails EMA20 (let winners run) · exit by 23:15", "Not advice - your decision."]
             send("\n".join(lines))
             st["sent"].append(e["id"] + ":in")
         o = st["opt"].get(e["id"])
