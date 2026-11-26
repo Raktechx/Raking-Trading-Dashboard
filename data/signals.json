@@ -4444,7 +4444,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 58.3,
-    "ltp_time": "12:05"
+    "ltp_time": "12:07"
   },
   "2026-11-26|HDFCBANK|09:40": {
     "id": "2026-11-26|HDFCBANK|09:40",
@@ -5223,8 +5223,8 @@
     "block_reason": "chasing: SL 0.61% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 172.05,
-    "ltp_time": "12:05"
+    "ltp": 172.3,
+    "ltp_time": "12:07"
   },
   "2026-11-26|POWERGRID|10:40": {
     "id": "2026-11-26|POWERGRID|10:40",
@@ -5454,8 +5454,8 @@
     "block_reason": "against Nifty trend (Nifty up)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 106.75,
-    "ltp_time": "12:05"
+    "ltp": 108.75,
+    "ltp_time": "12:07"
   },
   "2026-11-26|SENSEX|11:50": {
     "id": "2026-11-26|SENSEX|11:50",
@@ -5523,8 +5523,8 @@
     "created_at": "2026-11-26 11:50:31",
     "alt_result": "TP",
     "alt_r": 2.0,
-    "ltp": 899.55,
-    "ltp_time": "12:05"
+    "ltp": 924.3,
+    "ltp_time": "12:07"
   },
   "2026-11-26|ADANIPORTS|11:55": {
     "id": "2026-11-26|ADANIPORTS|11:55",
@@ -5603,6 +5603,6 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 58.6,
-    "ltp_time": "12:05"
+    "ltp_time": "12:07"
   }
 }
