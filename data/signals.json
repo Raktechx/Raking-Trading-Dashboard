@@ -5642,13 +5642,13 @@
       "Opening range low 9356.0 broken, volume 1.1x (vs 20-candle avg)",
       "SL = previous candle high, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "TP",
+    "exit": 9282.5,
+    "exit_time": "13:35",
+    "r": 0.37,
+    "points": 49.0,
+    "opt_exit": 364.05,
+    "opt_points": 15.3,
     "group": "STOCK",
     "delta": 0.45,
     "opt_key": "NSE_FO|120429",
@@ -5687,7 +5687,9 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 359.0,
-    "ltp_time": "13:40"
+    "ltp_time": "13:40",
+    "breakeven": false,
+    "exit_by": "5-min candle"
   },
   "2026-11-26|LAURUSLABS|12:40": {
     "id": "2026-11-26|LAURUSLABS|12:40",
@@ -5799,13 +5801,13 @@
       "Opening range low 12828.0 broken, volume 3.2x (vs 20-candle avg)",
       "SL = previous candle high, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "TP",
+    "exit": 12610.0,
+    "exit_time": "13:40",
+    "r": 0.74,
+    "points": 146.0,
+    "opt_exit": 597.15,
+    "opt_points": 48.85,
     "group": "STOCK",
     "delta": 0.47,
     "opt_key": "NSE_FO|88010",
@@ -5843,7 +5845,9 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 597.15,
-    "ltp_time": "13:40"
+    "ltp_time": "13:40",
+    "breakeven": false,
+    "exit_by": "5-min candle"
   },
   "2026-11-26|ADANIGREEN|12:50": {
     "id": "2026-11-26|ADANIGREEN|12:50",
