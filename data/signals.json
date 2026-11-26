@@ -5918,8 +5918,8 @@
     "nifty_trend": "against",
     "blocked": true,
     "block_reason": "against Nifty trend (Nifty up)",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "SL",
+    "alt_r": -1.0,
     "ltp": 51.85,
     "ltp_time": "13:25"
   },
