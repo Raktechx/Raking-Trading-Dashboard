@@ -5377,5 +5377,81 @@
     "alt_r": null,
     "ltp": 55.45,
     "ltp_time": "11:30"
+  },
+  "2026-11-26|COFORGE|11:30": {
+    "id": "2026-11-26|COFORGE|11:30",
+    "index": "COFORGE",
+    "day": "2026-11-26",
+    "side": "PE",
+    "setup": "Breakout",
+    "signal_time": "11:30",
+    "future": "COFORGE FUT 29 DEC 26",
+    "entry": 2031.5,
+    "sl": 2045.6,
+    "tp": 2003.3,
+    "risk_pts": 14.1,
+    "strike": 2060.0,
+    "expiry": "2026-12-29",
+    "option": "COFORGE 2060 PE",
+    "opt_entry": 102.85,
+    "opt_sl": 90.5,
+    "opt_tp": 127.55,
+    "orb_high": 2094.0,
+    "orb_low": 2043.0,
+    "vwap": 2057.65,
+    "volume_x": 1.4,
+    "atm_oi_pct": 2.52,
+    "writing_oi_pct": 1.39,
+    "lot_size": 475,
+    "reasons": [
+      "Trend: price below VWAP 2057.7, EMA20 < EMA50",
+      "ATM 2060 PE long build-up: premium +10.4%, OI +2.5%",
+      "Call writing (2060, 2080, 2100): OI +1.4%",
+      "Opening range low 2043.0 broken, volume 1.4x (vs 20-candle avg)",
+      "SL = previous candle high, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.53,
+    "opt_key": "NSE_FO|82337",
+    "score": 56,
+    "grade": "B",
+    "score_parts": {
+      "Trend strength": 5.0,
+      "Breakout candle": 7.2,
+      "Volume": 2.7,
+      "OI build-up": 5.9,
+      "PCR": 5.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 9.7,
+      "India VIX": 5.0,
+      "Market alignment": 0.0
+    },
+    "score_notes": {
+      "plus": [
+        "no big OI wall before target (next at 2000)",
+        "premium fairly priced (IV 36.0)"
+      ],
+      "minus": [
+        "price stretched 3.1 ATR from VWAP",
+        "volume only just above average",
+        "broader market against the trade"
+      ]
+    },
+    "created_at": "2026-11-26 11:31:34",
+    "range_pct": 2.5,
+    "day_move_pct": 1.6,
+    "late_move": false,
+    "nifty_trend": "against",
+    "blocked": true,
+    "block_reason": "against Nifty trend (Nifty up)",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
