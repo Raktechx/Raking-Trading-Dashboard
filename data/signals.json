@@ -5373,8 +5373,8 @@
     "nifty_trend": "with",
     "blocked": true,
     "block_reason": "after 11:00 (afternoon stock entries)",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "SL",
+    "alt_r": -1.0,
     "ltp": 52.0,
     "ltp_time": "11:47",
     "exit_by": "live premium"
