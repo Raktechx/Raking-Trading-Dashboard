@@ -141,6 +141,10 @@ def _store_new(trades: list, saved: dict, tday: str, group: str, max_total: int,
                 rp = float(rec["risk_pts"]) / float(rec["entry"]) * 100
                 if rp > config.STOCKS.get("max_risk_pct", 0.6):
                     why = f"chasing: SL {rp:.2f}% away (max {config.STOCKS.get('max_risk_pct', 0.6)}%)"
+                elif group == "STOCK" and rp < config.STOCKS.get("min_risk_pct", 0):
+                    why = f"SL too tight: {rp:.2f}% away (min {config.STOCKS.get('min_risk_pct')}%)"
+                elif group == "STOCK" and (rec.get("score") or 0) < config.STOCKS.get("min_score", 0):
+                    why = f"not top grade: {rec.get('score')}/100 (stocks need {config.STOCKS.get('min_score')})"
             except (TypeError, ValueError, KeyError, ZeroDivisionError):
                 pass
         late = bool(rec.get("late_move"))
