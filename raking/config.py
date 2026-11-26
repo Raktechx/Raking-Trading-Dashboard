@@ -85,12 +85,14 @@ INDICES = {
 # ---------------------------------------------------------------------------
 STOCKS = {
     "enabled": True,
-    "max_candidates_per_scan": 50,  # top-50 strongest F&O stocks checked in full each scan
+    "max_candidates_per_scan": 50,  # speed cap only (scan must finish < 5 min); alerts = top grade only, no fixed count
     "max_break_pct": 3.0,           # more than 3% past the opening range = too late to chase
     "max_trades_per_day": 50,       # practice mode: no real daily cap - every grade A stock signal is sent
     "last_entry": "11:00",          # no new stock entry after 11:00 (later breakouts mostly failed)
-    "max_risk_pct": 0.6,            # skip chasing: SL more than 0.6% of price away from entry
-    "need_nifty_trend": False,      # off: blocked trades won 67%; nifty_trend is still logged on every stock signal
+    "max_risk_pct": 0.8,            # skip chasing: SL more than 0.8% of price away
+    "min_risk_pct": 0.35,           # skip noise: SL closer than 0.35% gets hit by normal swings
+    "min_score": 80,                # stocks: only top grade A (score >= 80) is sent
+    "need_nifty_trend": True,       # back on 26 Nov: choppy day, against-trend stock trades mostly hit SL
 }
 
 
