@@ -4443,8 +4443,8 @@
     "block_reason": "chasing: SL 0.65% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 59.25,
-    "ltp_time": "12:30"
+    "ltp": 59.0,
+    "ltp_time": "12:32"
   },
   "2026-11-26|HDFCBANK|09:40": {
     "id": "2026-11-26|HDFCBANK|09:40",
@@ -5223,8 +5223,8 @@
     "block_reason": "chasing: SL 0.61% away (max 0.6%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 188.2,
-    "ltp_time": "12:30"
+    "ltp": 186.95,
+    "ltp_time": "12:32"
   },
   "2026-11-26|POWERGRID|10:40": {
     "id": "2026-11-26|POWERGRID|10:40",
@@ -5454,8 +5454,8 @@
     "block_reason": "against Nifty trend (Nifty up)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 106.95,
-    "ltp_time": "12:30"
+    "ltp": 107.5,
+    "ltp_time": "12:32"
   },
   "2026-11-26|SENSEX|11:50": {
     "id": "2026-11-26|SENSEX|11:50",
@@ -5523,8 +5523,8 @@
     "created_at": "2026-11-26 11:50:31",
     "alt_result": "TP",
     "alt_r": 2.0,
-    "ltp": 879.5,
-    "ltp_time": "12:30"
+    "ltp": 910.8,
+    "ltp_time": "12:32"
   },
   "2026-11-26|ADANIPORTS|11:55": {
     "id": "2026-11-26|ADANIPORTS|11:55",
@@ -5602,8 +5602,8 @@
     "block_reason": "after 11:00 (afternoon stock entries)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 55.5,
-    "ltp_time": "12:30"
+    "ltp": 54.6,
+    "ltp_time": "12:32"
   },
   "2026-11-26|OFSS|12:25": {
     "id": "2026-11-26|OFSS|12:25",
@@ -5681,7 +5681,7 @@
     "block_reason": "against Nifty trend (Nifty up)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 351.8,
-    "ltp_time": "12:30"
+    "ltp": 355.9,
+    "ltp_time": "12:32"
   }
 }
