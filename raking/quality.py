@@ -11,7 +11,7 @@ import pandas as pd
 from .upstox import skey
 
 VIX_KEY = "NSE_INDEX|India VIX"
-GRADES = (("A", 70), ("B", 55), ("C", 40), ("D", 0))
+GRADES = (("A", 80), ("B", 65), ("C", 40), ("D", 0))
 
 # component -> max points (total 100)
 WEIGHTS = {"Trend strength": 15, "Breakout candle": 15, "Volume": 10, "OI build-up": 15,
