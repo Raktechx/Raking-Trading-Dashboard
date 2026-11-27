@@ -6958,7 +6958,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 90.0,
-    "ltp_time": "11:14"
+    "ltp_time": "11:15"
   },
   "2026-11-27|KOTAKBANK|09:50": {
     "id": "2026-11-27|KOTAKBANK|09:50",
@@ -7268,7 +7268,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 48.5,
-    "ltp_time": "11:14"
+    "ltp_time": "11:15"
   },
   "2026-11-27|PREMIERENE|10:35": {
     "id": "2026-11-27|PREMIERENE|10:35",
@@ -7423,8 +7423,8 @@
     "nifty_trend": "with",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 28.3,
-    "ltp_time": "11:14"
+    "ltp": 28.4,
+    "ltp_time": "11:15"
   },
   "2026-11-27|BANKNIFTY|11:00": {
     "id": "2026-11-27|BANKNIFTY|11:00",
@@ -7495,8 +7495,8 @@
     "created_at": "2026-11-27 11:00:30",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 1219.8,
-    "ltp_time": "11:14"
+    "ltp": 1211.6,
+    "ltp_time": "11:15"
   },
   "2026-11-27|ENRIN|11:05": {
     "id": "2026-11-27|ENRIN|11:05",
@@ -7573,8 +7573,8 @@
     "block_reason": "against Nifty trend (Nifty down)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 165.0,
-    "ltp_time": "11:14"
+    "ltp": 161.05,
+    "ltp_time": "11:15"
   },
   "2026-11-27|CUMMINSIND|11:05": {
     "id": "2026-11-27|CUMMINSIND|11:05",
@@ -7651,8 +7651,8 @@
     "block_reason": "against Nifty trend (Nifty down)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 158.4,
-    "ltp_time": "11:14"
+    "ltp": 155.0,
+    "ltp_time": "11:15"
   },
   "2026-11-27|BHARTIARTL|11:05": {
     "id": "2026-11-27|BHARTIARTL|11:05",
@@ -7726,8 +7726,8 @@
     "block_reason": "SL too tight: 0.29% away (min 0.35%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 43.0,
-    "ltp_time": "11:14"
+    "ltp": 43.25,
+    "ltp_time": "11:15"
   },
   "2026-11-27|CROMPTON|11:10": {
     "id": "2026-11-27|CROMPTON|11:10",
@@ -7803,7 +7803,7 @@
     "block_reason": "SL too tight: 0.21% away (min 0.35%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 7.5,
-    "ltp_time": "11:14"
+    "ltp": 7.6,
+    "ltp_time": "11:15"
   }
 }
