@@ -7265,8 +7265,8 @@
     "nifty_trend": "with",
     "blocked": true,
     "block_reason": "SL too tight: 0.29% away (min 0.35%)",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "TP",
+    "alt_r": 2.0,
     "ltp": 51.9,
     "ltp_time": "11:30"
   },
