@@ -7688,13 +7688,13 @@
       "Opening range low 2091.0 broken, volume 1.8x (vs 20-candle avg)",
       "SL = previous candle high, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "SL",
+    "exit": 2092.0,
+    "exit_time": "11:40",
+    "r": -0.33,
+    "points": -6.1,
+    "opt_exit": 43.0,
+    "opt_points": -1.8,
     "group": "STOCK",
     "delta": 0.46,
     "opt_key": "NSE_FO|89920",
@@ -7729,7 +7729,9 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 45.25,
-    "ltp_time": "11:45"
+    "ltp_time": "11:45",
+    "breakeven": false,
+    "exit_by": "5-min candle"
   },
   "2026-11-27|CROMPTON|11:10": {
     "id": "2026-11-27|CROMPTON|11:10",
