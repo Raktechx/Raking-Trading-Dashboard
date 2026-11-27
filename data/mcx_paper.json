@@ -110,14 +110,14 @@
  },
  "day": "2026-11-27",
  "live": {
-  "updated": "11:05",
+  "updated": "11:10",
   "symbol": "CRUDEOIL FUT 18 DEC 26",
-  "price": 8012.0,
+  "price": 8003.0,
   "prev_close": 7876.0,
-  "chg_pct": 1.73,
+  "chg_pct": 1.61,
   "day_high": 8060.0,
   "day_low": 7944.0,
-  "vwap": 7991.1,
+  "vwap": 7991.7,
   "trend": "Up",
   "above_vwap": true,
   "window": "Waiting (09:00-09:30, 19:30-20:00)",
@@ -296,6 +296,13 @@
     8060.0,
     8000.0,
     8012.0
+   ],
+   [
+    "11:05",
+    8014.0,
+    8016.0,
+    7994.0,
+    8003.0
    ]
   ],
   "ranges": {},
