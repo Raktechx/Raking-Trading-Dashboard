@@ -6957,8 +6957,8 @@
     "block_reason": "chasing: SL 0.92% away (max 0.8%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 90.0,
-    "ltp_time": "11:15"
+    "ltp": 91.5,
+    "ltp_time": "11:18"
   },
   "2026-11-27|KOTAKBANK|09:50": {
     "id": "2026-11-27|KOTAKBANK|09:50",
@@ -7267,8 +7267,8 @@
     "block_reason": "SL too tight: 0.29% away (min 0.35%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 48.5,
-    "ltp_time": "11:15"
+    "ltp": 49.45,
+    "ltp_time": "11:18"
   },
   "2026-11-27|PREMIERENE|10:35": {
     "id": "2026-11-27|PREMIERENE|10:35",
@@ -7423,8 +7423,8 @@
     "nifty_trend": "with",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 28.4,
-    "ltp_time": "11:15"
+    "ltp": 28.6,
+    "ltp_time": "11:18"
   },
   "2026-11-27|BANKNIFTY|11:00": {
     "id": "2026-11-27|BANKNIFTY|11:00",
@@ -7495,8 +7495,8 @@
     "created_at": "2026-11-27 11:00:30",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 1211.6,
-    "ltp_time": "11:15"
+    "ltp": 1228.05,
+    "ltp_time": "11:18"
   },
   "2026-11-27|ENRIN|11:05": {
     "id": "2026-11-27|ENRIN|11:05",
@@ -7573,8 +7573,8 @@
     "block_reason": "against Nifty trend (Nifty down)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 161.05,
-    "ltp_time": "11:15"
+    "ltp": 160.8,
+    "ltp_time": "11:18"
   },
   "2026-11-27|CUMMINSIND|11:05": {
     "id": "2026-11-27|CUMMINSIND|11:05",
@@ -7651,8 +7651,8 @@
     "block_reason": "against Nifty trend (Nifty down)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 155.0,
-    "ltp_time": "11:15"
+    "ltp": 151.0,
+    "ltp_time": "11:18"
   },
   "2026-11-27|BHARTIARTL|11:05": {
     "id": "2026-11-27|BHARTIARTL|11:05",
@@ -7726,8 +7726,8 @@
     "block_reason": "SL too tight: 0.29% away (min 0.35%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 43.25,
-    "ltp_time": "11:15"
+    "ltp": 44.2,
+    "ltp_time": "11:18"
   },
   "2026-11-27|CROMPTON|11:10": {
     "id": "2026-11-27|CROMPTON|11:10",
@@ -7803,7 +7803,7 @@
     "block_reason": "SL too tight: 0.21% away (min 0.35%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 7.6,
-    "ltp_time": "11:15"
+    "ltp": 7.79,
+    "ltp_time": "11:18"
   }
 }
