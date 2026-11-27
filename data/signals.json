@@ -6246,8 +6246,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 173.05,
-    "ltp_time": "10:08"
+    "ltp": 176.5,
+    "ltp_time": "10:09"
   },
   "2026-11-27|CDSL|09:40": {
     "id": "2026-11-27|CDSL|09:40",
@@ -6404,8 +6404,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 14.1,
-    "ltp_time": "10:08"
+    "ltp": 14.3,
+    "ltp_time": "10:09"
   },
   "2026-11-27|ANGELONE|09:45": {
     "id": "2026-11-27|ANGELONE|09:45",
@@ -6561,8 +6561,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 46.1,
-    "ltp_time": "10:08"
+    "ltp": 46.8,
+    "ltp_time": "10:09"
   },
   "2026-11-27|SOLARINDS|09:45": {
     "id": "2026-11-27|SOLARINDS|09:45",
@@ -6718,8 +6718,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 7.6,
-    "ltp_time": "10:08"
+    "ltp": 7.7,
+    "ltp_time": "10:09"
   },
   "2026-11-27|TATAELXSI|09:45": {
     "id": "2026-11-27|TATAELXSI|09:45",
@@ -6797,8 +6797,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 180.85,
-    "ltp_time": "10:08"
+    "ltp": 175.0,
+    "ltp_time": "10:09"
   },
   "2026-11-27|VOLTAS|09:50": {
     "id": "2026-11-27|VOLTAS|09:50",
@@ -6872,8 +6872,8 @@
     "block_reason": "chasing: SL 1.09% away (max 0.8%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 45.6,
-    "ltp_time": "10:08"
+    "ltp": 44.6,
+    "ltp_time": "10:09"
   },
   "2026-11-27|MPHASIS|09:50": {
     "id": "2026-11-27|MPHASIS|09:50",
@@ -6949,8 +6949,8 @@
     "block_reason": "chasing: SL 0.92% away (max 0.8%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 96.4,
-    "ltp_time": "10:08"
+    "ltp": 96.85,
+    "ltp_time": "10:09"
   },
   "2026-11-27|KOTAKBANK|09:50": {
     "id": "2026-11-27|KOTAKBANK|09:50",
@@ -7024,8 +7024,8 @@
     "nifty_trend": "with",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 12.3,
-    "ltp_time": "10:08"
+    "ltp": 12.0,
+    "ltp_time": "10:09"
   },
   "2026-11-27|HYUNDAI|09:55": {
     "id": "2026-11-27|HYUNDAI|09:55",
@@ -7099,7 +7099,7 @@
     "block_reason": "late move: opening range 3.99%, day move 3.94% (measuring)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 103.85,
-    "ltp_time": "10:08"
+    "ltp": 101.65,
+    "ltp_time": "10:09"
   }
 }
