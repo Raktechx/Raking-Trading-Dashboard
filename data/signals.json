@@ -6958,7 +6958,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 85.95,
-    "ltp_time": "10:59"
+    "ltp_time": "11:00"
   },
   "2026-11-27|KOTAKBANK|09:50": {
     "id": "2026-11-27|KOTAKBANK|09:50",
@@ -7267,8 +7267,8 @@
     "block_reason": "SL too tight: 0.29% away (min 0.35%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 50.35,
-    "ltp_time": "10:59"
+    "ltp": 50.15,
+    "ltp_time": "11:00"
   },
   "2026-11-27|PREMIERENE|10:35": {
     "id": "2026-11-27|PREMIERENE|10:35",
@@ -7423,7 +7423,7 @@
     "nifty_trend": "with",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 28.15,
-    "ltp_time": "10:59"
+    "ltp": 28.3,
+    "ltp_time": "11:00"
   }
 }
