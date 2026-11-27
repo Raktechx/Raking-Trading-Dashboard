@@ -7425,5 +7425,75 @@
     "alt_r": null,
     "ltp": 28.3,
     "ltp_time": "11:00"
+  },
+  "2026-11-27|BANKNIFTY|11:00": {
+    "id": "2026-11-27|BANKNIFTY|11:00",
+    "index": "BANKNIFTY",
+    "day": "2026-11-27",
+    "side": "PE",
+    "setup": "Breakout",
+    "signal_time": "11:00",
+    "future": "BANKNIFTY FUT 29 DEC 26",
+    "entry": 63589.6,
+    "sl": 63772.0,
+    "tp": 63224.8,
+    "risk_pts": 182.4,
+    "strike": 63400.0,
+    "expiry": "2026-12-29",
+    "option": "BANKNIFTY 63400 PE",
+    "opt_entry": 1243.75,
+    "opt_sl": 1094.5,
+    "opt_tp": 1542.25,
+    "orb_high": 63903.0,
+    "orb_low": 63590.0,
+    "vwap": 63825.4,
+    "volume_x": 1.28,
+    "atm_oi_pct": 16.5,
+    "writing_oi_pct": 7.01,
+    "lot_size": 30,
+    "reasons": [
+      "Trend: price below VWAP 63825.4, EMA20 < EMA50",
+      "ATM 63400 PE long build-up: premium +9.9%, OI +16.5%",
+      "Call writing (63400, 63500, 63600): OI +7.0%",
+      "Opening range low 63590.0 broken, volume 1.3x (vs 20-candle avg)",
+      "SL = previous candle high, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "INDEX",
+    "delta": 0.47,
+    "opt_key": "NSE_FO|59944",
+    "score": 73,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 14.2,
+      "Breakout candle": 4.1,
+      "Volume": 1.9,
+      "OI build-up": 15.0,
+      "PCR": 3.4,
+      "Room to OI wall": 14.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "heavy fresh OI build-up and writing",
+        "no big OI wall before target (next at 63000)"
+      ],
+      "minus": [
+        "weak breakout candle (small body / long wick)",
+        "volume only just above average"
+      ]
+    },
+    "created_at": "2026-11-27 11:00:30",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
