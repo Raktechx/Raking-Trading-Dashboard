@@ -7917,13 +7917,13 @@
       "Opening range high 3119.0 broken, volume 1.3x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "SL",
+    "exit": 3118.15,
+    "exit_time": "12:15",
+    "r": -0.25,
+    "points": -8.35,
+    "opt_exit": 167.95,
+    "opt_points": -5.1,
     "group": "STOCK",
     "delta": 0.55,
     "opt_key": "NSE_FO|106569",
@@ -7959,9 +7959,11 @@
     "nifty_trend": "against",
     "blocked": true,
     "block_reason": "against Nifty trend (Nifty down)",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "SL",
+    "alt_r": -1.0,
     "ltp": 167.95,
-    "ltp_time": "12:15"
+    "ltp_time": "12:15",
+    "breakeven": false,
+    "exit_by": "5-min candle"
   }
 }
