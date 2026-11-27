@@ -6957,8 +6957,8 @@
     "block_reason": "chasing: SL 0.92% away (max 0.8%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 91.5,
-    "ltp_time": "11:20"
+    "ltp": 92.0,
+    "ltp_time": "11:23"
   },
   "2026-11-27|KOTAKBANK|09:50": {
     "id": "2026-11-27|KOTAKBANK|09:50",
@@ -7267,8 +7267,8 @@
     "block_reason": "SL too tight: 0.29% away (min 0.35%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 49.8,
-    "ltp_time": "11:20"
+    "ltp": 50.9,
+    "ltp_time": "11:23"
   },
   "2026-11-27|PREMIERENE|10:35": {
     "id": "2026-11-27|PREMIERENE|10:35",
@@ -7424,7 +7424,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 29.5,
-    "ltp_time": "11:20"
+    "ltp_time": "11:23"
   },
   "2026-11-27|BANKNIFTY|11:00": {
     "id": "2026-11-27|BANKNIFTY|11:00",
@@ -7495,8 +7495,8 @@
     "created_at": "2026-11-27 11:00:30",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 1270.6,
-    "ltp_time": "11:20"
+    "ltp": 1294.0,
+    "ltp_time": "11:23"
   },
   "2026-11-27|ENRIN|11:05": {
     "id": "2026-11-27|ENRIN|11:05",
@@ -7573,8 +7573,8 @@
     "block_reason": "against Nifty trend (Nifty down)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 158.1,
-    "ltp_time": "11:20"
+    "ltp": 156.0,
+    "ltp_time": "11:23"
   },
   "2026-11-27|CUMMINSIND|11:05": {
     "id": "2026-11-27|CUMMINSIND|11:05",
@@ -7651,8 +7651,8 @@
     "block_reason": "against Nifty trend (Nifty down)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 148.0,
-    "ltp_time": "11:20"
+    "ltp": 147.25,
+    "ltp_time": "11:23"
   },
   "2026-11-27|BHARTIARTL|11:05": {
     "id": "2026-11-27|BHARTIARTL|11:05",
@@ -7726,8 +7726,8 @@
     "block_reason": "SL too tight: 0.29% away (min 0.35%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 44.3,
-    "ltp_time": "11:20"
+    "ltp": 44.0,
+    "ltp_time": "11:23"
   },
   "2026-11-27|CROMPTON|11:10": {
     "id": "2026-11-27|CROMPTON|11:10",
@@ -7877,6 +7877,8 @@
     "late_move": false,
     "nifty_trend": "with",
     "alt_result": "OPEN",
-    "alt_r": null
+    "alt_r": null,
+    "ltp": 54.6,
+    "ltp_time": "11:23"
   }
 }
