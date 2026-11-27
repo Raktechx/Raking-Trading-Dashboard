@@ -6562,8 +6562,8 @@
     "nifty_trend": "against",
     "blocked": true,
     "block_reason": "against Nifty trend (Nifty mixed)",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "TP",
+    "alt_r": 2.0,
     "ltp": 52.0,
     "ltp_time": "10:35"
   },
@@ -7264,5 +7264,82 @@
     "alt_r": null,
     "ltp": 48.2,
     "ltp_time": "10:35"
+  },
+  "2026-11-27|PREMIERENE|10:35": {
+    "id": "2026-11-27|PREMIERENE|10:35",
+    "index": "PREMIERENE",
+    "day": "2026-11-27",
+    "side": "PE",
+    "setup": "Breakout",
+    "signal_time": "10:35",
+    "future": "PREMIERENE FUT 29 DEC 26",
+    "entry": 799.75,
+    "sl": 801.65,
+    "tp": 795.95,
+    "risk_pts": 1.9,
+    "strike": 800.0,
+    "expiry": "2026-12-29",
+    "option": "PREMIERENE 800 PE",
+    "opt_entry": 30.35,
+    "opt_sl": 26.7,
+    "opt_tp": 37.65,
+    "orb_high": 809.0,
+    "orb_low": 801.95,
+    "vwap": 804.72,
+    "volume_x": 1.33,
+    "atm_oi_pct": 1.49,
+    "writing_oi_pct": 1.36,
+    "lot_size": 650,
+    "reasons": [
+      "Trend: price below VWAP 804.7, EMA20 < EMA50",
+      "ATM 800 PE long build-up: premium +4.1%, OI +1.5%",
+      "Call writing (800, 820, 840): OI +1.4%",
+      "Opening range low 802.0 broken, volume 1.3x (vs 20-candle avg)",
+      "SL = previous candle high, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.48,
+    "opt_key": "NSE_FO|143564",
+    "score": 67,
+    "grade": "B",
+    "score_parts": {
+      "Trend strength": 15.0,
+      "Breakout candle": 0.9,
+      "Volume": 2.2,
+      "OI build-up": 4.3,
+      "PCR": 10.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "PCR 0.38 falling in your favour",
+        "no big OI wall before target (next at 760)"
+      ],
+      "minus": [
+        "weak breakout candle (small body / long wick)",
+        "volume only just above average",
+        "OI build-up only marginal"
+      ]
+    },
+    "created_at": "2026-11-27 10:37:27",
+    "range_pct": 0.88,
+    "day_move_pct": 0.58,
+    "late_move": false,
+    "nifty_trend": "with",
+    "blocked": true,
+    "block_reason": "SL too tight: 0.24% away (min 0.35%)",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
