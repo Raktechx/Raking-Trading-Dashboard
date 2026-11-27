@@ -6957,8 +6957,8 @@
     "block_reason": "chasing: SL 0.92% away (max 0.8%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 83.35,
-    "ltp_time": "12:30"
+    "ltp": 85.75,
+    "ltp_time": "12:34"
   },
   "2026-11-27|KOTAKBANK|09:50": {
     "id": "2026-11-27|KOTAKBANK|09:50",
@@ -7267,8 +7267,8 @@
     "block_reason": "SL too tight: 0.29% away (min 0.35%)",
     "alt_result": "TP",
     "alt_r": 2.0,
-    "ltp": 50.55,
-    "ltp_time": "12:30"
+    "ltp": 50.65,
+    "ltp_time": "12:34"
   },
   "2026-11-27|PREMIERENE|10:35": {
     "id": "2026-11-27|PREMIERENE|10:35",
@@ -7423,8 +7423,8 @@
     "nifty_trend": "with",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 27.2,
-    "ltp_time": "12:30"
+    "ltp": 26.35,
+    "ltp_time": "12:34"
   },
   "2026-11-27|BANKNIFTY|11:00": {
     "id": "2026-11-27|BANKNIFTY|11:00",
@@ -7495,8 +7495,8 @@
     "created_at": "2026-11-27 11:00:30",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 1227.35,
-    "ltp_time": "12:30"
+    "ltp": 1193.55,
+    "ltp_time": "12:34"
   },
   "2026-11-27|ENRIN|11:05": {
     "id": "2026-11-27|ENRIN|11:05",
@@ -7653,8 +7653,8 @@
     "block_reason": "against Nifty trend (Nifty down)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 153.4,
-    "ltp_time": "12:30"
+    "ltp": 157.35,
+    "ltp_time": "12:34"
   },
   "2026-11-27|BHARTIARTL|11:05": {
     "id": "2026-11-27|BHARTIARTL|11:05",
@@ -7882,8 +7882,8 @@
     "nifty_trend": "with",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 52.0,
-    "ltp_time": "12:30"
+    "ltp": 53.05,
+    "ltp_time": "12:34"
   },
   "2026-11-27|ENRIN|11:50": {
     "id": "2026-11-27|ENRIN|11:50",
