@@ -479,6 +479,12 @@ with tab_stk:
         for s in store.today_signals(saved, today, include_blocked=True):
             today_by[s["index"]] = s   # latest signal of the day per stock
 
+        n_all = len(top)   # 27 Nov: list only stocks with a sent grade A (80+) signal today
+        top = [r for r in top if (g := today_by.get(r["symbol"])) and not g.get("blocked")
+               and (g.get("score") or 0) >= config.STOCKS.get("min_score", 80)]
+        if not top:
+            st.info(f"No grade A (80+) stock signal yet today. {n_all} strong stocks are being checked.")
+
         def _grade(sym: str) -> str:
             s = today_by.get(sym)
             if not s:
@@ -509,7 +515,7 @@ with tab_stk:
                     "<div class='muted' style='margin-top:4px'>Vol = latest candle volume vs 20-candle average. "
                     "Rules = trend + range break + volume met now; time below = first time all 3 lined up today. "
                     "Then the option chain is checked and the signal gets a grade (time = signal time): "
-                    "<b class='ok'>A</b> = sent to Telegram, B/C ⛔ = blocked (logged only).</div>",
+                    "<b class='ok'>A</b> = sent to Telegram, only grade A (80+) signals are listed.</div>",
                     unsafe_allow_html=True)
     else:
         st.caption("Being checked now: " + (", ".join(state.get("candidates") or []) or "—"))
