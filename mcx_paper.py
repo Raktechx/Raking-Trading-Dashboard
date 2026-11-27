@@ -41,7 +41,7 @@ def candles(api, today, now):
     d["ts"] = pd.to_datetime(d["ts"], utc=True).dt.tz_convert(config.TZ)
     d = d.sort_values("ts").drop_duplicates("ts")
     d = d[d.ts + pd.Timedelta(minutes=5) <= now]          # completed candles only
-    return prepare(d.reset_index(drop=True)), m
+    return prepare(d.reset_index(drop=True)).pipe(lambda x: x.assign(h20=x.close.ewm(span=60).mean(), h50=x.close.ewm(span=150).mean())), m   # h20/h50 = 15-min EMA20/50
 
 
 def events(d, today):
@@ -70,9 +70,9 @@ def events(d, today):
             if n >= 2 or r.t > LAST_ENTRY or pd.isna(r.vavg) or pd.isna(r.atr):
                 continue
             ok = r.volume > r.vavg
-            if r.close > hi and r.close > r.vwap and r.e20 > r.e50 and ok:
+            if r.close > hi and r.close > r.vwap and r.e20 > r.e50 and r.h20 > r.h50 and ok:   # 27 Nov research: 15-min trend must agree
                 side, sl = 1, p.low
-            elif r.close < lo and r.close < r.vwap and r.e20 < r.e50 and ok:
+            elif r.close < lo and r.close < r.vwap and r.e20 < r.e50 and r.h20 < r.h50 and ok:
                 side, sl = -1, p.high
             else:
                 continue
