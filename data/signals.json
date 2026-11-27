@@ -6957,8 +6957,8 @@
     "block_reason": "chasing: SL 0.92% away (max 0.8%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 79.0,
-    "ltp_time": "14:30"
+    "ltp": 78.0,
+    "ltp_time": "14:35"
   },
   "2026-11-27|KOTAKBANK|09:50": {
     "id": "2026-11-27|KOTAKBANK|09:50",
@@ -7425,8 +7425,8 @@
     "nifty_trend": "with",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 29.2,
-    "ltp_time": "14:30"
+    "ltp": 29.5,
+    "ltp_time": "14:35"
   },
   "2026-11-27|BANKNIFTY|11:00": {
     "id": "2026-11-27|BANKNIFTY|11:00",
@@ -7497,8 +7497,8 @@
     "created_at": "2026-11-27 11:00:30",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 1271.9,
-    "ltp_time": "14:30"
+    "ltp": 1268.0,
+    "ltp_time": "14:35"
   },
   "2026-11-27|ENRIN|11:05": {
     "id": "2026-11-27|ENRIN|11:05",
@@ -7655,8 +7655,8 @@
     "block_reason": "against Nifty trend (Nifty down)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 159.95,
-    "ltp_time": "14:30"
+    "ltp": 156.95,
+    "ltp_time": "14:35"
   },
   "2026-11-27|BHARTIARTL|11:05": {
     "id": "2026-11-27|BHARTIARTL|11:05",
@@ -8042,8 +8042,8 @@
     "block_reason": "SL too tight: 0.22% away (min 0.35%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 81.4,
-    "ltp_time": "14:30"
+    "ltp": 80.75,
+    "ltp_time": "14:35"
   },
   "2026-11-27|ADANIENSOL|12:50": {
     "id": "2026-11-27|ADANIENSOL|12:50",
@@ -8281,8 +8281,8 @@
     "block_reason": "against Nifty trend (Nifty down)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 11.3,
-    "ltp_time": "14:30"
+    "ltp": 11.32,
+    "ltp_time": "14:35"
   },
   "2026-11-27|GODREJCP|14:25": {
     "id": "2026-11-27|GODREJCP|14:25",
@@ -8361,6 +8361,6 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 23.5,
-    "ltp_time": "14:30"
+    "ltp_time": "14:35"
   }
 }
