@@ -119,20 +119,20 @@
    "side": "PE",
    "time": "20:20",
    "window": "US open",
-   "now": 369.75,
-   "now_t": "20:20"
+   "now": 367.3,
+   "now_t": "20:25"
   }
  },
  "day": "2026-11-27",
  "live": {
-  "updated": "20:20",
+  "updated": "20:25",
   "symbol": "CRUDEOIL FUT 18 DEC 26",
   "price": 7831.0,
   "prev_close": 7876.0,
   "chg_pct": -0.57,
   "day_high": 8060.0,
   "day_low": 7817.0,
-  "vwap": 7967.5,
+  "vwap": 7966.5,
   "trend": "Down",
   "above_vwap": false,
   "window": "Waiting (09:00-09:30, 19:30-20:00)",
@@ -1087,6 +1087,13 @@
     7838.0,
     7839.0,
     7817.0,
+    7831.0
+   ],
+   [
+    "20:20",
+    7829.0,
+    7841.0,
+    7826.0,
     7831.0
    ]
   ],
