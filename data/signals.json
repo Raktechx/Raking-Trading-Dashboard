@@ -6521,13 +6521,13 @@
       "Opening range high 1062.8 broken, volume 1.7x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "TP",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "10:44",
+    "r": 2.0,
+    "points": 17.3,
+    "opt_exit": 57.6,
+    "opt_points": 12.3,
     "group": "STOCK",
     "delta": 0.51,
     "opt_key": "NSE_FO|88253",
@@ -6564,8 +6564,9 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "TP",
     "alt_r": 2.0,
-    "ltp": 56.05,
-    "ltp_time": "10:43"
+    "ltp": 57.6,
+    "ltp_time": "10:44",
+    "exit_by": "live premium"
   },
   "2026-11-27|SOLARINDS|09:45": {
     "id": "2026-11-27|SOLARINDS|09:45",
@@ -6802,7 +6803,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 177.65,
-    "ltp_time": "10:43"
+    "ltp_time": "10:44"
   },
   "2026-11-27|VOLTAS|09:50": {
     "id": "2026-11-27|VOLTAS|09:50",
@@ -6954,8 +6955,8 @@
     "block_reason": "chasing: SL 0.92% away (max 0.8%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 93.8,
-    "ltp_time": "10:43"
+    "ltp": 92.4,
+    "ltp_time": "10:44"
   },
   "2026-11-27|KOTAKBANK|09:50": {
     "id": "2026-11-27|KOTAKBANK|09:50",
@@ -7265,7 +7266,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 47.75,
-    "ltp_time": "10:43"
+    "ltp_time": "10:44"
   },
   "2026-11-27|PREMIERENE|10:35": {
     "id": "2026-11-27|PREMIERENE|10:35",
