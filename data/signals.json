@@ -6246,8 +6246,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 176.45,
-    "ltp_time": "10:10"
+    "ltp": 172.45,
+    "ltp_time": "10:12"
   },
   "2026-11-27|CDSL|09:40": {
     "id": "2026-11-27|CDSL|09:40",
@@ -6404,8 +6404,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 14.65,
-    "ltp_time": "10:10"
+    "ltp": 14.25,
+    "ltp_time": "10:12"
   },
   "2026-11-27|ANGELONE|09:45": {
     "id": "2026-11-27|ANGELONE|09:45",
@@ -6561,8 +6561,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 47.15,
-    "ltp_time": "10:10"
+    "ltp": 47.5,
+    "ltp_time": "10:12"
   },
   "2026-11-27|SOLARINDS|09:45": {
     "id": "2026-11-27|SOLARINDS|09:45",
@@ -6718,8 +6718,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 7.9,
-    "ltp_time": "10:10"
+    "ltp": 7.65,
+    "ltp_time": "10:12"
   },
   "2026-11-27|TATAELXSI|09:45": {
     "id": "2026-11-27|TATAELXSI|09:45",
@@ -6797,8 +6797,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 172.1,
-    "ltp_time": "10:10"
+    "ltp": 176.45,
+    "ltp_time": "10:12"
   },
   "2026-11-27|VOLTAS|09:50": {
     "id": "2026-11-27|VOLTAS|09:50",
@@ -6872,8 +6872,8 @@
     "block_reason": "chasing: SL 1.09% away (max 0.8%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 44.65,
-    "ltp_time": "10:10"
+    "ltp": 45.0,
+    "ltp_time": "10:12"
   },
   "2026-11-27|MPHASIS|09:50": {
     "id": "2026-11-27|MPHASIS|09:50",
@@ -6949,8 +6949,8 @@
     "block_reason": "chasing: SL 0.92% away (max 0.8%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 95.25,
-    "ltp_time": "10:10"
+    "ltp": 94.8,
+    "ltp_time": "10:12"
   },
   "2026-11-27|KOTAKBANK|09:50": {
     "id": "2026-11-27|KOTAKBANK|09:50",
@@ -7101,7 +7101,7 @@
     "block_reason": "late move: opening range 3.99%, day move 3.94% (measuring)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 101.35,
-    "ltp_time": "10:10"
+    "ltp": 102.35,
+    "ltp_time": "10:12"
   }
 }
