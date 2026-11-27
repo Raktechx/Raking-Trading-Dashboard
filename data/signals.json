@@ -7143,13 +7143,13 @@
       "Opening range high 2780.0 broken, volume 1.9x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "TP",
+    "exit": 2808.7,
+    "exit_time": "10:40",
+    "r": 1.58,
+    "points": 19.8,
+    "opt_exit": 116.9,
+    "opt_points": 18.65,
     "group": "STOCK",
     "delta": 0.54,
     "opt_key": "NSE_FO|91787",
@@ -7183,10 +7183,12 @@
     "nifty_trend": "against",
     "blocked": true,
     "block_reason": "against Nifty trend (Nifty down)",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "TP",
+    "alt_r": 2.0,
     "ltp": 116.9,
-    "ltp_time": "10:40"
+    "ltp_time": "10:40",
+    "breakeven": false,
+    "exit_by": "5-min candle"
   },
   "2026-11-27|BAJAJFINSV|10:30": {
     "id": "2026-11-27|BAJAJFINSV|10:30",
@@ -7297,13 +7299,13 @@
       "Opening range low 802.0 broken, volume 1.3x (vs 20-candle avg)",
       "SL = previous candle high, target 1:2"
     ],
-    "result": "OPEN",
-    "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "result": "SL",
+    "exit": 801.65,
+    "exit_time": "10:40",
+    "r": -0.18,
+    "points": -1.9,
+    "opt_exit": 29.7,
+    "opt_points": -0.65,
     "group": "STOCK",
     "delta": 0.48,
     "opt_key": "NSE_FO|143564",
@@ -7342,6 +7344,8 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 29.7,
-    "ltp_time": "10:40"
+    "ltp_time": "10:40",
+    "breakeven": false,
+    "exit_by": "5-min candle"
   }
 }
