@@ -1,0 +1,132 @@
+<!-- CRUDEOIL: expired data not available (UpstoxError) -->
+
+## Crude Oil research: 2026-08-17 to 2026-11-26 (73 days), test from 2026-10-26
+
+### Current live rules
+
+```
+Empty DataFrame
+Columns: [window, stop, target, filter, trades, win, R, PF, maxDD, train_R, test_R, test_PF, test_n]
+Index: []
+```
+
+### Best variants profitable in BOTH train and test (top 25)
+
+```
+  window       stop target     filter  trades  win     R   PF  maxDD  train_R  test_R  test_PF  test_n
+US 19:30       atr1  trail       base      56   34 129.8 4.75   -7.4    118.8    11.0     1.72      20
+US 19:30       atr1  trail        htf      42   40 125.2 6.08   -6.4    110.0    15.2     2.16      18
+US 19:30       atr1  trail      vol15      54   35 125.2 4.85   -6.3    114.9    10.4     1.79      18
+US 19:30       atr1  trail     narrow      42   33 100.9 4.90   -7.5     89.3    11.6     2.16      14
+US 19:30 prev_min05  trail       base      50   34  74.2 3.32   -8.6     55.7    18.5     2.42      20
+US 19:30 prev_min05  trail      vol15      47   30  43.7 2.40  -10.5     30.9    12.8     2.15      18
+AM 09:00       atr1    3.0       base      85   35  30.7 1.53   -8.6     21.6     9.2     1.35      37
+PM 17:00  range_mid  trail      vol15      42   52  26.9 2.37   -5.3     18.1     8.7     1.91      22
+PM 17:00  range_mid  trail     narrow      41   56  26.4 2.50   -2.8     23.6     2.8     1.27      22
+EU 13:30 prev_min05    3.0      vol15      75   39  25.8 1.53   -7.4     25.7     0.1     1.01      29
+US 19:30       atr1    3.0        htf      42   40  24.9 1.99   -5.5     23.8     1.1     1.08      18
+AM 09:00       atr1    3.0     narrow      71   34  21.4 1.43  -12.8     16.1     5.4     1.22      33
+PM 17:00  range_mid    3.0     narrow      41   49  19.9 1.90   -3.9      8.9    11.0     1.95      22
+PM 17:00 prev_min05    3.0     narrow      63   38  19.7 1.48  -11.8      9.1    10.6     1.63      28
+AM 09:00 prev_min05    3.0      vol15      80   34  19.4 1.35   -6.7      3.7    15.8     1.68      36
+PM 17:00  range_mid    2.0     narrow      41   56  18.5 1.98   -4.0     10.4     8.1     1.77      22
+PM 17:00       atr1    3.0 htf+narrow      49   35  17.6 1.54   -9.7     13.7     3.9     1.23      23
+PM 17:00  range_mid    3.0      vol15      42   48  17.4 1.75   -6.2      1.0    16.4     2.57      22
+PM 17:00       atr1    3.0     narrow      69   32  15.7 1.34  -10.9      8.0     7.8     1.41      28
+PM 17:00  range_mid    1.5     narrow      41   61  14.5 1.86   -2.8     10.9     3.6     1.35      22
+PM 17:00 prev_min05    2.0     narrow      63   44  13.4 1.36   -9.8      7.1     6.3     1.40      28
+US 19:30       prev  trail       base      49   33  13.4 1.42  -11.5      8.8     4.6     1.35      20
+PM 17:00       atr1    1.5     narrow      69   48  13.1 1.38   -6.3      7.5     5.6     1.38      28
+PM 17:00 prev_min05  trail     narrow      63   32  13.0 1.32  -10.1     10.2     2.9     1.19      28
+PM 17:00  range_mid    2.0      vol15      42   50  12.7 1.58   -5.2      3.4     9.4     1.90      22
+```
+
+### Per window, best robust variant
+
+```
+  window       stop target filter  trades  win     R   PF  maxDD  train_R  test_R  test_PF  test_n
+US 19:30       atr1  trail   base      56   34 129.8 4.75   -7.4    118.8    11.0     1.72      20
+AM 09:00       atr1    3.0   base      85   35  30.7 1.53   -8.6     21.6     9.2     1.35      37
+PM 17:00  range_mid  trail  vol15      42   52  26.9 2.37   -5.3     18.1     8.7     1.91      22
+EU 13:30 prev_min05    3.0  vol15      75   39  25.8 1.53   -7.4     25.7     0.1     1.01      29
+```
+
+55 of 320 variants were profitable in both periods.
+
+### V2 crude ideas (US 19:30, SL 1 ATR, trail). Current live = mode orb with every other option False, 22:00
+
+```
+mode  dir_of_open  retest last_entry  skip_wed  half_at_1_5R   htf  trades  win     R    PF  maxDD  train_R  test_R  test_PF  test_n
+ orb        False   False      22:00     False         False False      56   34 129.8  4.75   -7.4    118.8    11.0     1.72      20
+ orb        False   False      22:00     False         False  True      42   40 125.2  6.08   -6.4    110.0    15.2     2.16      18
+ orb        False   False      22:00      True         False  True      32   41  96.8  6.25   -8.0    103.7    -6.9     0.38      13
+ orb        False   False      22:00      True         False False      43   33  92.6  4.39  -13.2    103.7   -11.1     0.15      15
+ orb        False   False      21:00     False         False False      41   32  37.9  2.45   -6.4     41.2    -3.3     0.76      17
+ orb        False   False      21:00     False         False  True      31   39  35.8  2.95   -5.3     36.0    -0.2     0.98      14
+ orb         True   False      22:00     False         False False      35   34  33.0  2.41   -6.2     34.6    -1.6     0.85      13
+momo        False   False      22:00     False         False  True      24   42  27.8  3.08   -4.3     24.4     3.4     1.49      11
+ orb         True   False      21:00     False         False False      29   31  26.4  2.30   -6.2     28.0    -1.6     0.85      12
+ eia        False   False      22:00     False         False False      10   50  24.4  6.23   -3.1      7.4    17.0    17.18       4
+momo        False   False      22:00     False         False False      48   35  23.4  1.83   -8.4     23.1     0.2     1.02      18
+ orb         True   False      21:00     False         False  True      21   38  23.2  2.71   -5.2     22.7     0.5     1.06      10
+ orb        False   False      21:00      True         False  True      22   41  22.7  2.87   -7.9     29.7    -7.0     0.22      10
+ orb         True   False      22:00     False         False  True      26   35  22.0  2.24   -5.2     22.5    -0.5     0.94      11
+ eia        False   False      22:00     False         False  True       4   75  19.9 19.98   -1.0      3.5    16.4    16.63       3
+ orb         True   False      22:00      True         False False      27   33  19.5  2.07  -11.5     28.9    -9.4     0.00      10
+ orb         True   False      21:00      True         False  True      15   40  18.5  2.96   -7.4     25.9    -7.4     0.00       7
+ orb         True   False      22:00      True         False  True      20   35  17.3  2.26   -9.5     25.7    -8.4     0.00       8
+ orb        False   False      21:00      True         False False      29   31  16.0  1.85  -11.2     26.1   -10.1     0.16      13
+ eia        False   False      22:00     False          True False      10   50  13.1  3.80   -3.1      3.4     9.7    10.25       4
+ orb         True   False      21:00      True         False False      21   29  12.9  1.85  -10.5     22.3    -9.5     0.00       9
+ eia        False   False      22:00     False          True  True       4   75  11.6 12.06   -1.0      2.5     9.1     9.69       3
+ orb        False   False      22:00     False          True  True      42   48  11.1  1.51   -5.6     11.2    -0.1     0.99      18
+ orb        False   False      22:00      True          True  True      32   47  10.7  1.65   -6.1     14.7    -4.0     0.55      13
+momo        False   False      22:00     False          True  True      24   50   7.9  1.65   -4.2      5.0     2.9     1.49      11
+ orb         True    True      21:00     False         False  True       7   71   7.0  4.34   -1.0     -0.0     7.1     7.73       5
+ orb        False   False      21:00      True          True  True      22   50   6.8  1.67   -5.8     10.5    -3.7     0.45      10
+ orb         True    True      22:00     False         False False      13   54   6.5  2.09   -2.8     -2.1     8.6     4.06       9
+ orb         True    True      22:00     False         False  True      12   50   6.5  2.09   -2.8     -2.1     8.6     4.05       8
+ orb        False   False      21:00     False          True  True      31   48   6.5  1.42   -4.0      7.0    -0.5     0.93      14
+ orb         True    True      21:00     False         False False       9   67   6.0  2.90   -1.1     -1.1     7.1     7.73       6
+ orb        False    True      21:00     False         False  True       8   62   6.0  2.90   -1.1     -0.0     6.0     3.86       6
+ orb         True   False      21:00     False          True  True      21   52   5.0  1.47   -2.5      4.6     0.4     1.08      10
+ orb        False    True      21:00     False         False False      10   60   4.9  2.17   -1.1     -1.1     6.0     3.87       7
+ orb         True    True      21:00     False          True  True       7   71   4.9  3.31   -1.0     -0.3     5.2     5.96       5
+ orb         True    True      21:00     False          True False       9   67   4.5  2.43   -1.1     -1.4     5.9     6.62       6
+ orb        False   False      22:00     False          True False      56   43   4.3  1.14   -7.5      7.6    -3.3     0.73      20
+ orb        False   False      22:00      True          True False      43   42   4.3  1.18   -9.3     11.5    -7.2     0.35      15
+ orb         True    True      22:00     False          True False      13   54   4.1  1.68   -2.8     -2.4     6.5     3.31       9
+ orb         True   False      21:00      True          True  True      15   53   3.9  1.52   -4.2      7.7    -3.8     0.27       7
+ orb        False    True      21:00     False          True  True       8   62   3.8  2.21   -1.1     -0.3     4.2     2.98       6
+momo        False   False      22:00     False          True False      48   46   3.5  1.13   -8.4      1.5     2.0     1.22      18
+ orb        False    True      21:00     False          True False      10   60   3.5  1.82   -1.1     -1.4     4.9     3.31       7
+ orb         True    True      22:00     False          True  True      12   50   3.4  1.56   -2.8     -2.4     5.8     3.06       8
+ orb         True   False      22:00     False          True  True      26   46   3.0  1.20   -4.6      3.6    -0.6     0.90      11
+ orb        False    True      22:00     False         False False      19   42   2.8  1.25   -4.9     -3.2     6.0     1.85      14
+ orb        False    True      22:00     False         False  True      18   39   2.8  1.25   -4.9     -3.2     6.0     1.85      13
+ orb         True   False      22:00      True          True  True      20   45   1.9  1.16   -6.3      6.8    -4.9     0.22       8
+ orb        False   False      21:00      True          True False      29   41   1.2  1.07   -8.9      8.1    -6.9     0.31      13
+ orb         True   False      22:00     False          True False      35   46   0.6  1.03   -5.6      1.5    -0.9     0.87      13
+ orb         True    True      21:00      True          True  True       3   67   0.5  1.49   -1.0      0.7    -0.2     0.83       2
+ orb        False   False      21:00     False          True False      41   41   0.5  1.02   -7.9      4.2    -3.7     0.67      17
+ orb        False    True      22:00     False          True False      19   42   0.3  1.03   -4.9     -3.5     3.8     1.54      14
+ orb         True    True      21:00      True         False  True       3   67   0.2  1.23   -1.0      1.0    -0.8     0.27       2
+ orb         True    True      21:00      True          True False       5   60   0.2  1.08   -1.1     -0.4     0.5     1.49       3
+ orb         True   False      21:00     False          True False      29   45   0.1  1.00   -4.9      1.8    -1.7     0.77      12
+ orb         True   False      22:00      True          True False      27   44  -0.2  0.99   -7.3      5.0    -5.2     0.29      10
+ orb         True    True      22:00      True         False False       9   44  -0.3  0.94   -2.8     -1.1     0.8     1.29       6
+ orb         True    True      22:00      True          True False       9   44  -0.3  0.95   -2.8     -1.4     1.1     1.40       6
+ orb         True    True      22:00      True         False  True       8   38  -0.3  0.94   -2.8     -1.1     0.8     1.29       5
+ orb        False    True      22:00     False          True  True      18   39  -0.4  0.97   -4.9     -3.5     3.1     1.44      13
+ orb        False    True      21:00      True          True  True       4   50  -0.5  0.75   -2.1      0.7    -1.2     0.41       3
+ orb         True   False      21:00      True          True False      21   43  -0.7  0.94   -7.0      5.3    -6.0     0.19       9
+ orb        False    True      21:00      True         False  True       4   50  -0.8  0.62   -2.1      1.0    -1.8     0.14       3
+ orb         True    True      21:00      True         False False       5   60  -0.8  0.62   -1.8     -0.0    -0.8     0.28       3
+ orb        False    True      21:00      True          True False       6   50  -0.9  0.72   -2.1     -0.4    -0.5     0.75       4
+ orb         True    True      22:00      True          True  True       8   38  -1.0  0.81   -2.8     -1.4     0.4     1.16       5
+ orb        False    True      21:00      True         False False       6   50  -1.9  0.41   -2.9     -0.0    -1.8     0.14       4
+ orb        False    True      22:00      True          True False      15   33  -4.0  0.60   -6.0     -2.4    -1.6     0.78      11
+ orb        False    True      22:00      True         False  True      14   29  -4.0  0.61   -6.0     -2.1    -1.9     0.73      10
+ orb        False    True      22:00      True         False False      15   33  -4.0  0.61   -6.0     -2.1    -1.9     0.74      11
+ orb        False    True      22:00      True          True  True      14   29  -4.7  0.54   -6.0     -2.5    -2.3     0.68      10
+```
