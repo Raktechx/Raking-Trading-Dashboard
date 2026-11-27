@@ -6246,8 +6246,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 189.5,
-    "ltp_time": "09:42"
+    "ltp": 190.5,
+    "ltp_time": "09:43"
   },
   "2026-11-27|CDSL|09:40": {
     "id": "2026-11-27|CDSL|09:40",
@@ -6325,7 +6325,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 56.0,
-    "ltp_time": "09:42"
+    "ltp_time": "09:43"
   },
   "2026-11-27|BEL|09:40": {
     "id": "2026-11-27|BEL|09:40",
@@ -6402,7 +6402,7 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 12.85,
-    "ltp_time": "09:42"
+    "ltp": 12.8,
+    "ltp_time": "09:43"
   }
 }
