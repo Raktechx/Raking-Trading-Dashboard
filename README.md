@@ -17,7 +17,26 @@ Price, VWAP, EMA and volume come from the near-month **future**, because the ind
 The mirror image: price below VWAP, EMA20 below EMA50, long build-up in the ATM put plus call writing at ATM and the 2 strikes above, the range low breaks with volume, and the SL is the previous candle's high.
 
 ### Stock options (automatic, all F&O stocks)
-Every scan first runs one batch quote for all F&O stock futures and picks the stocks that are past their 9:15–9:30 range on the right side of VWAP (freshest breakouts first, up to 8). Only those get the full check: EMA20/50, volume and option OI. Stock trades have their own limit of 2 a day; the 2-a-day index limit is separate. Stock strikes come from the real option list, so uneven strike gaps are handled.
+Every scan checks **all** F&O stocks that are past their 9:15–9:30 range on the right side of VWAP (no fixed 25/50 cap; a 150-second time budget per scan keeps Upstox calls within limits). A stock signal is sent only if it passes every rule above **and**:
+- grade **A = quality score 80+** (lower grades are logged, never alerted; the Stocks tab lists only grade A signals),
+- the **Nifty trend** agrees with the trade direction,
+- the stop-loss is **0.35%–0.8%** from entry (too tight gets hit by noise, too wide risks too much),
+- entry before **15:00**. Stock strikes come from the real option list, so uneven strike gaps are handled.
+
+### Index options
+Only grade **A (score 80+)** index signals are sent.
+
+### MCX Crude Oil (alerts 19:30–23:15 IST)
+Updated 27 Nov 2026 after testing 70 rule variants on recent CRUDEOIL 5-min data (train on older 2/3, then check on the newest 1/3 it never saw).
+1. **Range:** high and low of the US-open half hour, **19:30–20:00 IST**.
+2. **Entry:** a 5-min candle closes beyond the range with volume above the 20-candle average, price on the right side of VWAP.
+3. **Trend filter (new):** EMA20 vs EMA50 must agree on **both 5-min and 15-min** candles. This was the best version: about the same total profit as before with fewer trades (42 vs 56), a higher win rate (40% vs 34%), smaller drawdown, and better results on the unseen period (+15R vs +11R).
+4. **SL:** 1 ATR. After +1R the SL trails EMA20 (let winners run). Exit by **23:15**.
+5. Option alerted: ATM Crude Oil Mini CE/PE.
+
+Tested and **rejected** (lost money on the unseen period): waiting for a retest, stopping entries at 21:00, skipping Wednesdays (EIA report day), booking half at 1.5R, trading only in the direction of the first half hour. The EIA-day momentum trade looked good but had only 4–10 trades, too few to trust; it is being watched, not traded.
+
+⚠️ Upstox free data gave about 3.5 months of crude history (expired contracts need Upstox Plus), so these results are early and will be re-checked as paper trades build up.
 
 Note: Sensex futures trade thinly, so its volume check is less reliable than Nifty's and Bank Nifty's.
 
