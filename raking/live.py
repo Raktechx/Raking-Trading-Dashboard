@@ -211,9 +211,14 @@ def scan(api: Upstox | None = None, send_alerts: bool = True, demo_mode: bool = 
                 orb = data.stock_orbs(api, today)
                 top = data.stock_candidates(api, orb, config.STOCKS["max_candidates_per_scan"])
                 cands = [r["symbol"] for r in top]
-            for sym in dict.fromkeys(cands + open_stocks):
+            t0, budget = now_ist(), config.STOCKS.get("scan_budget_sec", 150)
+            for sym in dict.fromkeys(open_stocks + cands):   # open trades first, then strongest first
+                if sym not in open_stocks and (now_ist() - t0).total_seconds() > budget:
+                    continue   # time budget used: weaker movers wait for the next scan, alerts stay on time
                 _load(api, sym, today, demo_mode, status, stock_days)
-            status["STOCKS"] = f"OK ({len(cands)} candidates: {', '.join(cands) or '-'})"
+            done = [c for c in cands if c in stock_days]
+            status["STOCKS"] = (f"OK ({len(cands)} stocks past their range, {len(done)} fully checked: "
+                                f"{', '.join(done) or '-'})")
         except UpstoxError as e:
             status["STOCKS"] = str(e)
         except Exception as e:
