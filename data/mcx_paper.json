@@ -1,5 +1,7 @@
 {
- "sent": [],
+ "sent": [
+  "2026-11-27-US open-1:in"
+ ],
  "trades": [
   {
    "id": "2026-11-25-Morning-1",
@@ -106,18 +108,31 @@
    "now": 353.55,
    "now_t": "21:40",
    "exit": 353.55
+  },
+  "2026-11-27-US open-1": {
+   "sym": "CRUDEOILM 7850 PE 16 DEC 26",
+   "key": "MCX_FO|586374",
+   "lot": 10,
+   "ltp": 369.75,
+   "sl": 359.6,
+   "tp": 390.0,
+   "side": "PE",
+   "time": "20:20",
+   "window": "US open",
+   "now": 369.75,
+   "now_t": "20:20"
   }
  },
  "day": "2026-11-27",
  "live": {
-  "updated": "20:15",
+  "updated": "20:20",
   "symbol": "CRUDEOIL FUT 18 DEC 26",
-  "price": 7840.0,
+  "price": 7831.0,
   "prev_close": 7876.0,
-  "chg_pct": -0.46,
+  "chg_pct": -0.57,
   "day_high": 8060.0,
-  "day_low": 7830.0,
-  "vwap": 7969.3,
+  "day_low": 7817.0,
+  "vwap": 7967.5,
   "trend": "Down",
   "above_vwap": false,
   "window": "Waiting (09:00-09:30, 19:30-20:00)",
@@ -1066,6 +1081,13 @@
     7847.0,
     7835.0,
     7840.0
+   ],
+   [
+    "20:15",
+    7838.0,
+    7839.0,
+    7817.0,
+    7831.0
    ]
   ],
   "ranges": {
@@ -1074,6 +1096,20 @@
     7842.0
    ]
   },
-  "events": []
+  "events": [
+   {
+    "id": "2026-11-27-US open-1",
+    "window": "US open",
+    "side": -1,
+    "t": "20:20",
+    "entry": 7831.0,
+    "sl": 7851.214285714285,
+    "tg": 7790.571428571428,
+    "exit": null,
+    "exit_t": null,
+    "why": null,
+    "R": null
+   }
+  ]
  }
 }
