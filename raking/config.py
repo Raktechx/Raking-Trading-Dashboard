@@ -89,7 +89,7 @@ STOCKS = {
     "scan_budget_sec": 150,         # stop loading new stocks after 150 s so each scan still ends inside its 5-min candle
     "max_break_pct": 3.0,           # more than 3% past the opening range = too late to chase
     "max_trades_per_day": 50,       # practice mode: no real daily cap - every grade A stock signal is sent
-    "last_entry": "11:00",          # no new stock entry after 11:00 (later breakouts mostly failed)
+    "last_entry": "15:00",          # 27 Nov: 11:00 cap removed on request; same 15:00 cutoff as indexes
     "max_risk_pct": 0.8,            # skip chasing: SL more than 0.8% of price away
     "min_risk_pct": 0.35,           # skip noise: SL closer than 0.35% gets hit by normal swings
     "min_score": 80,                # stocks: only top grade A (score >= 80) is sent
