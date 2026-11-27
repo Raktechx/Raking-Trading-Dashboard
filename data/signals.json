@@ -6246,8 +6246,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 195.8,
-    "ltp_time": "09:47"
+    "ltp": 196.4,
+    "ltp_time": "09:48"
   },
   "2026-11-27|CDSL|09:40": {
     "id": "2026-11-27|CDSL|09:40",
@@ -6324,8 +6324,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 57.0,
-    "ltp_time": "09:47"
+    "ltp": 56.5,
+    "ltp_time": "09:48"
   },
   "2026-11-27|BEL|09:40": {
     "id": "2026-11-27|BEL|09:40",
@@ -6402,8 +6402,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 13.0,
-    "ltp_time": "09:47"
+    "ltp": 12.85,
+    "ltp_time": "09:48"
   },
   "2026-11-27|ANGELONE|09:45": {
     "id": "2026-11-27|ANGELONE|09:45",
@@ -6479,8 +6479,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 18.5,
-    "ltp_time": "09:47"
+    "ltp": 18.55,
+    "ltp_time": "09:48"
   },
   "2026-11-27|BDL|09:45": {
     "id": "2026-11-27|BDL|09:45",
@@ -6557,8 +6557,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 44.7,
-    "ltp_time": "09:47"
+    "ltp": 45.2,
+    "ltp_time": "09:48"
   },
   "2026-11-27|SOLARINDS|09:45": {
     "id": "2026-11-27|SOLARINDS|09:45",
@@ -6634,8 +6634,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 768.85,
-    "ltp_time": "09:47"
+    "ltp": 796.3,
+    "ltp_time": "09:48"
   },
   "2026-11-27|POWERGRID|09:45": {
     "id": "2026-11-27|POWERGRID|09:45",
@@ -6712,8 +6712,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 7.9,
-    "ltp_time": "09:47"
+    "ltp": 7.95,
+    "ltp_time": "09:48"
   },
   "2026-11-27|TATAELXSI|09:45": {
     "id": "2026-11-27|TATAELXSI|09:45",
@@ -6791,7 +6791,7 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 164.95,
-    "ltp_time": "09:47"
+    "ltp": 170.0,
+    "ltp_time": "09:48"
   }
 }
