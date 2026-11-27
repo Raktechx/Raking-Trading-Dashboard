@@ -6246,8 +6246,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 171.3,
-    "ltp_time": "10:13"
+    "ltp": 170.0,
+    "ltp_time": "10:14"
   },
   "2026-11-27|CDSL|09:40": {
     "id": "2026-11-27|CDSL|09:40",
@@ -6404,8 +6404,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 15.3,
-    "ltp_time": "10:13"
+    "ltp": 15.0,
+    "ltp_time": "10:14"
   },
   "2026-11-27|ANGELONE|09:45": {
     "id": "2026-11-27|ANGELONE|09:45",
@@ -6561,8 +6561,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 48.75,
-    "ltp_time": "10:13"
+    "ltp": 49.0,
+    "ltp_time": "10:14"
   },
   "2026-11-27|SOLARINDS|09:45": {
     "id": "2026-11-27|SOLARINDS|09:45",
@@ -6718,8 +6718,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 7.55,
-    "ltp_time": "10:13"
+    "ltp": 7.35,
+    "ltp_time": "10:14"
   },
   "2026-11-27|TATAELXSI|09:45": {
     "id": "2026-11-27|TATAELXSI|09:45",
@@ -6797,8 +6797,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 177.6,
-    "ltp_time": "10:13"
+    "ltp": 178.35,
+    "ltp_time": "10:14"
   },
   "2026-11-27|VOLTAS|09:50": {
     "id": "2026-11-27|VOLTAS|09:50",
@@ -6872,8 +6872,8 @@
     "block_reason": "chasing: SL 1.09% away (max 0.8%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 45.0,
-    "ltp_time": "10:13"
+    "ltp": 44.2,
+    "ltp_time": "10:14"
   },
   "2026-11-27|MPHASIS|09:50": {
     "id": "2026-11-27|MPHASIS|09:50",
@@ -6950,7 +6950,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 92.85,
-    "ltp_time": "10:13"
+    "ltp_time": "10:14"
   },
   "2026-11-27|KOTAKBANK|09:50": {
     "id": "2026-11-27|KOTAKBANK|09:50",
@@ -7101,7 +7101,7 @@
     "block_reason": "late move: opening range 3.99%, day move 3.94% (measuring)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 102.35,
-    "ltp_time": "10:13"
+    "ltp": 106.8,
+    "ltp_time": "10:14"
   }
 }
