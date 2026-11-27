@@ -6202,13 +6202,13 @@
       "Opening range high 4059.0 broken, volume 2.6x (vs 20-candle avg)",
       "SL = previous candle low, target 1:2"
     ],
-    "result": "OPEN",
+    "result": "SL",
     "exit": null,
-    "exit_time": null,
-    "r": null,
-    "points": null,
-    "opt_exit": null,
-    "opt_points": null,
+    "exit_time": "10:22",
+    "r": -1.0,
+    "points": -20.3,
+    "opt_exit": 163.9,
+    "opt_points": -22.65,
     "group": "STOCK",
     "delta": 0.55,
     "opt_key": "NSE_FO|78957",
@@ -6246,8 +6246,9 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 166.2,
-    "ltp_time": "10:20"
+    "ltp": 163.9,
+    "ltp_time": "10:22",
+    "exit_by": "live premium"
   },
   "2026-11-27|CDSL|09:40": {
     "id": "2026-11-27|CDSL|09:40",
@@ -6563,8 +6564,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 51.7,
-    "ltp_time": "10:20"
+    "ltp": 50.0,
+    "ltp_time": "10:22"
   },
   "2026-11-27|SOLARINDS|09:45": {
     "id": "2026-11-27|SOLARINDS|09:45",
@@ -6720,8 +6721,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 7.15,
-    "ltp_time": "10:20"
+    "ltp": 7.2,
+    "ltp_time": "10:22"
   },
   "2026-11-27|TATAELXSI|09:45": {
     "id": "2026-11-27|TATAELXSI|09:45",
@@ -6800,7 +6801,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 182.0,
-    "ltp_time": "10:20"
+    "ltp_time": "10:22"
   },
   "2026-11-27|VOLTAS|09:50": {
     "id": "2026-11-27|VOLTAS|09:50",
@@ -6874,8 +6875,8 @@
     "block_reason": "chasing: SL 1.09% away (max 0.8%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 41.35,
-    "ltp_time": "10:20"
+    "ltp": 42.5,
+    "ltp_time": "10:22"
   },
   "2026-11-27|MPHASIS|09:50": {
     "id": "2026-11-27|MPHASIS|09:50",
@@ -6951,8 +6952,8 @@
     "block_reason": "chasing: SL 0.92% away (max 0.8%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 90.05,
-    "ltp_time": "10:20"
+    "ltp": 91.55,
+    "ltp_time": "10:22"
   },
   "2026-11-27|KOTAKBANK|09:50": {
     "id": "2026-11-27|KOTAKBANK|09:50",
@@ -7103,7 +7104,7 @@
     "block_reason": "late move: opening range 3.99%, day move 3.94% (measuring)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 113.6,
-    "ltp_time": "10:20"
+    "ltp": 116.5,
+    "ltp_time": "10:22"
   }
 }
