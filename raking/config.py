@@ -142,8 +142,8 @@ STRATEGY = {
     "skip_expiry_day": True,       # on expiry day use the next expiry's options
     "assumed_delta": 0.5,          # for option SL/TP when the live delta is not available
     "fresh_minutes": 10,           # live: only the latest closed candle (+ scan delay) can alert - no late entries
-    # 7. Quality pre-check: only grade A (score >= 70) is sent; lower grades are logged, never alerted
-    "min_quality": 70,
+    # 7. Quality pre-check: only grade A (score >= 80) is sent; lower grades are logged, never alerted
+    "min_quality": 80,
     # 8. Second setup - PULLBACK: range already broken earlier, price dips back to VWAP / EMA20
     #    and the candle bounces in the trend direction with volume (OI checks the same).
     "pullback_enabled": True,      # evaluated + backtested always; this switch controls live signals
