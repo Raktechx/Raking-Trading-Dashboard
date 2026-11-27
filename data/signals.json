@@ -6564,8 +6564,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "TP",
     "alt_r": 2.0,
-    "ltp": 54.0,
-    "ltp_time": "10:39"
+    "ltp": 53.7,
+    "ltp_time": "10:40"
   },
   "2026-11-27|SOLARINDS|09:45": {
     "id": "2026-11-27|SOLARINDS|09:45",
@@ -6801,8 +6801,8 @@
     "block_reason": "against Nifty trend (Nifty mixed)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 177.15,
-    "ltp_time": "10:39"
+    "ltp": 176.0,
+    "ltp_time": "10:40"
   },
   "2026-11-27|VOLTAS|09:50": {
     "id": "2026-11-27|VOLTAS|09:50",
@@ -6954,8 +6954,8 @@
     "block_reason": "chasing: SL 0.92% away (max 0.8%)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 96.65,
-    "ltp_time": "10:39"
+    "ltp": 95.0,
+    "ltp_time": "10:40"
   },
   "2026-11-27|KOTAKBANK|09:50": {
     "id": "2026-11-27|KOTAKBANK|09:50",
@@ -7185,8 +7185,8 @@
     "block_reason": "against Nifty trend (Nifty down)",
     "alt_result": "OPEN",
     "alt_r": null,
-    "ltp": 105.5,
-    "ltp_time": "10:39"
+    "ltp": 116.9,
+    "ltp_time": "10:40"
   },
   "2026-11-27|BAJAJFINSV|10:30": {
     "id": "2026-11-27|BAJAJFINSV|10:30",
@@ -7263,7 +7263,7 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 48.65,
-    "ltp_time": "10:39"
+    "ltp_time": "10:40"
   },
   "2026-11-27|PREMIERENE|10:35": {
     "id": "2026-11-27|PREMIERENE|10:35",
@@ -7342,6 +7342,6 @@
     "alt_result": "OPEN",
     "alt_r": null,
     "ltp": 29.7,
-    "ltp_time": "10:39"
+    "ltp_time": "10:40"
   }
 }
