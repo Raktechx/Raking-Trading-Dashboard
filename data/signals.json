@@ -7722,5 +7722,80 @@
     "block_reason": "SL too tight: 0.29% away (min 0.35%)",
     "alt_result": "OPEN",
     "alt_r": null
+  },
+  "2026-11-27|CROMPTON|11:10": {
+    "id": "2026-11-27|CROMPTON|11:10",
+    "index": "CROMPTON",
+    "day": "2026-11-27",
+    "side": "PE",
+    "setup": "Breakout",
+    "signal_time": "11:10",
+    "future": "CROMPTON FUT 29 DEC 26",
+    "entry": 212.15,
+    "sl": 212.6,
+    "tp": 211.25,
+    "risk_pts": 0.45,
+    "strike": 210.0,
+    "expiry": "2026-12-29",
+    "option": "CROMPTON 210 PE",
+    "opt_entry": 7.6,
+    "opt_sl": 6.7,
+    "opt_tp": 9.4,
+    "orb_high": 215.25,
+    "orb_low": 212.79,
+    "vwap": 213.08,
+    "volume_x": 3.4,
+    "atm_oi_pct": 28.57,
+    "writing_oi_pct": 21.65,
+    "lot_size": 2150,
+    "reasons": [
+      "Trend: price below VWAP 213.1, EMA20 < EMA50",
+      "ATM 210 PE long build-up: premium +12.9%, OI +28.6%",
+      "Call writing (210, 212.5, 215): OI +21.6%",
+      "Opening range low 212.8 broken, volume 3.4x (vs 20-candle avg)",
+      "SL = previous candle high, target 1:2"
+    ],
+    "result": "OPEN",
+    "exit": null,
+    "exit_time": null,
+    "r": null,
+    "points": null,
+    "opt_exit": null,
+    "opt_points": null,
+    "group": "STOCK",
+    "delta": 0.44,
+    "opt_key": "NSE_FO|100721",
+    "score": 83,
+    "grade": "A",
+    "score_parts": {
+      "Trend strength": 15.0,
+      "Breakout candle": 3.2,
+      "Volume": 10.0,
+      "OI build-up": 15.0,
+      "PCR": 5.0,
+      "Room to OI wall": 15.0,
+      "Option IV": 10.0,
+      "India VIX": 5.0,
+      "Market alignment": 5.0
+    },
+    "score_notes": {
+      "plus": [
+        "strong trend (clear VWAP and EMA gap)",
+        "volume 3.4x average",
+        "heavy fresh OI build-up and writing"
+      ],
+      "minus": [
+        "weak breakout candle (small body / long wick)"
+      ]
+    },
+    "created_at": "2026-11-27 11:12:13",
+    "range_pct": 1.16,
+    "day_move_pct": 1.44,
+    "late_move": false,
+    "nifty_trend": "with",
+    "blocked": true,
+    "block_reason": "SL too tight: 0.21% away (min 0.35%)",
+    "alt_result": "OPEN",
+    "alt_r": null
   }
 }
