@@ -455,7 +455,7 @@ with tab_crude:
                     st.caption(f"Entry ₹{t['opt_entry']:.1f} → Exit ₹{t.get('opt_exit', 0):.1f} · Lot {t.get('lot')} qty · "
                                f"P&L ₹{t.get('opt_pnl_lot', 0):+,.0f} per lot · Future {t['entry']:.0f} → {t['exit']:.0f}")
         if not ct and not opn:
-            st.caption("No crude trade today yet. Signals only come in the 09:00-09:30 and 19:30-20:00 breakout windows.")
+            st.caption("No crude trade today yet. Signals only come in the 19:30-20:00 US-open window (SL 1 ATR, trails EMA20 after +1R, exit by 23:15).")
 
         if trades:
             tdf = pd.DataFrame(trades)
@@ -600,6 +600,10 @@ least {S['min_opt_sl_pct']:.0f}% below the entry premium (target = 2× that). Op
 **Limits (practice mode):** no daily cap - every grade A signal is sent; one open trade per instrument at a time ·
 no new entry after {S['last_entry']} · open trades closed at {S['exit_time']} · alerts never older than
 {S['fresh_minutes']} minutes.
+
+**Stocks (extra):** with the Nifty trend only · SL {config.STOCKS['min_risk_pct']}–{config.STOCKS['max_risk_pct']}% from entry · entries until {config.STOCKS['last_entry']}.
+
+**Crude oil:** US-open window 19:30–20:00 only · SL 1 ATR · after +1R the SL trails EMA20 · exit by 23:15.
 
 **Exit test:** every trade is also scored with Method B (SL on the option's previous candle) so the paper
 record shows which exit earns more.
