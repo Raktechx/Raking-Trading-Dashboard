@@ -7882,8 +7882,8 @@
     "day_move_pct": 0.42,
     "late_move": false,
     "nifty_trend": "with",
-    "alt_result": "OPEN",
-    "alt_r": null,
+    "alt_result": "TP",
+    "alt_r": 2.0,
     "ltp": 57.0,
     "ltp_time": "13:20"
   },
