@@ -85,7 +85,8 @@ INDICES = {
 # ---------------------------------------------------------------------------
 STOCKS = {
     "enabled": True,
-    "max_candidates_per_scan": 50,  # speed cap only (scan must finish < 5 min); alerts = top grade only, no fixed count
+    "max_candidates_per_scan": 999, # no fixed count: every F&O stock past its range on the right side of VWAP
+    "scan_budget_sec": 150,         # stop loading new stocks after 150 s so each scan still ends inside its 5-min candle
     "max_break_pct": 3.0,           # more than 3% past the opening range = too late to chase
     "max_trades_per_day": 50,       # practice mode: no real daily cap - every grade A stock signal is sent
     "last_entry": "11:00",          # no new stock entry after 11:00 (later breakouts mostly failed)
