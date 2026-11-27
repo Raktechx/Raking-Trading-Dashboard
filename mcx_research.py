@@ -128,3 +128,105 @@ if __name__ == "__main__":
     print("\n### Per window, best robust variant\n")
     print(md(good.groupby("window").head(1)))
     print(f"\n{len(good)} of {len(res)} variants were profitable in both periods.")
+    # ---- 27 Nov: crude v2 ideas on the live setup (US 19:30 range, SL 1 ATR, trail EMA20 after +1R)
+    def run2(d, retest=False, cut=dtime(22, 0), no_wed=False, half=False, htf=False, mode="orb", dirn=False):
+        a, b = WINDOWS["US 19:30"]
+        out = []
+        for day, g in d.groupby("day"):
+            if no_wed and pd.Timestamp(day).weekday() == 2:
+                continue
+            orw = g[(g.t >= a) & (g.t < b)]
+            if len(orw) < 6:
+                continue
+            hi, lo, pos, used, armed = orw.high.max(), orw.low.min(), None, set(), 0
+            wret = float(orw.close.iloc[-1] - orw.open.iloc[0])   # first half-hour move after the US open
+            rows = g[g.t >= b].reset_index(drop=True)
+            if mode != "orb":   # intraday momentum: one trade in the direction of a half-hour move, held to close
+                if mode == "eia":
+                    if pd.Timestamp(day).weekday() != 2:
+                        continue
+                    ea = dtime(21, 0) if pd.Timestamp(day).month in (11, 12, 1, 2) or (pd.Timestamp(day).month == 3 and pd.Timestamp(day).day < 10) else dtime(20, 0)
+                    ew = g[(g.t >= ea) & (g.t < (pd.Timestamp.combine(day, ea) + pd.Timedelta(minutes=30)).time())]
+                    if len(ew) < 6:
+                        continue
+                    wret = float(ew.close.iloc[-1] - ew.open.iloc[0])
+                    rows = g[g.t >= ew.t.iloc[-1]].reset_index(drop=True)
+                if len(rows) < 2 or wret == 0 or pd.isna(rows.iloc[0].atr):
+                    continue
+                side, r0 = (1 if wret > 0 else -1), rows.iloc[0]
+                if htf and (r0.h20 - r0.h50) * side <= 0:
+                    continue
+                entry, risk = float(r0.close), float(r0.atr)
+                if abs(wret) < 0.5 * risk:   # skip quiet opens
+                    continue
+                pos = (side, entry, entry - risk * side, risk, 0)
+                rows = rows.iloc[1:].reset_index(drop=True)
+                rows = pd.concat([rows.iloc[:1], rows]).reset_index(drop=True)
+            for i in range(1, len(rows)):
+                r = rows.iloc[i]
+                if pos:
+                    side, entry, sl, risk, bank = pos
+                    if (r.close - entry) * side >= risk:
+                        sl = max(sl, r.e20) if side > 0 else min(sl, r.e20)
+                    if half and bank == 0 and ((r.high - entry) if side > 0 else (entry - r.low)) >= 1.5 * risk:
+                        bank, sl = 0.75, (max(sl, entry) if side > 0 else min(sl, entry))
+                    hit = r.low <= sl if side > 0 else r.high >= sl
+                    if hit or r.t >= SQUARE_OFF:
+                        px = sl if hit else r.close
+                        rr = (px - entry) * side / risk
+                        out.append((day, side, (bank + 0.5 * rr if bank else rr) - COST))
+                        pos = None
+                    else:
+                        pos = (side, entry, sl, risk, bank)
+                    continue
+                if mode != "orb" or r.t > cut or pd.isna(r.vavg) or pd.isna(r.atr) or len(used) == 2:
+                    continue
+                up = r.close > r.vwap and r.e20 > r.e50 and (not htf or r.h20 > r.h50)
+                dn = r.close < r.vwap and r.e20 < r.e50 and (not htf or r.h20 < r.h50)
+                side = 0
+                if not retest:
+                    if r.close > hi and up and r.volume > r.vavg and 1 not in used:
+                        side = 1
+                    elif r.close < lo and dn and r.volume > r.vavg and -1 not in used:
+                        side = -1
+                else:
+                    if r.close > hi and r.volume > r.vavg:
+                        armed = 1
+                    elif r.close < lo and r.volume > r.vavg:
+                        armed = -1
+                    elif armed == 1 and r.low <= hi + 0.2 * r.atr and r.close > hi and up and 1 not in used:
+                        side = 1
+                    elif armed == -1 and r.high >= lo - 0.2 * r.atr and r.close < lo and dn and -1 not in used:
+                        side = -1
+                if not side or (dirn and side * wret <= 0):
+                    continue
+                px, risk = float(r.close), float(r.atr)
+                if risk <= 0:
+                    continue
+                used.add(side)
+                armed = 0
+                pos = (side, px, px - risk * side, risk, 0)
+            if pos:
+                side, entry, sl, risk, bank = pos
+                rr = (rows.iloc[-1].close - entry) * side / risk
+                out.append((day, side, (bank + 0.5 * rr if bank else rr) - COST))
+        return pd.DataFrame(out, columns=["day", "side", "R"])
+
+    rows2 = []
+    combos = [("orb", rt, ct, nw, hf, hx, dn) for rt, ct, nw, hf, hx, dn in itertools.product(
+        [False, True], [dtime(22, 0), dtime(21, 0)], [False, True], [False, True], [False, True], [False, True])]
+    combos += [(m, False, dtime(22, 0), False, hf, hx, False) for m in ("momo", "eia")
+               for hf in (False, True) for hx in (False, True)]
+    for mo, rt, ct, nw, hf, hx, dn in combos:
+        t = run2(d, rt, ct, nw, hf, hx, mo, dn)
+        tr, te = t[t.day < cut], t[t.day >= cut]
+        n, wr, tot, pf, dd = stats(t)
+        rows2.append(dict(mode=mo, dir_of_open=dn, retest=rt, last_entry=str(ct)[:5], skip_wed=nw, half_at_1_5R=hf, htf=hx, trades=n,
+                          win=round(wr), R=round(tot, 1), PF=round(pf, 2), maxDD=round(dd, 1),
+                          train_R=round(stats(tr)[2], 1), test_R=round(stats(te)[2], 1),
+                          test_PF=round(stats(te)[3], 2), test_n=stats(te)[0]))
+    r2 = pd.DataFrame(rows2).sort_values("R", ascending=False)
+    print("")
+    print("### V2 crude ideas (US 19:30, SL 1 ATR, trail). Current live = mode orb with every other option False, 22:00")
+    print("")
+    print(md(r2))
