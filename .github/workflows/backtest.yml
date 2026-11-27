@@ -26,11 +26,11 @@ jobs:
         env:
           UPSTOX_ANALYTICS_TOKEN: ${{ secrets.UPSTOX_ANALYTICS_TOKEN }}
           UPSTOX_ACCESS_TOKEN: ${{ secrets.UPSTOX_ACCESS_TOKEN }}
-        run: python run_backtest.py "${{ github.event.inputs.years }}"
+        run: if [ "${{ github.event.inputs.years }}" = "crude" ]; then python mcx_research.py 365 | tee data/crude_research.txt; else python run_backtest.py "${{ github.event.inputs.years }}"; fi
       - name: Save report to the repo
         run: |
           git config user.name "raking-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add -f data/backtest_report.xlsx data/backtest_summary.txt
+          for f in data/backtest_report.xlsx data/backtest_summary.txt data/crude_research.txt; do [ -f "$f" ] && git add -f "$f"; done
           git commit -q -m "backtest report" || exit 0
           for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
